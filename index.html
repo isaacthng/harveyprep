@@ -722,15 +722,242 @@
   ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 3px; }
   ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.16); }
 
-  /* ── Responsive ── */
+  /* ── Mobile topbar (hidden on desktop) ── */
+  .mobile-topbar {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 56px;
+    background: rgba(14, 14, 14, 0.92);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    z-index: 200;
+    padding: 0 16px;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .mobile-topbar .logo {
+    margin-bottom: 0;
+    gap: 8px;
+  }
+
+  .mobile-topbar .logo-text { font-size: 16px; }
+
+  .hamburger-btn {
+    width: 44px;
+    height: 44px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--transition);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .hamburger-btn:active { background: var(--accent-soft); border-color: var(--accent-border); }
+
+  .hamburger-icon { display: flex; flex-direction: column; gap: 4px; }
+  .hamburger-icon span {
+    display: block;
+    width: 18px;
+    height: 2px;
+    background: var(--fg-primary);
+    border-radius: 1px;
+    transition: all var(--transition);
+  }
+
+  .drawer-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 250;
+    opacity: 0;
+    transition: opacity 250ms ease;
+  }
+
+  .drawer-overlay.open { opacity: 1; }
+
+  /* ── Responsive (tablet) ── */
   @media (max-width: 1100px) {
     .sidebar { transform: translateX(-100%); }
     .main { margin-left: 0; padding: 32px; }
     .values-grid, .day-of-grid { grid-template-columns: 1fr; }
   }
+
+  /* ── Mobile (phone) ── */
+  @media (max-width: 768px) {
+    body {
+      font-size: 15px;
+      line-height: 1.7;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    .mobile-topbar { display: flex; }
+    .drawer-overlay { display: block; pointer-events: none; }
+    .drawer-overlay.open { pointer-events: auto; }
+
+    /* Mobile drawer (the sidebar repurposed as a slide-in) */
+    .sidebar {
+      display: block;
+      width: 84vw;
+      max-width: 320px;
+      transform: translateX(-100%);
+      transition: transform 280ms cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 300;
+      box-shadow: 4px 0 24px rgba(0, 0, 0, 0.5);
+      padding-top: 24px;
+    }
+
+    .sidebar.open { transform: translateX(0); }
+
+    .main {
+      margin-left: 0;
+      padding: 80px 20px 100px;
+      max-width: 100%;
+    }
+
+    /* Page header — bigger title, less padding */
+    .page-header { margin-bottom: 36px; padding-bottom: 20px; }
+    .page-title { font-size: 28px; line-height: 1.2; }
+    .page-subtitle { font-size: 14px; }
+    .page-meta { font-size: 12px; gap: 8px; }
+
+    /* Sections — tighter spacing */
+    section { margin-bottom: 48px; scroll-margin-top: 72px; }
+    h1.section-title { font-size: 22px; line-height: 1.25; }
+    .section-intro { font-size: 14px; margin-bottom: 24px; }
+    h2.subsection-title { font-size: 16px; margin-top: 28px; }
+
+    /* Values grid — single column with tighter padding */
+    .values-grid { grid-template-columns: 1fr; gap: 12px; }
+    .value-card { padding: 18px; }
+    .value-name { font-size: 15px; }
+    .value-desc { font-size: 13px; }
+
+    /* Story cards — mobile-friendly layout */
+    .story-card { padding: 18px 20px; margin-bottom: 14px; }
+    .story-hook { font-size: 15px; margin-bottom: 14px; }
+    .story-row { flex-direction: column; gap: 4px; margin-bottom: 12px; }
+    .story-label { width: auto; padding-top: 0; font-size: 9px; }
+    .story-text { font-size: 14px; }
+
+    /* Coverage table — horizontal scroll */
+    .coverage-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .coverage-table th, .coverage-table td { padding: 10px 14px; font-size: 12px; white-space: nowrap; }
+
+    /* Round cards */
+    .round-card { padding: 22px 18px; margin-bottom: 18px; }
+    .round-header { gap: 14px; padding-bottom: 16px; margin-bottom: 18px; }
+    .round-icon { width: 40px; height: 40px; font-size: 18px; }
+    .round-title { font-size: 16px; }
+    .round-meta { font-size: 11px; gap: 8px; }
+    .round-content h3 { font-size: 11px; margin-top: 22px; }
+    .round-content p, .round-content li { font-size: 14px; }
+
+    /* Question blocks */
+    .question-block { margin-bottom: 22px; }
+    .question-text { font-size: 15px; }
+    .question-prompt { font-size: 12px; }
+
+    /* Golden answer blocks */
+    .golden-answer { padding: 16px 18px; margin: 12px 0 18px; }
+    .golden-answer p { font-size: 14px; line-height: 1.75; }
+    .golden-label { font-size: 9px; }
+
+    /* QA cards (deep dive Q&A) — much tighter */
+    .qa-card { margin-bottom: 12px; }
+    .qa-question { padding: 14px 16px; gap: 12px; }
+    .qa-num { width: 26px; height: 26px; font-size: 12px; }
+    .qa-q-text { font-size: 14px; padding-top: 3px; line-height: 1.45; }
+    .qa-answer-inner {
+      padding: 0 18px 22px 18px;
+      font-size: 14px;
+      line-height: 1.78;
+    }
+    .qa-answer-inner p { margin-bottom: 14px; }
+    .closing-thought {
+      padding: 12px 14px;
+      font-size: 13px;
+      margin-top: 14px;
+    }
+
+    /* Talking points box */
+    .talking-points { padding: 16px 18px; margin-top: 18px; }
+    .talking-points li { font-size: 13px; }
+
+    /* Day-of grid */
+    .day-of-grid { grid-template-columns: 1fr; gap: 14px; }
+    .day-of-card { padding: 18px 20px; }
+    .day-of-card li { font-size: 13px; }
+
+    /* Quote box */
+    .quote { padding: 16px 18px; font-size: 14px; }
+
+    /* Buttons */
+    .expand-all {
+      width: 100%;
+      padding: 12px 16px;
+      font-size: 14px;
+      border-radius: 8px;
+    }
+
+    /* Tags */
+    .tag { font-size: 9px; padding: 3px 8px; margin-right: 4px; }
+    .story-tag { font-size: 9px; padding: 3px 8px; }
+
+    /* Larger touch targets for nav items */
+    .nav-item {
+      padding: 12px 24px;
+      font-size: 14px;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  /* ── Very small screens ── */
+  @media (max-width: 380px) {
+    .main { padding: 76px 16px 80px; }
+    .page-title { font-size: 24px; }
+    .qa-question { padding: 13px 14px; }
+    .qa-answer-inner { padding: 0 16px 20px 16px; }
+    .round-card { padding: 18px 16px; }
+    .golden-answer { padding: 14px 16px; }
+  }
+
+  /* Lock body scroll when drawer is open */
+  body.drawer-open { overflow: hidden; }
 </style>
 </head>
 <body>
+
+<!-- Mobile topbar with hamburger -->
+<header class="mobile-topbar">
+  <div class="logo">
+    <div class="logo-mark"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 3h3v8h12V3h3v18h-3v-7H6v7H3V3z" fill="#F5F0EB"/></svg></div>
+    <span class="logo-text">Harvey Onsite</span>
+  </div>
+  <button class="hamburger-btn" aria-label="Open navigation menu" onclick="toggleDrawer()">
+    <span class="hamburger-icon">
+      <span></span>
+      <span></span>
+      <span></span>
+    </span>
+  </button>
+</header>
+
+<!-- Drawer backdrop -->
+<div class="drawer-overlay" onclick="closeDrawer()"></div>
 
 <aside class="sidebar">
   <div class="sidebar-header">
@@ -1859,14 +2086,44 @@
   window.addEventListener('scroll', setActiveNav);
   setActiveNav();
 
-  // Smooth scroll
+  // Smooth scroll + auto-close drawer on mobile when nav item clicked
   navItems.forEach(item => {
     item.addEventListener('click', e => {
       e.preventDefault();
       const target = document.querySelector(item.getAttribute('href'));
       if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (window.innerWidth <= 768) closeDrawer();
     });
   });
+
+  // ── Mobile drawer ──
+  const sidebar = document.querySelector('.sidebar');
+  const overlay = document.querySelector('.drawer-overlay');
+
+  function toggleDrawer() {
+    const isOpen = sidebar.classList.toggle('open');
+    overlay.classList.toggle('open', isOpen);
+    document.body.classList.toggle('drawer-open', isOpen);
+  }
+
+  function closeDrawer() {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('open');
+    document.body.classList.remove('drawer-open');
+  }
+
+  // ESC key closes drawer
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeDrawer();
+  });
+
+  // Swipe-to-close (touch)
+  let touchStartX = 0;
+  sidebar.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+  sidebar.addEventListener('touchend', e => {
+    const touchEndX = e.changedTouches[0].clientX;
+    if (touchStartX - touchEndX > 60) closeDrawer();
+  }, { passive: true });
 </script>
 
 </body>
