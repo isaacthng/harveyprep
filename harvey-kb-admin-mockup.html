@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harvey — Knowledge Base Management</title>
+<style>
+  :root {
+    --bg-base: #111111;
+    --bg-raised: #1A1A1A;
+    --bg-surface: #222222;
+    --bg-hover: #2A2A2A;
+    --bg-active: #333333;
+    --border: rgba(255,255,255,0.08);
+    --border-strong: rgba(255,255,255,0.14);
+    --fg-primary: #F5F0EB;
+    --fg-secondary: #A8A199;
+    --fg-subtle: #6B6560;
+    --fg-muted: #4A4540;
+    --accent: #C4956A;
+    --accent-soft: rgba(196, 149, 106, 0.10);
+    --accent-border: rgba(196, 149, 106, 0.25);
+    --accent-hover: #D4A57A;
+    --green: #5CB88F;
+    --green-soft: rgba(92, 184, 143, 0.10);
+    --green-border: rgba(92, 184, 143, 0.22);
+    --yellow: #D4A04A;
+    --yellow-soft: rgba(212, 160, 74, 0.10);
+    --yellow-border: rgba(212, 160, 74, 0.22);
+    --red: #D46A6A;
+    --red-soft: rgba(212, 106, 106, 0.10);
+    --red-border: rgba(212, 106, 106, 0.22);
+    --orange: #D4864A;
+    --orange-soft: rgba(212, 134, 74, 0.10);
+    --orange-border: rgba(212, 134, 74, 0.22);
+    --blue-soft: rgba(100, 140, 220, 0.10);
+    --blue: #6E8ED4;
+    --blue-border: rgba(100, 140, 220, 0.22);
+    --radius: 8px;
+    --radius-lg: 12px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.4);
+    --transition: 150ms ease;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg-base);
+    color: var(--fg-primary);
+    font-size: 14px;
+    line-height: 1.5;
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    width: 256px;
+    background: var(--bg-base);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+  }
+
+  .sidebar-logo {
+    padding: 22px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .logo-mark {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .logo-text {
+    font-size: 17px;
+    font-weight: 600;
+    font-family: 'Georgia', 'Times New Roman', serif;
+    letter-spacing: 0.5px;
+    color: var(--fg-primary);
+  }
+
+  .logo-badge {
+    font-size: 10px;
+    background: var(--accent-soft);
+    border: 1px solid var(--accent-border);
+    padding: 2px 7px;
+    border-radius: 4px;
+    color: var(--accent);
+    font-weight: 600;
+    margin-left: auto;
+  }
+
+  .sidebar-section { padding: 16px 12px 4px; }
+
+  .sidebar-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--fg-muted);
+    padding: 0 8px;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 12px;
+    border-radius: 6px;
+    color: var(--fg-subtle);
+    cursor: pointer;
+    transition: all var(--transition);
+    font-size: 13px;
+    font-weight: 450;
+  }
+
+  .nav-item:hover { background: rgba(245,240,235,0.04); color: var(--fg-secondary); }
+  .nav-item.active { background: var(--accent-soft); color: var(--fg-primary); }
+  .nav-item .icon { font-size: 15px; width: 20px; text-align: center; opacity: 0.55; }
+  .nav-item.active .icon { opacity: 0.85; }
+
+  .nav-badge {
+    margin-left: auto;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 10px;
+    padding: 1px 7px;
+    border-radius: 10px;
+    font-weight: 600;
+  }
+
+  .sidebar-divider { height: 1px; background: var(--border); margin: 8px 12px; }
+
+  .kb-list { flex: 1; overflow-y: auto; padding: 0 12px; }
+
+  .kb-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    color: var(--fg-subtle);
+    cursor: pointer;
+    transition: all var(--transition);
+    font-size: 13px;
+  }
+
+  .kb-item:hover { background: rgba(245,240,235,0.04); color: var(--fg-secondary); }
+  .kb-item.active { background: var(--accent-soft); color: var(--fg-primary); }
+
+  .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .dot-green { background: var(--green); }
+  .dot-yellow { background: var(--yellow); }
+  .dot-accent { background: var(--accent); }
+
+  .sidebar-user {
+    padding: 14px 20px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .avatar {
+    width: 28px; height: 28px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 600; color: var(--accent); flex-shrink: 0;
+  }
+
+  .user-name { font-size: 13px; font-weight: 500; color: var(--fg-primary); }
+  .user-role { font-size: 11px; color: var(--fg-muted); }
+
+  /* ── Main ── */
+  .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: var(--bg-raised); }
+
+  .topbar {
+    height: 50px;
+    background: var(--bg-raised);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 28px;
+    flex-shrink: 0;
+  }
+
+  .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--fg-subtle); }
+  .breadcrumb .current { color: var(--fg-primary); font-weight: 600; }
+
+  .topbar-actions { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 14px; border-radius: 7px; font-size: 13px; font-weight: 500;
+    cursor: pointer; transition: all var(--transition); border: none; font-family: inherit;
+  }
+
+  .btn-primary { background: var(--accent); color: var(--bg-base); }
+  .btn-primary:hover { background: var(--accent-hover); }
+  .btn-secondary { background: var(--bg-surface); color: var(--fg-secondary); border: 1px solid var(--border-strong); }
+  .btn-secondary:hover { background: var(--bg-hover); color: var(--fg-primary); }
+  .btn-ghost { background: none; color: var(--fg-subtle); padding: 6px 10px; }
+  .btn-ghost:hover { background: rgba(245,240,235,0.04); color: var(--fg-secondary); }
+
+  .content { flex: 1; overflow-y: auto; padding: 28px; }
+
+  /* ── KB Header ── */
+  .kb-header { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 24px; }
+
+  .kb-icon {
+    width: 44px; height: 44px;
+    background: var(--accent-soft); border: 1px solid var(--accent-border);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; flex-shrink: 0;
+  }
+
+  .kb-title { font-size: 21px; font-weight: 700; letter-spacing: -0.3px; color: var(--fg-primary); margin-bottom: 5px; }
+
+  .kb-meta { display: flex; align-items: center; gap: 14px; font-size: 13px; color: var(--fg-subtle); }
+
+  .status-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 9px; border-radius: 20px; font-size: 11px; font-weight: 500;
+  }
+
+  .st-active { background: var(--green-soft); color: var(--green); border: 1px solid var(--green-border); }
+  .st-processing { background: var(--yellow-soft); color: var(--yellow); border: 1px solid var(--yellow-border); }
+  .st-stale { background: var(--orange-soft); color: var(--orange); border: 1px solid var(--orange-border); }
+
+  /* ── Alert ── */
+  .alert {
+    display: flex; align-items: center; gap: 12px;
+    padding: 11px 16px; border-radius: var(--radius); margin-bottom: 20px;
+    font-size: 13px;
+    background: var(--orange-soft); border: 1px solid var(--orange-border); color: var(--orange);
+  }
+
+  .alert strong { color: var(--fg-primary); }
+  .alert-action { margin-left: auto; font-size: 12px; font-weight: 600; color: var(--accent); cursor: pointer; white-space: nowrap; }
+  .alert-action:hover { text-decoration: underline; }
+
+  /* ── Analytics ── */
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px; }
+
+  .stat-card {
+    background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-lg);
+    padding: 18px 20px; transition: all var(--transition);
+  }
+
+  .stat-card:hover { border-color: var(--border-strong); }
+
+  .stat-label { font-size: 11px; color: var(--fg-subtle); font-weight: 500; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 8px; }
+  .stat-value { font-size: 26px; font-weight: 700; letter-spacing: -0.5px; color: var(--fg-primary); margin-bottom: 4px; }
+  .stat-change { font-size: 12px; }
+  .stat-change.up { color: var(--green); }
+  .stat-change.down { color: var(--red); }
+
+  .stat-card.insight { position: relative; }
+  .stat-card.insight .stat-flag { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--orange); margin-bottom: 6px; }
+  .stat-card.insight .stat-value { color: var(--orange); }
+  .stat-card.insight .stat-desc { font-size: 12px; color: var(--fg-subtle); margin-bottom: 6px; }
+  .stat-card.insight .stat-action { font-size: 12px; color: var(--accent); cursor: pointer; font-weight: 500; }
+  .stat-card.insight .stat-action:hover { text-decoration: underline; }
+
+  /* ── Two Col ── */
+  .two-col { display: grid; grid-template-columns: 1fr 380px; gap: 18px; margin-bottom: 24px; }
+
+  /* ── Panel ── */
+  .panel { background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+  .panel-head { padding: 13px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .panel-title { font-size: 14px; font-weight: 600; color: var(--fg-primary); }
+  .panel-body { padding: 18px 20px; }
+
+  /* Upload */
+  .upload-zone {
+    border: 1.5px dashed var(--border-strong); border-radius: var(--radius);
+    padding: 28px; text-align: center; cursor: pointer; transition: all var(--transition); margin-bottom: 14px;
+  }
+  .upload-zone:hover { border-color: var(--accent); background: var(--accent-soft); }
+  .upload-zone .u-icon { font-size: 24px; margin-bottom: 6px; opacity: 0.35; }
+  .upload-zone .u-text { font-size: 14px; color: var(--fg-secondary); font-weight: 500; margin-bottom: 3px; }
+  .upload-zone .u-hint { font-size: 12px; color: var(--fg-muted); }
+
+  .dms-row { display: flex; gap: 10px; }
+
+  .dms-btn {
+    flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 9px; border: 1px solid var(--border-strong); border-radius: var(--radius);
+    background: var(--bg-hover); cursor: pointer; transition: all var(--transition);
+    font-size: 13px; color: var(--fg-secondary); font-weight: 500; font-family: inherit;
+  }
+  .dms-btn:hover { border-color: var(--accent-border); color: var(--accent); background: var(--accent-soft); }
+
+  /* Permissions */
+  .perm-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 9px 0; border-bottom: 1px solid var(--border);
+  }
+  .perm-row:last-child { border-bottom: none; }
+
+  .perm-left { display: flex; align-items: center; gap: 10px; }
+  .perm-icon { width: 26px; height: 26px; background: var(--bg-hover); border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 12px; }
+  .perm-name { font-size: 13px; font-weight: 500; color: var(--fg-primary); }
+  .perm-desc { font-size: 11px; color: var(--fg-muted); }
+
+  .perm-val { font-size: 11px; padding: 3px 9px; border-radius: 4px; font-weight: 500; background: var(--bg-hover); color: var(--fg-secondary); }
+  .perm-val.on { background: var(--green-soft); color: var(--green); border: 1px solid var(--green-border); }
+  .perm-val.set { background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent-border); }
+
+  /* ── Tabs ── */
+  .tabs {
+    display: flex; background: var(--bg-surface); padding: 0 20px;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    border: 1px solid var(--border); border-bottom: none;
+  }
+
+  .tab {
+    padding: 11px 14px; font-size: 13px; font-weight: 500; color: var(--fg-subtle);
+    cursor: pointer; border-bottom: 2px solid transparent; transition: all var(--transition); margin-bottom: -1px;
+  }
+  .tab:hover { color: var(--fg-secondary); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  .tab-count {
+    margin-left: 5px; background: var(--bg-hover); padding: 1px 6px; border-radius: 10px;
+    font-size: 11px; color: var(--fg-subtle); font-weight: 500;
+  }
+  .tab.active .tab-count { background: var(--accent-soft); color: var(--accent); }
+
+  /* ── Filter ── */
+  .filter-bar {
+    display: flex; align-items: center; gap: 10px;
+    padding: 11px 16px; background: var(--bg-surface);
+    border: 1px solid var(--border); border-top: none; border-bottom: 1px solid var(--border);
+  }
+
+  .search-input { flex: 1; border: none; outline: none; font-size: 13px; color: var(--fg-primary); font-family: inherit; background: none; }
+  .search-input::placeholder { color: var(--fg-muted); }
+
+  .filter-chip {
+    padding: 3px 10px; border: 1px solid var(--border-strong); border-radius: 6px;
+    font-size: 11px; color: var(--fg-subtle); cursor: pointer; transition: all var(--transition);
+    background: var(--bg-hover); font-family: inherit;
+  }
+  .filter-chip:hover { border-color: var(--accent-border); color: var(--accent); }
+
+  /* ── Table ── */
+  .table-wrap {
+    background: var(--bg-surface); border: 1px solid var(--border); border-top: none;
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg); overflow: hidden;
+  }
+
+  .tbl { width: 100%; border-collapse: collapse; }
+
+  .tbl thead th {
+    text-align: left; padding: 9px 16px; font-size: 10px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.5px; color: var(--fg-muted);
+    background: var(--bg-hover); border-bottom: 1px solid var(--border);
+  }
+
+  .tbl tbody tr { transition: background var(--transition); }
+  .tbl tbody tr:hover { background: var(--bg-hover); }
+
+  .tbl tbody td { padding: 11px 16px; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--fg-secondary); }
+
+  .doc-name { display: flex; align-items: center; gap: 10px; }
+
+  .doc-icon {
+    width: 30px; height: 30px; border-radius: 5px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px; font-weight: 700; letter-spacing: 0.3px; flex-shrink: 0;
+  }
+
+  .di-pdf { background: var(--red-soft); color: var(--red); border: 1px solid var(--red-border); }
+  .di-doc { background: var(--blue-soft); color: var(--blue); border: 1px solid var(--blue-border); }
+  .di-xls { background: var(--green-soft); color: var(--green); border: 1px solid var(--green-border); }
+
+  .doc-text { font-weight: 500; color: var(--fg-primary); font-size: 13px; }
+  .doc-sub { font-size: 11px; color: var(--fg-muted); margin-top: 1px; }
+
+  .tag { display: inline-block; padding: 2px 7px; border-radius: 4px; font-size: 10px; font-weight: 500; background: var(--bg-hover); color: var(--fg-secondary); border: 1px solid var(--border); }
+  .tag-bronze { background: var(--accent-soft); color: var(--accent); border-color: var(--accent-border); }
+  .tag-green { background: var(--green-soft); color: var(--green); border-color: var(--green-border); }
+
+  .row-actions { display: flex; gap: 4px; opacity: 0; transition: opacity var(--transition); }
+  .tbl tbody tr:hover .row-actions { opacity: 1; }
+
+  .row-btn {
+    width: 26px; height: 26px; border: none; background: none; border-radius: 4px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    color: var(--fg-subtle); font-size: 14px; transition: all var(--transition);
+  }
+  .row-btn:hover { background: var(--bg-active); color: var(--fg-primary); }
+
+  .checkbox { width: 15px; height: 15px; border: 1.5px solid var(--border-strong); border-radius: 3px; cursor: pointer; flex-shrink: 0; }
+
+  /* ── Queries & Gaps ── */
+  .q-table { width: 100%; border-collapse: collapse; }
+  .q-table thead th { text-align: left; padding: 9px 16px; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--fg-muted); border-bottom: 1px solid var(--border); }
+  .q-table tbody td { padding: 10px 16px; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--fg-secondary); }
+  .q-table tbody tr:hover { background: var(--bg-hover); }
+
+  .gap-item { display: flex; align-items: center; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--border); }
+  .gap-item:last-child { border-bottom: none; }
+  .gap-count { font-size: 15px; font-weight: 700; color: var(--accent); min-width: 32px; text-align: center; }
+  .gap-query { font-size: 13px; color: var(--fg-primary); font-weight: 500; }
+  .gap-sub { font-size: 11px; color: var(--fg-muted); margin-top: 1px; }
+  .gap-tag { font-size: 10px; padding: 2px 7px; border-radius: 4px; font-weight: 500; background: var(--yellow-soft); color: var(--yellow); border: 1px solid var(--yellow-border); white-space: nowrap; }
+
+  /* ── Pagination ── */
+  .pagination {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 16px; border-top: 1px solid var(--border);
+  }
+
+  .pg-info { font-size: 12px; color: var(--fg-muted); }
+  .pg-btns { display: flex; gap: 6px; }
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.14); }
+</style>
+</head>
+<body>
+
+<!-- ════════ Sidebar ════════ -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M3 3h3v8h12V3h3v18h-3v-7H6v7H3V3z" fill="#F5F0EB"/></svg></div>
+    <span class="logo-text">Harvey</span>
+    <span class="logo-badge">Admin</span>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">Platform</div>
+    <div class="nav-item active">
+      <span class="icon">📚</span> Knowledge Bases
+    </div>
+    <div class="nav-item">
+      <span class="icon">💬</span> Assistant
+    </div>
+    <div class="nav-item">
+      <span class="icon">📊</span> Analytics
+      <span class="nav-badge">New</span>
+    </div>
+    <div class="nav-item">
+      <span class="icon">👥</span> Users & Teams
+    </div>
+    <div class="nav-item">
+      <span class="icon">⚙️</span> Settings
+    </div>
+  </div>
+
+  <div class="sidebar-divider"></div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">Knowledge Bases</div>
+  </div>
+
+  <div class="kb-list">
+    <div class="kb-item active"><span class="dot dot-green"></span> Commercial Contracts</div>
+    <div class="kb-item"><span class="dot dot-green"></span> M&A Playbooks</div>
+    <div class="kb-item"><span class="dot dot-green"></span> IP & Patent Library</div>
+    <div class="kb-item"><span class="dot dot-yellow"></span> Real Estate Templates</div>
+    <div class="kb-item"><span class="dot dot-accent"></span> Employment Standards</div>
+    <div class="kb-item"><span class="dot dot-green"></span> Regulatory & Compliance</div>
+    <div class="kb-item"><span class="dot dot-green"></span> Litigation Precedents</div>
+  </div>
+
+  <div class="sidebar-user">
+    <div class="avatar">JC</div>
+    <div>
+      <div class="user-name">James Chen</div>
+      <div class="user-role">KM Director</div>
+    </div>
+  </div>
+</aside>
+
+<!-- ════════ Main ════════ -->
+<main class="main">
+  <div class="topbar">
+    <div class="breadcrumb">
+      Knowledge Bases <span style="opacity:0.3">›</span>
+      <span class="current">Commercial Contracts</span>
+    </div>
+    <div class="topbar-actions">
+      <button class="btn btn-ghost">Share</button>
+      <button class="btn btn-secondary">Export</button>
+      <button class="btn btn-primary">+ Upload Documents</button>
+    </div>
+  </div>
+
+  <div class="content">
+    <!-- KB Header -->
+    <div class="kb-header">
+      <div class="kb-icon">📑</div>
+      <div>
+        <div class="kb-title">Commercial Contracts</div>
+        <div class="kb-meta">
+          <span class="status-badge st-active">● Active</span>
+          <span>847 documents</span>
+          <span>Corporate Practice Group</span>
+          <span>Updated 2 hours ago</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Alert -->
+    <div class="alert">
+      <span>⚠</span>
+      <span><strong>3 documents</strong> haven't been updated in over 12 months and may contain outdated clauses.</span>
+      <span class="alert-action">Review now →</span>
+    </div>
+
+    <!-- Analytics -->
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-label">Queries (30d)</div>
+        <div class="stat-value">2,847</div>
+        <div class="stat-change up">↑ 18% vs. prior period</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Unique Users</div>
+        <div class="stat-value">124</div>
+        <div class="stat-change up">↑ 9% vs. prior period</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Retrieval Success</div>
+        <div class="stat-value">94.2%</div>
+        <div class="stat-change up">↑ 1.3pp vs. prior period</div>
+      </div>
+      <div class="stat-card insight">
+        <div class="stat-flag">Action needed</div>
+        <div class="stat-value">7</div>
+        <div class="stat-desc">content gaps — queries with no matching docs</div>
+        <span class="stat-action">View content gaps →</span>
+      </div>
+    </div>
+
+    <!-- Upload + Permissions -->
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-head">
+          <span class="panel-title">Upload Documents</span>
+          <span style="font-size:11px;color:var(--fg-muted);">PDF, DOCX, XLSX, TXT</span>
+        </div>
+        <div class="panel-body">
+          <div class="upload-zone">
+            <div class="u-icon">↑</div>
+            <div class="u-text">Drag & drop files, or click to browse</div>
+            <div class="u-hint">Up to 50 MB per file · 100 files at once</div>
+          </div>
+          <div class="dms-row">
+            <button class="dms-btn">Import from iManage</button>
+            <button class="dms-btn">Import from NetDocuments</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <span class="panel-title">Access & Permissions</span>
+          <button class="btn btn-ghost" style="font-size:12px;">Edit</button>
+        </div>
+        <div class="panel-body">
+          <div class="perm-row">
+            <div class="perm-left">
+              <span class="perm-icon">👥</span>
+              <div><div class="perm-name">Practice Group</div><div class="perm-desc">Primary access group</div></div>
+            </div>
+            <span class="perm-val on">Corporate</span>
+          </div>
+          <div class="perm-row">
+            <div class="perm-left">
+              <span class="perm-icon">🔒</span>
+              <div><div class="perm-name">Matter Restriction</div><div class="perm-desc">Limit by client matter</div></div>
+            </div>
+            <span class="perm-val">None applied</span>
+          </div>
+          <div class="perm-row">
+            <div class="perm-left">
+              <span class="perm-icon">🛡</span>
+              <div><div class="perm-name">Ethical Walls</div><div class="perm-desc">Conflict isolation rules</div></div>
+            </div>
+            <span class="perm-val set">2 configured</span>
+          </div>
+          <div class="perm-row">
+            <div class="perm-left">
+              <span class="perm-icon">🌐</span>
+              <div><div class="perm-name">Shared Access</div><div class="perm-desc">Additional groups with access</div></div>
+            </div>
+            <span class="perm-val on">Litigation, IP</span>
+          </div>
+          <div class="perm-row">
+            <div class="perm-left">
+              <span class="perm-icon">✏</span>
+              <div><div class="perm-name">Edit Access</div><div class="perm-desc">Who can modify this KB</div></div>
+            </div>
+            <span class="perm-val">KM Directors only</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Top Queries + Content Gaps -->
+    <div style="display:grid;grid-template-columns:1fr 380px;gap:18px;margin-bottom:24px;">
+      <div class="panel">
+        <div class="panel-head">
+          <span class="panel-title">Top Queries This Month</span>
+          <button class="btn btn-ghost" style="font-size:12px;">View all →</button>
+        </div>
+        <table class="q-table">
+          <thead>
+            <tr>
+              <th style="width:48%">Query</th>
+              <th>Frequency</th>
+              <th>Retrieval</th>
+              <th>User Rating</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="color:var(--fg-primary);font-weight:500;">Standard indemnification clause for SaaS vendors</td>
+              <td>142</td>
+              <td><span class="status-badge st-active">96.8%</span></td>
+              <td style="color:var(--green);">94% positive</td>
+            </tr>
+            <tr>
+              <td style="color:var(--fg-primary);font-weight:500;">IP assignment provisions in employment agreements</td>
+              <td>98</td>
+              <td><span class="status-badge st-active">95.1%</span></td>
+              <td style="color:var(--green);">91% positive</td>
+            </tr>
+            <tr>
+              <td style="color:var(--fg-primary);font-weight:500;">Limitation of liability cap language</td>
+              <td>87</td>
+              <td><span class="status-badge st-active">93.4%</span></td>
+              <td style="color:var(--green);">89% positive</td>
+            </tr>
+            <tr>
+              <td style="color:var(--fg-primary);font-weight:500;">Force majeure clause comparison across vendors</td>
+              <td>64</td>
+              <td><span class="status-badge st-processing">88.2%</span></td>
+              <td style="color:var(--yellow);">82% positive</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <span class="panel-title">Content Gaps</span>
+          <span style="font-size:11px;color:var(--fg-muted);">Unmet query demand</span>
+        </div>
+        <div class="panel-body">
+          <div class="gap-item">
+            <div class="gap-count">34</div>
+            <div style="flex:1"><div class="gap-query">AI vendor liability frameworks</div><div class="gap-sub">No matching templates</div></div>
+            <span class="gap-tag">High demand</span>
+          </div>
+          <div class="gap-item">
+            <div class="gap-count">21</div>
+            <div style="flex:1"><div class="gap-query">ESG disclosure requirements</div><div class="gap-sub">No matching templates</div></div>
+            <span class="gap-tag">High demand</span>
+          </div>
+          <div class="gap-item">
+            <div class="gap-count">18</div>
+            <div style="flex:1"><div class="gap-query">Crypto/digital asset custody</div><div class="gap-sub">No matching templates</div></div>
+            <span class="gap-tag">Medium</span>
+          </div>
+          <div class="gap-item">
+            <div class="gap-count">12</div>
+            <div style="flex:1"><div class="gap-query">Cross-border data transfer addendum</div><div class="gap-sub">1 outdated match</div></div>
+            <span class="gap-tag">Medium</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Document Table -->
+    <div class="tabs">
+      <div class="tab active">All Documents <span class="tab-count">847</span></div>
+      <div class="tab">Recently Added <span class="tab-count">23</span></div>
+      <div class="tab">Processing <span class="tab-count">4</span></div>
+      <div class="tab">Stale <span class="tab-count">3</span></div>
+      <div class="tab">Archived</div>
+    </div>
+
+    <div class="filter-bar">
+      <span style="color:var(--fg-muted);font-size:14px;">⌕</span>
+      <input class="search-input" placeholder="Search documents by name, type, or practice area..." />
+      <button class="filter-chip">Type ▾</button>
+      <button class="filter-chip">Practice Area ▾</button>
+      <button class="filter-chip">Status ▾</button>
+      <button class="filter-chip">Date ▾</button>
+    </div>
+
+    <div class="table-wrap">
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th style="width:28px;"><div class="checkbox"></div></th>
+            <th>Document</th>
+            <th>Type</th>
+            <th>Practice Area</th>
+            <th>Status</th>
+            <th>Last Updated</th>
+            <th style="width:60px;"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div class="checkbox"></div></td>
+            <td><div class="doc-name"><div class="doc-icon di-pdf">PDF</div><div><div class="doc-text">Master SaaS Vendor Agreement — Template v4.2</div><div class="doc-sub">Uploaded by J. Chen · 847 KB</div></div></div></td>
+            <td><span class="tag tag-bronze">Template</span></td>
+            <td>Commercial</td>
+            <td><span class="status-badge st-active">● Indexed</span></td>
+            <td>Mar 24, 2026</td>
+            <td><div class="row-actions"><button class="row-btn">⋮</button></div></td>
+          </tr>
+          <tr>
+            <td><div class="checkbox"></div></td>
+            <td><div class="doc-name"><div class="doc-icon di-doc">DOC</div><div><div class="doc-text">Indemnification Clause Library — 2026 Update</div><div class="doc-sub">Uploaded by M. Torres · 1.2 MB</div></div></div></td>
+            <td><span class="tag tag-green">Clause Lib</span></td>
+            <td>Commercial</td>
+            <td><span class="status-badge st-active">● Indexed</span></td>
+            <td>Mar 22, 2026</td>
+            <td><div class="row-actions"><button class="row-btn">⋮</button></div></td>
+          </tr>
+          <tr>
+            <td><div class="checkbox"></div></td>
+            <td><div class="doc-name"><div class="doc-icon di-pdf">PDF</div><div><div class="doc-text">Data Processing Agreement — Standard Terms</div><div class="doc-sub">Uploaded by J. Chen · 623 KB</div></div></div></td>
+            <td><span class="tag tag-bronze">Template</span></td>
+            <td>Privacy & Data</td>
+            <td><span class="status-badge st-processing">◌ Processing</span></td>
+            <td>Mar 24, 2026</td>
+            <td><div class="row-actions"><button class="row-btn">⋮</button></div></td>
+          </tr>
+          <tr>
+            <td><div class="checkbox"></div></td>
+            <td><div class="doc-name"><div class="doc-icon di-xls">XLS</div><div><div class="doc-text">Vendor Risk Assessment Matrix — Q1 2026</div><div class="doc-sub">Uploaded by S. Patel · 340 KB</div></div></div></td>
+            <td><span class="tag">Reference</span></td>
+            <td>Commercial</td>
+            <td><span class="status-badge st-active">● Indexed</span></td>
+            <td>Mar 18, 2026</td>
+            <td><div class="row-actions"><button class="row-btn">⋮</button></div></td>
+          </tr>
+          <tr>
+            <td><div class="checkbox"></div></td>
+            <td><div class="doc-name"><div class="doc-icon di-pdf">PDF</div><div><div class="doc-text">Non-Compete & Non-Solicitation Standards</div><div class="doc-sub">Uploaded by A. Williams · 510 KB</div></div></div></td>
+            <td><span class="tag tag-green">Clause Lib</span></td>
+            <td>Employment</td>
+            <td><span class="status-badge st-stale">● Stale</span></td>
+            <td>Feb 12, 2025</td>
+            <td><div class="row-actions"><button class="row-btn">⋮</button></div></td>
+          </tr>
+          <tr>
+            <td><div class="checkbox"></div></td>
+            <td><div class="doc-name"><div class="doc-icon di-doc">DOC</div><div><div class="doc-text">Software Licensing Playbook — Enterprise Deals</div><div class="doc-sub">Uploaded by J. Chen · 2.1 MB</div></div></div></td>
+            <td><span class="tag">Playbook</span></td>
+            <td>Technology</td>
+            <td><span class="status-badge st-active">● Indexed</span></td>
+            <td>Mar 15, 2026</td>
+            <td><div class="row-actions"><button class="row-btn">⋮</button></div></td>
+          </tr>
+          <tr>
+            <td><div class="checkbox"></div></td>
+            <td><div class="doc-name"><div class="doc-icon di-pdf">PDF</div><div><div class="doc-text">Professional Services Agreement — Consulting</div><div class="doc-sub">Uploaded by M. Torres · 780 KB</div></div></div></td>
+            <td><span class="tag tag-bronze">Template</span></td>
+            <td>Commercial</td>
+            <td><span class="status-badge st-active">● Indexed</span></td>
+            <td>Mar 10, 2026</td>
+            <td><div class="row-actions"><button class="row-btn">⋮</button></div></td>
+          </tr>
+          <tr>
+            <td><div class="checkbox"></div></td>
+            <td><div class="doc-name"><div class="doc-icon di-doc">DOC</div><div><div class="doc-text">Change of Control Provisions — Annotated Guide</div><div class="doc-sub">Uploaded by R. Kim · 920 KB</div></div></div></td>
+            <td><span class="tag tag-green">Clause Lib</span></td>
+            <td>M&A</td>
+            <td><span class="status-badge st-active">● Indexed</span></td>
+            <td>Mar 8, 2026</td>
+            <td><div class="row-actions"><button class="row-btn">⋮</button></div></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="pagination">
+        <span class="pg-info">Showing 1–8 of 847 documents</span>
+        <div class="pg-btns">
+          <button class="btn btn-secondary" style="padding:4px 10px;font-size:12px;opacity:0.4;" disabled>← Prev</button>
+          <button class="btn btn-secondary" style="padding:4px 10px;font-size:12px;">Next →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+</body>
+</html>

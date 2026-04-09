@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harvey — End User Flow</title>
+<style>
+  :root {
+    --bg-base: #111111;
+    --bg-raised: #1A1A1A;
+    --bg-surface: #222222;
+    --bg-hover: #2A2A2A;
+    --border: rgba(255,255,255,0.08);
+    --border-strong: rgba(255,255,255,0.14);
+    --fg-primary: #F5F0EB;
+    --fg-secondary: #A8A199;
+    --fg-subtle: #6B6560;
+    --fg-muted: #4A4540;
+    --accent: #C4956A;
+    --accent-soft: rgba(196,149,106,0.08);
+    --accent-border: rgba(196,149,106,0.22);
+    --blue: #4F8BF6;
+    --blue-soft: rgba(79,139,246,0.08);
+    --blue-border: rgba(79,139,246,0.20);
+    --purple: #8B5CF6;
+    --purple-soft: rgba(139,92,246,0.08);
+    --purple-border: rgba(139,92,246,0.20);
+    --amber: #F59E0B;
+    --amber-soft: rgba(245,158,11,0.08);
+    --amber-border: rgba(245,158,11,0.20);
+    --green: #10B981;
+    --green-soft: rgba(16,185,129,0.08);
+    --green-border: rgba(16,185,129,0.20);
+    --red: #EF4444;
+    --red-soft: rgba(239,68,68,0.08);
+    --red-border: rgba(239,68,68,0.20);
+    --radius: 8px;
+    --radius-lg: 12px;
+    --transition: 180ms ease;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg-base);
+    color: var(--fg-primary);
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page-header {
+    text-align: center;
+    padding: 48px 32px 12px;
+  }
+
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .logo-mark {
+    width: 32px; height: 32px;
+    background: var(--blue);
+    border-radius: 7px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 16px; color: #fff;
+  }
+
+  .logo-text {
+    font-size: 18px; font-weight: 600;
+    letter-spacing: 0.5px; color: var(--fg-primary);
+  }
+
+  .page-header h1 {
+    font-size: 28px; font-weight: 700;
+    letter-spacing: -0.5px; color: var(--fg-primary);
+    margin-bottom: 6px;
+  }
+
+  .page-header .subtitle {
+    font-size: 14px; color: var(--fg-subtle);
+    max-width: 620px; margin: 0 auto; line-height: 1.6;
+  }
+
+  /* Legend */
+  .legend {
+    display: flex; justify-content: center; gap: 24px;
+    padding: 16px 32px 8px; flex-wrap: wrap;
+  }
+
+  .legend-item {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 12px; color: var(--fg-secondary);
+  }
+
+  .legend-shape {
+    width: 20px; height: 14px; border-radius: 3px;
+    border: 1.5px solid;
+  }
+
+  .legend-diamond {
+    width: 14px; height: 14px;
+    transform: rotate(45deg);
+    border: 1.5px solid;
+    border-radius: 2px;
+  }
+
+  .legend-line {
+    width: 24px; height: 0;
+    border-top: 2px solid;
+  }
+
+  .legend-line-dashed {
+    width: 24px; height: 0;
+    border-top: 2px dashed;
+  }
+
+  /* Flow canvas */
+  .flow-canvas {
+    padding: 20px 32px 48px;
+    overflow-x: auto;
+    display: flex;
+    justify-content: center;
+  }
+
+  /* Tooltip */
+  .tooltip {
+    position: fixed;
+    background: #2A2A2A;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 12px;
+    color: var(--fg-primary);
+    max-width: 300px;
+    line-height: 1.5;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 150ms ease;
+    z-index: 1000;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  }
+
+  .tooltip.visible { opacity: 1; }
+  .tooltip-title { font-weight: 600; margin-bottom: 4px; font-size: 13px; }
+  .tooltip-body { color: var(--fg-secondary); }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="logo">
+    <div class="logo-mark">H</div>
+    <div class="logo-text">HARVEY</div>
+  </div>
+  <h1>End User Flow — Knowledge Bases</h1>
+  <p class="subtitle">Complete end-user journey: querying KBs via AI Assistant, browsing and discovering content, using results in drafting, providing feedback, and nominating knowledge</p>
+</div>
+
+<div class="legend">
+  <div class="legend-item">
+    <div class="legend-shape" style="background:var(--blue-soft);border-color:var(--blue);"></div>
+    User Action
+  </div>
+  <div class="legend-item">
+    <div class="legend-shape" style="background:var(--purple-soft);border-color:var(--purple);"></div>
+    AI / System Step
+  </div>
+  <div class="legend-item">
+    <div class="legend-diamond" style="background:var(--amber-soft);border-color:var(--amber);"></div>
+    Decision Point
+  </div>
+  <div class="legend-item">
+    <div class="legend-shape" style="background:var(--green-soft);border-color:var(--green);"></div>
+    Output / Success
+  </div>
+  <div class="legend-item">
+    <div class="legend-shape" style="background:var(--red-soft);border-color:var(--red);"></div>
+    Error / Fail-Closed
+  </div>
+  <div class="legend-item">
+    <div class="legend-shape" style="background:var(--accent-soft);border-color:var(--accent);"></div>
+    Admin Touchpoint
+  </div>
+  <div class="legend-item">
+    <div class="legend-line" style="border-color:var(--fg-subtle);"></div>
+    Primary Flow
+  </div>
+  <div class="legend-item">
+    <div class="legend-line-dashed" style="border-color:var(--blue);"></div>
+    Cross-Flow Connection
+  </div>
+</div>
+
+<div class="flow-canvas">
+<svg width="1680" height="2600" viewBox="0 0 1680 2600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,3.5 L0,7 Z" fill="#6B6560"/>
+    </marker>
+    <marker id="arrow-blue" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,3.5 L0,7 Z" fill="#4F8BF6"/>
+    </marker>
+    <marker id="arrow-purple" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,3.5 L0,7 Z" fill="#8B5CF6"/>
+    </marker>
+    <marker id="arrow-amber" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,3.5 L0,7 Z" fill="#F59E0B"/>
+    </marker>
+    <marker id="arrow-green" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,3.5 L0,7 Z" fill="#10B981"/>
+    </marker>
+    <marker id="arrow-red" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,3.5 L0,7 Z" fill="#EF4444"/>
+    </marker>
+    <marker id="arrow-accent" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,3.5 L0,7 Z" fill="#C4956A"/>
+    </marker>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- U2: BROWSE & DISCOVER KBs                          -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <g id="section-u2">
+    <rect x="40" y="20" width="240" height="28" rx="14" fill="var(--blue-soft)" stroke="var(--blue-border)" stroke-width="1"/>
+    <text x="56" y="39" font-size="11" font-weight="600" fill="var(--blue)" letter-spacing="0.6" font-family="Inter, system-ui, sans-serif">U2 — BROWSE &amp; DISCOVER KBs</text>
+
+    <g class="node" data-tooltip="User navigates to the Knowledge Base directory from the main Harvey interface." data-title="KB Directory">
+      <rect x="56" y="68" width="140" height="44" rx="8" fill="var(--bg-raised)" stroke="rgba(79,139,246,0.4)" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="126" y="86" text-anchor="middle" font-size="11" font-weight="600" fill="var(--fg-primary)" font-family="Inter, system-ui, sans-serif">KB Directory</text>
+      <text x="126" y="101" text-anchor="middle" font-size="10" fill="var(--fg-subtle)" font-family="Inter, system-ui, sans-serif">Browse all KBs</text>
+    </g>
+
+    <path d="M196,90 L228,90" stroke="#6B6560" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+    <g class="node" data-tooltip="Filter KBs by practice area: M&A, Litigation, Tax, Real Estate, etc." data-title="Browse by Practice Area">
+      <rect x="236" y="68" width="140" height="44" rx="8" fill="var(--bg-raised)" stroke="rgba(79,139,246,0.4)" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="306" y="86" text-anchor="middle" font-size="11" font-weight="600" fill="var(--fg-primary)" font-family="Inter, system-ui, sans-serif">Practice Areas</text>
+      <text x="306" y="101" text-anchor="middle" font-size="10" fill="var(--fg-subtle)" font-family="Inter, system-ui, sans-serif">Filter by specialty</text>
+    </g>
+
+    <path d="M376,90 L408,90" stroke="#6B6560" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+    <g class="node" data-tooltip="Search KBs by name, description, or content keywords. Filter by recency, document count, or relevance." data-title="Search & Filter">
+      <rect x="416" y="68" width="130" height="44" rx="8" fill="var(--bg-raised)" stroke="rgba(79,139,246,0.4)" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="481" y="86" text-anchor="middle" font-size="11" font-weight="600" fill="var(--fg-primary)" font-family="Inter, system-ui, sans-serif">Search &amp; Filter</text>
+      <text x="481" y="101" text-anchor="middle" font-size="10" fill="var(--fg-subtle)" font-family="Inter, system-ui, sans-serif">Find specific KBs</text>
+    </g>
+
+    <path d="M546,90 L578,90" stroke="#6B6560" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+    <g class="node" data-tooltip="View KB cards showing name, description, document count, last updated date, and practice area tag." data-title="KB Cards">
+      <rect x="586" y="68" width="140" height="44" rx="8" fill="var(--bg-raised)" stroke="rgba(79,139,246,0.4)" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="656" y="86" text-anchor="middle" font-size="11" font-weight="600" fill="var(--fg-primary)" font-family="Inter, system-ui, sans-serif">View KB Cards</text>
+      <text x="656" y="101" text-anchor="middle" font-size="10" fill="var(--fg-subtle)" font-family="Inter, system-ui, sans-serif">Name, count, updated</text>
+    </g>
+
+    <path d="M726,90 L758,90" stroke="#6B6560" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+    <g class="node" data-tooltip="Subscribe to a KB to get notifications about new content and updates." data-title="Follow / Subscribe">
+      <rect x="766" y="68" width="130" height="44" rx="8" fill="var(--bg-raised)" stroke="rgba(79,139,246,0.4)" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="831" y="86" text-anchor="middle" font-size="11" font-weight="600" fill="var(--fg-primary)" font-family="Inter, system-ui, sans-serif">Follow / Subscribe</text>
+      <text x="831" y="101" text-anchor="middle" font-size="10" fill="var(--fg-subtle)" font-family="Inter, system-ui, sans-serif">Get updates</text>
+    </g>
+
+    <g class="node" data-tooltip="AI recommends KBs based on user's practice area, recent activity, and colleague usage patterns." data-title="AI Recommendations">
+      <rect x="916" y="68" width="160" height="44" rx="8" fill="var(--purple-soft)" stroke="var(--purple)" stroke-width="1.2" filter="url(#shadow)"/>
+      <text x="996" y="86" text-anchor="middle" font-size="11" font-weight="600" fill="var(--purple)" font-family="Inter, system-ui, sans-serif">AI Recommendations</text>
+      <text x="996" y="101" text-anchor="middle" font-size="10" fill="rgba(139,92,246,0.7)" font-family="Inter, system-ui, sans-serif">Based on your activity</text>
+    </g>
+
+    <!-- Connection: U2 → U1 -->
+    <path d="M656,112 L656,150 L420,150 L420,195" stroke="var(--blue)" stroke-width="2" fill="none" marker-end="url(#arrow-blue)"/>
+    <text x="540" y="146" text-anchor="middle" font-size="10" font-weight="600" fill="var(--blue)" font-family="Inter, system-ui, sans-serif">Select KB → Query (U1)</text>
+  </g>
+
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- U1: QUERY A KB VIA ASSISTANT (CORE FLOW)           -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <g id="section-u1">
+    <!-- Highlighted section background -->
+    <rect x="30" y="175" width="1620" height="1020" rx="14" fill="rgba(79,139,246,0.02)" stroke="rgba(79,139,246,0.08)" stroke-width="1"/>
+
+    <rect x="40" y="200" width="400" height="28" rx="14" fill="var(--blue-soft)" stroke="var(--blue-border)" stroke-width="1.5"/>
+    <text x="56" y="219" font-size="11" font-weight="700" fill="var(--blue)" letter-spacing="0.6" font-family="Inter, system-ui, sans-serif">U1 — QUERY A KB VIA ASSISTANT (CORE FLOW)</text>
+
+    <!-- Start: Open Assistant -->
+    <g class="node" data-tooltip="User opens the Harvey AI Assistant from the main interface or directly from a KB page." data-title="Open Assistant">
+      <circle cx="80" cy="280" r="24" fill="var(--bg-raised)" stroke="var(--blue)" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="80" y="276" text-anchor="middle" font-size="9" font-weight="600" fill="var(--blue)" font-family="Inter, system-ui, sans-serif">OPEN</text>
+      <text x="80" y="288" text-anchor="middle" font-size="9" font-weight="600" fill="var(--blue)" font-family="Inter, system-ui, sans-serif">ASST</text>
+    </g>
+
+    <path d="M104,280 L148,280" stroke="#6B6560" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+    <!-- Natural Language Query -->
+    <g class="node" data-tooltip="User types a natural language question. Examples: 'What are the standard indemnification caps in our recent M&A deals?' or 'Find precedent for force majeure clauses in supply chain agreements.'" data-title="Natural Language Query">
+      <rect x="156" y="256" width="170" height="48" rx="8" fill="var(--bg-raised)" stroke="rgba(79,139,246,0.5)" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="241" y="276" text-anchor="middle" font-size="11" font-weight="600" fill="var(--fg-primary)" font-family="Inter, system-ui, sans-serif">Natural Language Query</text>
+      <text x="241" y="292" text-anchor="middle" font-size="10" fill="var(--fg-subtle)" font-family="Inter, system-ui, sans-serif">"What are the standard..."</text>
+    </g>
+
+    <path d="M326,280 L366,280" stroke="#6B6560" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+    <!-- AI RETRIEVAL PIPELINE (visual centerpiece) -->
+    <rect x="374" y="195" width="860" height="200" rx="12" fill="rgba(139,92,246,0.03)" stroke="rgba(139,92,246,0.12)" stroke-width="1.5"/>
+    <text x="394" y="222" font-size="11" font-weight="700" fill="var(--purple)" letter-spacing="0.8" font-family="Inter, system-ui, sans-serif">AI RETRIEVAL &amp; GENERATION PIPELINE</text>
+
+    <!-- Pipeline step 1: Query Understanding -->
+    <g class="node" data-tooltip="AI analyzes the user's query: intent classification, entity extraction, query expansion. Determines what the user is really asking for." data-title="Query Understanding">
+      <rect x="394" y="240" width="110" height="50" rx="6" fill="var(--purple-soft)" stroke="var(--purple)" stroke-width="1.2"/>
+      <text x="449" y="260" text-anchor="middle" font-size="10" font-weight="600" fill="var(--purple)" font-family="Inter, system-ui, sans-serif">Query</text>
+      <text x="449" y="274" text-anchor="middle" font-size="10" font-weight="600" fill="var(--purple)" font-family="Inter, system-ui, sans-serif">Understanding</text>
+    </g>
+
+    <path d="M504,265 L518,265" stroke="#8B5CF6" stroke-width="1.2" fill="none" marker-end="url(#arrow-purple)"/>
+
+    <!-- Pipeline step 2: KB Selection -->
+    <g class="node" data-tooltip="Select the relevant KB(s). Can be auto-detected from query context or manually specified by user. Multi-KB queries supported." data-title="KB Selection">
+      <rect x="526" y="240" width="100" height="50" rx="6" fill="var(--purple-soft)" stroke="var(--purple)" stroke-width="1.2"/>
+      <text x="576" y="260" text-anchor="middle" font-size="10" font-weight="600" fill="var(--purple)" font-family="Inter, system-ui, sans-serif">KB</text>
+      <text x="576" y="274" text-anchor="middle" font-size="10" font-weight="600" fill="var(--purple)" font-family="Inter, system-ui, sans-serif">Selection</text>
+    </g>
+
+    <path d="M626,265 L640,265" stroke="#8B5CF6" stroke-width="1.2" fill="none" marker-end="url(#arrow-purple)"/>
+
+    <!-- Pipeline step 3: Hybrid Retrieval -->
+    <g class="node" data-tooltip="Hybrid retrieval combining semantic search (vector similarity) and keyword search (BM25). Returns candidate document chunks ranked by relevance." data-title="Hybrid Retrieval">
+      <rect x="648" y="240" width="110" height="50" rx="6" fill="var(--purple-soft)" stroke="var(--purple)" stroke-width="1.2"/>
+      <text x="703" y="256" text-anchor="middle" font-size="10" font-weight="600" fill="var(--purple)" font-family="Inter, system-ui, sans-serif">Retrieval</text>
+      <text x="703" y="270" text-anchor="middle" font-size="9" fill="rgba(139,92,246,0.7)" font-family="Inter, system-ui, sans-serif">Semantic +</text>
+      <text x="703" y="282" text-anchor="middle" font-size="9" fill="rgba(139,92,246,0.7)" font-family="Inter, system-ui, sans-serif">Keyword hybrid</text>
+    </g>
+
+    <path d="M758,265 L772,265" stroke="#8B5CF6" stroke-width="1.2" fill="none" marker-end="url(#arrow-purple)"/>
+
+    <!-- Pipeline step 4: Re-Ranking -->
+    <g class="node" data-tooltip="Cross-encoder re-ranking model scores each candidate chunk against the query for precision. Reorders results by true relevance." data-title="Re-Ranking">
+      <rect x="780" y="240" width="90" height="50" rx="6" fill="var(--purple-soft)" stroke="var(--purple)" stroke-width="1.2"/>
+      <text x="825" y="260" text-anchor="middle" font-size="10" font-weight="600" fill="var(--purple)" font-family="Inter, system-ui, sans-serif">Re-Rank</text>
+      <text x="825" y="274" text-anchor="middle" font-size="9" fill="rgba(139,92,246,0.7)" font-family="Inter, system-ui, sans-serif">Cross-encoder</text>
+    </g>
+
+    <path d="M870,265 L884,265" stroke="#8B5CF6" stroke-width="1.2" fill="none" marker-end="url(#arrow-purple)"/>
+
+    <!-- Pipeline step 5: Permission Filter -->
+    <g class="node" data-tooltip="CRITICAL: Filter results against user's permissions and ethical walls. FAIL-CLOSED — if permission status is uncertain, document is excluded. No data leakage." data-title="Permission Filter (FAIL-CLOSED)">
+      <rect x="892" y="240" width="110" height="50" rx="6" fill="var(--red-soft)" stroke="var(--red)" stroke-width="1.5"/>
+      <text x="947" y="256" text-anchor="middle" font-size="10" font-weight="700" fill="var(--red)" font-family="Inter, system-ui, sans-serif">Permission</text>
+      <text x="947" y="270" text-anchor="middle" font-size="10" font-weight="700" fill="var(--red)" font-family="Inter, system-ui, sans-serif">Filter</text>
+      <text x="947" y="284" text-anchor="middle" font-size="8" font-weight="600" fill="rgba(239,68,68,0.7)" font-family="Inter, system-ui, sans-serif">FAIL-CLOSED</text>
+    </g>
+
+    <path d="M1002,265 L1016,265" stroke="#8B5CF6" stroke-width="1.2" fill="none" marker-end="url(#arrow-purple)"/>
+
+    <!-- Pipeline step 6: Context Assembly -->
+    <g class="node" data-tooltip="Assemble the context window: selected chunks, metadata, source references. Optimized for token limits while preserving critical context." data-title="Context Assembly">
+      <rect x="1024" y="240" width="100" height="50" rx="6" fill="var(--purple-soft)" stroke="var(--purple)" stroke-width="1.2"/>
+      <text x="1074" y="260" text-anchor="middle" font-size="10" font-weight="600" fill="var(--purple)" font-family="Inter, system-ui, sans-serif">Context</text>
+      <text x="1074" y="274" text-anchor="middle" font-size="10" font-weight="600" fill="var(--purple)" font-family="Inter, system-ui, sans-serif">Assembly</text>
+    </g>
+
+    <path d="M1124,265 L1138,265" stroke="#8B5CF6" stroke-width="1.2" fill="none" marker-end="url(#arrow-purple)"/>
+
+    <!-- Pipeline step 7: LLM Generation -->
+    <g class="node" data-tooltip="LLM generates a synthesized response grounded in the retrieved context. Prompted to cite sources and acknowledge uncertainty." data-title="LLM Generation">
+      <rect x="1146" y="240" width="100" height="50" rx="6" fill="var(--purple-soft)" stroke="var(--purple)" stroke-width="1.5"/>
+      <text x="1196" y="260" text-anchor="middle" font-size="10" font-weight="700" fill="var(--purple)" font-family="Inter, system-ui, sans-serif">LLM</text>
+      <text x="1196" y="274" text-anchor="middle" font-size="10" font-weight="700" fill="var(--purple)" font-family="Inter, system-ui, sans-serif">Generation</text>
+    </g>
+
+    <!-- Pipeline verification steps (below) -->
+    <path d="M1196,290 L1196,310" stroke="#8B5CF6" stroke-width="1.2" fill="none" marker-end="url(#arrow-purple)"/>
+
+    <g class="node" data-tooltip="Verify all citations in the generated response: confirm each cited passage exists in the source documents and supports the claim made." data-title="Citation Verification">
+      <rect x="1036" y="318" width="130" height="40" rx="6" fill="var(--purple-soft)" stroke="var(--purple)" stroke-width="1.2"/>
+      <text x="1101" y="334" text-anchor="middle" font-size="10" font-weight="600" fill="var(--purple)" font-family="Inter, system-ui, sans-serif">Citation Verification</text>
+      <text x="1101" y="348" text-anchor="middle" font-size="9" fill="rgba(139,92,246,0.7)" font-family="Inter, system-ui, sans-serif">Confirm source accuracy</text>
+    </g>
+
+    <path d="M1196,310 L1196,320 L1166,320 L1166,318" stroke="#8B5CF6" stroke-width="1.2" fill="none"/>
+    <path d="M1036,338 L1012,338" stroke="#8B5CF6" stroke-width="1.2" fill="none" marker-end="url(#arrow-purple)"/>
+
+    <g class="node" data-tooltip="Second-pass check: does the synthesized answer accurately represent the source material? Flag potential hallucinations or overstatements." data-title="Synthesis Accuracy Check">
+      <rect x="874" y="318" width="130" height="40" rx="6" fill="var(--purple-soft)" stroke="var(--purple)" stroke-width="1.2"/>
+      <text x="939" y="334" text-anchor="middle" font-size="10" font-weight="600" fill="var(--purple)" font-family="Inter, system-ui, sans-serif">Accuracy Check</text>
+      <text x="939" y="348" text-anchor="middle" font-size="9" fill="rgba(139,92,246,0.7)" font-family="Inter, system-ui, sans-serif">Anti-hallucination gate</text>
+    </g>
+
+    <!-- Admin A4 connection to Permission Filter -->
+    <path d="M947,240 L947,215 L1300,215 L1300,195" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="6,4" fill="none" marker-end="url(#arrow-accent)"/>
+    <text x="1160" y="210" text-anchor="middle" font-size="9" fill="var(--accent)" font-family="Inter, system-ui, sans-serif">Enforces Admin A4 permissions &amp; ethical walls</text>
+
+    <!-- Exit pipeline -->
+    <path d="M874,338 L810,338 L810,400 L460,400" stroke="#6B6560" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+    <!-- Decision: Sources Found? -->
+    <g class="node" data-tooltip="System checks if the retrieval pipeline returned relevant source documents. If none found, an honest empty state is shown instead of fabricating an answer." data-title="Sources Found?">
+      <rect x="360" y="432" width="72" height="72" rx="4" fill="var(--amber-soft)" stroke="var(--amber)" stroke-width="1.5" transform="rotate(45,396,468)" filter="url(#shadow)"/>
+      <text x="396" y="464" text-anchor="middle" font-size="10" font-weight="700" fill="var(--amber)" font-family="Inter, system-ui, sans-serif">Sources</text>
+      <text x="396" y="476" text-anchor="middle" font-size="10" font-weight="700" fill="var(--amber)" font-family="Inter, system-ui, sans-serif">Found?</text>
+    </g>
+
+    <path d="M396,400 L396,432" stroke="#6B6560" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+    <!-- No: Empty state -->
+    <path d="M360,468 L260,468" stroke="#EF4444" stroke-width="1.5" fill="none" marker-end="url(#arrow-red)"/>
+    <text x="310" y="460" text-anchor="middle" font-size="10" font-weight="600" fill="var(--red)" font-family="Inter, system-ui, sans-serif">No</text>
+
+    <g class="node" data-tooltip="Honest empty state: 'No relevant precedent found in the selected Knowledge Bases.' Suggests broadening the search or trying different KBs. Never fabricates." data-title="No Relevant Precedent">
+      <rect x="80" y="448" width="172" height="44" rx="8" fill="var(--red-soft)" stroke="var(--red)" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="166" y="466" text-anchor="middle" font-size="11" font-weight="600" fill="var(--red)" font-family="Inter, system-ui, sans-serif">No Precedent Found</text>
+      <text x="166" y="481" text-anchor="middle" font-size="10" fill="rgba(239,68,68,0.7)" font-family="Inter, system-ui, sans-serif">Honest empty state</text>
+    </g>
+
+    <!-- Yes: Confidence check -->
+    <path d="M432,468 L520,468" stroke="#F59E0B" stroke-width="1.5" fill="none" marker-end="url(#arrow-amber)"/>
+    <text x="470" y="460" text-anchor="middle" font-size="10" font-weight="600" fill="var(--amber)" font-family="Inter, system-ui, sans-serif">Yes</text>
+
+    <!-- Decision: Confidence Level -->
+    <g class="node" data-tooltip="Assess confidence based on number and quality of matching sources. High (3+): strong signal. Medium (1-2): proceed with standard indicators. Low (<2 quality): show warning." data-title="Confidence Level?">
+      <rect x="524" y="432" width="72" height="72" rx="4" fill="var(--amber-soft)" stroke="var(--amber)" stroke-width="1.5" transform="rotate(45,560,468)" filter="url(#shadow)"/>
+      <text x="560" y="462" text-anchor="middle" font-size="9" font-weight="700" fill="var(--amber)" font-family="Inter, system-ui, sans-serif">Confi-</text>
+      <text x="560" y="474" text-anchor="middle" font-size="9" font-weight="700" fill="var(--amber)" font-family="Inter, system-ui, sans-serif">dence?</text>
+    </g>
+
+    <!-- High confidence -->
+    <path d="M596,468 L660,468 L660,430" stroke="#10B981" stroke-width="1.5" fill="none" marker-end="url(#arrow-green)"/>
+    <text x="628" y="460" font-size="9" font-weight="600" fill="var(--green)" font-family="Inter, system-ui, sans-serif">High</text>
+
+    <g class="node" data-tooltip="3+ quality source matches. Strong confidence indicator shown. Response is well-grounded with multiple supporting documents." data-title="High Confidence (3+ sources)">
+      <rect x="620" y="396" width="110" height="30" rx="6" fill="var(--green-soft)" stroke="var(--green)" stroke-width="1.2"/>
+      <text x="675" y="415" text-anchor="middle" font-size="10" font-weight="600" fill="var(--green)" font-family="Inter, system-ui, sans-serif">High (3+ sources)</text>
+    </g>
+
+    <!-- Medium confidence -->
+    <path d="M560,504 L560,530" stroke="#F59E0B" stroke-width="1.5" fill="none" marker-end="url(#arrow-amber)"/>
+    <text x="572" y="522" font-size="9" font-weight="600" fill="var(--amber)" font-family="Inter, system-ui, sans-serif">Med</text>
+
+    <g class="node" data-tooltip="1-2 quality source matches. Standard confidence indicator. Response is grounded but with limited corroboration." data-title="Medium Confidence (1-2 sources)">
+      <rect x="490" y="536" width="140" height="30" rx="6" fill="var(--amber-soft)" stroke="var(--amber)" stroke-width="1.2"/>
+      <text x="560" y="555" text-anchor="middle" font-size="10" font-weight="600" fill="var(--amber)" font-family="Inter, system-ui, sans-serif">Medium (1-2 sources)</text>
+    </g>
+
+    <!-- Low confidence -->
+    <path d="M524,468 L480,510 L480,548" stroke="#EF4444" stroke-width="1.5" fill="none" marker-end="url(#arrow-red)"/>
+    <text x="470" y="518" font-size="9" font-weight="600" fill="var(--red)" font-family="Inter, system-ui, sans-serif">Low</text>
+
+    <g class="node" data-tooltip="Fewer than 2 quality matches. Warning indicator and disclaimer shown. User advised to verify independently." data-title="Low Confidence (<2 quality)">
+      <rect x="380" y="554" width="90" height="30" rx="6" fill="var(--red-soft)" stroke="var(--red)" stroke-width="1.2"/>
+      <text x="425" y="573" text-anchor="middle" font-size="10" font-weight="600" fill="var(--red)" font-family="Inter, system-ui, sans-serif">Low + Warning</text>
+    </g>
+
+    <!-- All confidence paths converge -->
+    <path d="M675,426 L675,440 L780,440 L780,600" stroke="#6B6560" stroke-width="1.5" fill="none"/>
+    <path d="M560,566 L560,584 L780,584 L780,600" stroke="#6B6560" stroke-width="1.5" fill="none"/>
+    <path d="M425,584 L425,598 L780,598 L780,600" stroke="#6B6560" stroke-width="1.5" fill="none"/>
+
+    <!-- Decision: Sources Conflict? -->
+    <g class="node" data-tooltip="Check if retrieved sources contain conflicting positions or conclusions. If so, present both sides rather than silently choosing one." data-title="Sources Conflict?">
+      <rect x="744" y="604" width="72" height="72" rx="4" fill="var(--amber-soft)" stroke="var(--amber)" stroke-width="1.5" transform="rotate(45,780,640)" filter="url(#shadow)"/>
+      <text x="780" y="636" text-anchor="middle" font-size="10" font-weight="700" fill="var(--amber)" font-family="Inter, system-ui, sans-serif">Sources</text>
+      <text x="780" y="648" text-anchor="middle" font-size="10" font-weight="700" fill="var(--amber)" font-family="Inter, system-ui, sans-serif">Conflict?</text>
+    </g>
+
+    <!-- Yes: Present both -->
+    <path d="M816,640 L900,640" stroke="#F59E0B" stroke-width="1.5" fill="none" marker-end="url(#arrow-amber)"/>
+    <text x="856" y="632" text-anchor="middle" font-size="10" font-weight="600" fill="var(--amber)" font-family="Inter, system-ui, sans-serif">Yes</text>
+
+    <g class="node" data-tooltip="When sources conflict, present both positions clearly with their respective sources. Let the user decide which applies to their situation." data-title="Present Both Positions">
+      <rect x="908" y="618" width="160" height="44" rx="8" fill="var(--amber-soft)" stroke="var(--amber)" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="988" y="636" text-anchor="middle" font-size="11" font-weight="600" fill="var(--amber)" font-family="Inter, system-ui, sans-serif">Present Both Sides</text>
+      <text x="988" y="651" text-anchor="middle" font-size="10" fill="rgba(245,158,11,0.7)" font-family="Inter, system-ui, sans-serif">Let user decide</text>
+    </g>
+
+    <!-- No: Synthesize -->
+    <path d="M780,676 L780,700" stroke="#F59E0B" stroke-width="1.5" fill="none" marker-end="url(#arrow-amber)"/>
+    <text x="795" y="694" font-size="10" font-weight="600" fill="var(--amber)" font-family="Inter, system-ui, sans-serif">No</text>
+
+    <g class="node" data-tooltip="Synthesize a coherent answer from aligned sources. Combine insights into a clear, actionable response." data-title="Synthesize">
+      <rect x="710" y="708" width="140" height="36" rx="8" fill="var(--purple-soft)" stroke="var(--purple)" stroke-width="1.2"/>
+      <text x="780" y="731" text-anchor="middle" font-size="11" font-weight="600" fill="var(--purple)" font-family="Inter, system-ui, sans-serif">Synthesize Answer</text>
+    </g>
+
+    <!-- Converge both paths -->
+    <path d="M988,662 L988,750 L860,750" stroke="#6B6560" stroke-width="1.5" fill="none"/>
+    <path d="M780,744 L780,750 L860,750" stroke="#6B6560" stroke-width="1.5" fill="none"/>
+    <path d="M860,750 L860,780" stroke="#6B6560" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+    <!-- OUTPUT: Response -->
+    <g class="node" data-tooltip="Final output: synthesized answer with inline citations, expandable source panel showing original document excerpts, confidence indicator, and action buttons." data-title="Response Output">
+      <rect x="700" y="788" width="320" height="70" rx="10" fill="var(--green-soft)" stroke="var(--green)" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="860" y="810" text-anchor="middle" font-size="13" font-weight="700" fill="var(--green)" font-family="Inter, system-ui, sans-serif">Synthesized Response</text>
+      <text x="860" y="828" text-anchor="middle" font-size="10" fill="rgba(16,185,129,0.8)" font-family="Inter, system-ui, sans-serif">Inline citations + Source panel + Confidence indicator</text>
+      <text x="860" y="846" text-anchor="middle" font-size="10" fill="rgba(16,185,129,0.6)" font-family="Inter, system-ui, sans-serif">Actions: Use in Draft | Feedback | Nominate | Follow-up</text>
+    </g>
+
+    <!-- Follow-up query loop -->
+    <path d="M700,823 L640,823 L640,310 L370,310 L370,280 L326,280" stroke="var(--blue)" stroke-width="1.5" stroke-dasharray="6,4" fill="none" marker-end="url(#arrow-blue)"/>
+    <rect x="490" y="298" width="150" height="20" rx="4" fill="var(--bg-base)"/>
+    <text x="565" y="312" text-anchor="middle" font-size="10" font-weight="500" fill="var(--blue)" font-family="Inter, system-ui, sans-serif">Follow-up query (context kept)</text>
+
+    <!-- Branching connections from response to U3, U4, U5 -->
+
+    <!-- Action arrows from response -->
+    <path d="M780,858 L780,910 L300,910 L300,960" stroke="var(--blue)" stroke-width="2" fill="none" marker-end="url(#arrow-blue)"/>
+    <text x="540" y="904" text-anchor="middle" font-size="10" font-weight="600" fill="var(--blue)" font-family="Inter, system-ui, sans-serif">Use in Draft → U3</text>
+
+    <path d="M860,858 L860,910 L860,960" stroke="var(--blue)" stroke-width="2" fill="none" marker-end="url(#arrow-blue)"/>
+    <text x="880" y="940" font-size="10" font-weight="600" fill="var(--blue)" font-family="Inter, system-ui, sans-serif">Feedback → U4</text>
+
+    <path d="M940,858 L940,910 L1360,910 L1360,960" stroke="var(--blue)" stroke-width="2" fill="none" marker-end="url(#arrow-blue)"/>
+    <text x="1150" y="904" text-anchor="middle" font-size="10" font-weight="600" fill="var(--blue)" font-family="Inter, system-ui, sans-serif">Nominate → U5</text>
+  </g>
+
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- U3: USE IN DRAFTING                                -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <g id="section-u3">
+    <rect x="40" y="980" width="200" height="28" rx="14" fill="var(--blue-soft)" stroke="var(--blue-border)" stroke-width="1"/>
+    <text x="56" y="999" font-size="11" font-weight="600" fill="var(--blue)" letter-spacing="0.6" font-family="Inter, system-ui, sans-serif">U3 — USE IN DRAFTING</text>
+
+    <g class="node" data-tooltip="User clicks 'Use in Draft' on a query response or specific cited source. Opens the draft editor with the source loaded as reference." data-title="Use in Draft">
+      <rect x="56" y="1028" width="140" height="44" rx="8" fill="var(--bg-raised)" stroke="rgba(79,139,246,0.4)" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="126" y="1046" text-anchor="middle" font-size="11" font-weight="600" fill="var(--fg-primary)" font-family="Inter, system-ui, sans-serif">"Use in Draft"</text>
+      <text x="126" y="1061" text-anchor="middle" font-size="10" fill="var(--fg-subtle)" font-family="Inter, system-ui, sans-serif">From U1 result</text>
+    </g>
+
+    <path d="M196,1050 L228,1050" stroke="#6B6560" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+    <g class="node" data-tooltip="Draft editor opens with the cited source as a reference panel. User can view the original document alongside their work." data-title="Draft Editor">
+      <rect x="236" y="1028" width="140" height="44" rx="8" fill="var(--bg-raised)" stroke="rgba(79,139,246,0.4)" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="306" y="1046" text-anchor="middle" font-size="11" font-weight="600" fill="var(--fg-primary)" font-family="Inter, system-ui, sans-serif">Draft Editor</text>
+      <text x="306" y="1061" text-anchor="middle" font-size="10" fill="var(--fg-subtle)" font-family="Inter, system-ui, sans-serif">Source as reference</text>
+    </g>
+
+    <path d="M376,1050 L408,1050" stroke="#6B6560" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+    <g class="node" data-tooltip="Adapt standard clauses from the source to the current matter. AI assists with modifications while preserving legal intent." data-title="Adapt Clauses">
+      <rect x="416" y="1028" width="130" height="44" rx="8" fill="var(--purple-soft)" stroke="var(--purple)" stroke-width="1.2" filter="url(#shadow)"/>
+      <text x="481" y="1046" text-anchor="middle" font-size="11" font-weight="600" fill="var(--purple)" font-family="Inter, system-ui, sans-serif">Adapt Clauses</text>
+      <text x="481" y="1061" text-anchor="middle" font-size="10" fill="rgba(139,92,246,0.7)" font-family="Inter, system-ui, sans-serif">AI-assisted edits</text>
+    </g>
+
+    <path d="M546,1050 L578,1050" stroke="#6B6560" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+    <g class="node" data-tooltip="Compare the adapted clause against the original with redline markup. Clearly shows all changes." data-title="Redline Comparison">
+      <rect x="586" y="1028" width="140" height="44" rx="8" fill="var(--bg-raised)" stroke="rgba(79,139,246,0.4)" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="656" y="1046" text-anchor="middle" font-size="11" font-weight="600" fill="var(--fg-primary)" font-family="Inter, system-ui, sans-serif">Redline Compare</text>
+      <text x="656" y="1061" text-anchor="middle" font-size="10" fill="var(--fg-subtle)" font-family="Inter, system-ui, sans-serif">Original vs adapted</text>
+    </g>
+
+    <path d="M726,1050 L758,1050" stroke="#6B6560" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+    <g class="node" data-tooltip="Every clause in the draft maintains a link to its source document. Full provenance chain for compliance and audit." data-title="Provenance Tracking">
+      <rect x="766" y="1028" width="150" height="44" rx="8" fill="var(--green-soft)" stroke="var(--green)" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="841" y="1046" text-anchor="middle" font-size="11" font-weight="600" fill="var(--green)" font-family="Inter, system-ui, sans-serif">Provenance Tracked</text>
+      <text x="841" y="1061" text-anchor="middle" font-size="10" fill="rgba(16,185,129,0.7)" font-family="Inter, system-ui, sans-serif">Full source chain</text>
+    </g>
+  </g>
+
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- U4: PROVIDE FEEDBACK                               -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <g id="section-u4">
+    <rect x="700" y="980" width="200" height="28" rx="14" fill="var(--blue-soft)" stroke="var(--blue-border)" stroke-width="1"/>
+    <text x="716" y="999" font-size="11" font-weight="600" fill="var(--blue)" letter-spacing="0.6" font-family="Inter, system-ui, sans-serif">U4 — PROVIDE FEEDBACK</text>
+
+    <g class="node" data-tooltip="Quick reaction: thumbs up if the response was helpful, thumbs down if not. Low-friction signal for retrieval quality." data-title="Thumbs Up / Down">
+      <rect x="716" y="1028" width="130" height="44" rx="8" fill="var(--bg-raised)" stroke="rgba(79,139,246,0.4)" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="781" y="1046" text-anchor="middle" font-size="11" font-weight="600" fill="var(--fg-primary)" font-family="Inter, system-ui, sans-serif">Thumbs Up/Down</text>
+      <text x="781" y="1061" text-anchor="middle" font-size="10" fill="var(--fg-subtle)" font-family="Inter, system-ui, sans-serif">Quick reaction</text>
+    </g>
+
+    <path d="M846,1050 L878,1050" stroke="#6B6560" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+    <g class="node" data-tooltip="Detailed issue flagging: wrong citation, outdated information, missing context, or misleading conclusion. Structured categories help admins triage." data-title="Flag Issue">
+      <rect x="886" y="1028" width="140" height="44" rx="8" fill="var(--bg-raised)" stroke="rgba(79,139,246,0.4)" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="956" y="1046" text-anchor="middle" font-size="11" font-weight="600" fill="var(--fg-primary)" font-family="Inter, system-ui, sans-serif">"Flag Issue"</text>
+      <text x="956" y="1061" text-anchor="middle" font-size="10" fill="var(--fg-subtle)" font-family="Inter, system-ui, sans-serif">Wrong / Outdated / Missing</text>
+    </g>
+
+    <path d="M1026,1050 L1058,1050" stroke="#6B6560" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+    <g class="node" data-tooltip="Optional free-text comment to provide additional context about the issue. Helps admins understand the problem." data-title="Optional Comment">
+      <rect x="1066" y="1028" width="130" height="44" rx="8" fill="var(--bg-raised)" stroke="rgba(79,139,246,0.4)" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="1131" y="1046" text-anchor="middle" font-size="11" font-weight="600" fill="var(--fg-primary)" font-family="Inter, system-ui, sans-serif">Add Comment</text>
+      <text x="1131" y="1061" text-anchor="middle" font-size="10" fill="var(--fg-subtle)" font-family="Inter, system-ui, sans-serif">Optional context</text>
+    </g>
+
+    <!-- Routes to Admin A6 -->
+    <path d="M956,1072 L956,1120" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="6,4" fill="none" marker-end="url(#arrow-accent)"/>
+
+    <g class="node" data-tooltip="Feedback flows to the admin's A6 Analytics Dashboard. Aggregated for quality monitoring and used to improve retrieval ranking." data-title="Routes to Admin Dashboard">
+      <rect x="876" y="1128" width="160" height="44" rx="8" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="956" y="1146" text-anchor="middle" font-size="11" font-weight="600" fill="var(--accent)" font-family="Inter, system-ui, sans-serif">Admin A6 Dashboard</text>
+      <text x="956" y="1161" text-anchor="middle" font-size="10" fill="rgba(196,149,106,0.7)" font-family="Inter, system-ui, sans-serif">Quality monitoring</text>
+    </g>
+
+    <!-- Feeds into ranking -->
+    <path d="M1036,1150 L1120,1150" stroke="var(--purple)" stroke-width="1.5" stroke-dasharray="6,4" fill="none" marker-end="url(#arrow-purple)"/>
+
+    <g class="node" data-tooltip="Aggregated feedback signals feed back into the retrieval ranking model, improving future result quality." data-title="Ranking Improvements">
+      <rect x="1128" y="1128" width="160" height="44" rx="8" fill="var(--purple-soft)" stroke="var(--purple)" stroke-width="1.2" filter="url(#shadow)"/>
+      <text x="1208" y="1146" text-anchor="middle" font-size="11" font-weight="600" fill="var(--purple)" font-family="Inter, system-ui, sans-serif">Ranking Improved</text>
+      <text x="1208" y="1161" text-anchor="middle" font-size="10" fill="rgba(139,92,246,0.7)" font-family="Inter, system-ui, sans-serif">Better future retrieval</text>
+    </g>
+  </g>
+
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- U5: KNOWLEDGE NOMINATION                           -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <g id="section-u5">
+    <rect x="1200" y="980" width="240" height="28" rx="14" fill="var(--blue-soft)" stroke="var(--blue-border)" stroke-width="1"/>
+    <text x="1216" y="999" font-size="11" font-weight="600" fill="var(--blue)" letter-spacing="0.6" font-family="Inter, system-ui, sans-serif">U5 — KNOWLEDGE NOMINATION</text>
+
+    <g class="node" data-tooltip="User discovers a valuable document during their work and wants to add it to a KB for others to benefit from." data-title="Find Valuable Document">
+      <rect x="1216" y="1028" width="160" height="44" rx="8" fill="var(--bg-raised)" stroke="rgba(79,139,246,0.4)" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="1296" y="1046" text-anchor="middle" font-size="11" font-weight="600" fill="var(--fg-primary)" font-family="Inter, system-ui, sans-serif">Find Valuable Doc</text>
+      <text x="1296" y="1061" text-anchor="middle" font-size="10" fill="var(--fg-subtle)" font-family="Inter, system-ui, sans-serif">During work</text>
+    </g>
+
+    <path d="M1376,1050 L1408,1050" stroke="#6B6560" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+    <g class="node" data-tooltip="Click 'Nominate for KB' to begin the submission process. User selects which KB the document should be added to." data-title="Nominate for KB">
+      <rect x="1416" y="1028" width="150" height="44" rx="8" fill="var(--bg-raised)" stroke="rgba(79,139,246,0.4)" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="1491" y="1046" text-anchor="middle" font-size="11" font-weight="600" fill="var(--fg-primary)" font-family="Inter, system-ui, sans-serif">"Nominate for KB"</text>
+      <text x="1491" y="1061" text-anchor="middle" font-size="10" fill="var(--fg-subtle)" font-family="Inter, system-ui, sans-serif">Select target KB</text>
+    </g>
+
+    <path d="M1491,1072 L1491,1100" stroke="#6B6560" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+    <g class="node" data-tooltip="Add context explaining why this document is valuable: what it covers, when it's relevant, and any caveats." data-title="Add Context">
+      <rect x="1416" y="1108" width="150" height="44" rx="8" fill="var(--bg-raised)" stroke="rgba(79,139,246,0.4)" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="1491" y="1126" text-anchor="middle" font-size="11" font-weight="600" fill="var(--fg-primary)" font-family="Inter, system-ui, sans-serif">Add Context</text>
+      <text x="1491" y="1141" text-anchor="middle" font-size="10" fill="var(--fg-subtle)" font-family="Inter, system-ui, sans-serif">Why it's valuable</text>
+    </g>
+
+    <path d="M1491,1152 L1491,1180" stroke="#6B6560" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+    <g class="node" data-tooltip="Nomination submitted. Enters the admin's A2 approval queue for review." data-title="Submit Nomination">
+      <rect x="1416" y="1188" width="150" height="44" rx="8" fill="var(--green-soft)" stroke="var(--green)" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="1491" y="1206" text-anchor="middle" font-size="11" font-weight="600" fill="var(--green)" font-family="Inter, system-ui, sans-serif">Submitted</text>
+      <text x="1491" y="1221" text-anchor="middle" font-size="10" fill="rgba(16,185,129,0.7)" font-family="Inter, system-ui, sans-serif">In admin queue</text>
+    </g>
+
+    <!-- Routes to Admin A2 -->
+    <path d="M1416,1210 L1340,1210 L1340,1280" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="6,4" fill="none" marker-end="url(#arrow-accent)"/>
+
+    <g class="node" data-tooltip="Nomination enters the admin's upload and approval queue (A2). Admin reviews, approves, or rejects." data-title="Admin A2 Approval Queue">
+      <rect x="1260" y="1288" width="160" height="44" rx="8" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="1340" y="1306" text-anchor="middle" font-size="11" font-weight="600" fill="var(--accent)" font-family="Inter, system-ui, sans-serif">Admin A2 Queue</text>
+      <text x="1340" y="1321" text-anchor="middle" font-size="10" fill="rgba(196,149,106,0.7)" font-family="Inter, system-ui, sans-serif">Approve / Reject</text>
+    </g>
+
+    <!-- Notification back -->
+    <path d="M1340,1332 L1340,1370" stroke="#6B6560" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+    <g class="node" data-tooltip="User receives a notification when the admin approves or rejects their nomination, with optional reason." data-title="User Notified">
+      <rect x="1260" y="1378" width="160" height="44" rx="8" fill="var(--bg-raised)" stroke="rgba(79,139,246,0.4)" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="1340" y="1396" text-anchor="middle" font-size="11" font-weight="600" fill="var(--fg-primary)" font-family="Inter, system-ui, sans-serif">User Notified</text>
+      <text x="1340" y="1411" text-anchor="middle" font-size="10" fill="var(--fg-subtle)" font-family="Inter, system-ui, sans-serif">Approved / Rejected</text>
+    </g>
+  </g>
+
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- CROSS-FLOW RELATIONSHIPS SUMMARY                   -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <g id="cross-flow-summary">
+    <rect x="56" y="1480" width="1560" height="150" rx="10" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+    <text x="76" y="1508" font-size="13" font-weight="700" fill="var(--fg-primary)" font-family="Inter, system-ui, sans-serif">Cross-Flow Relationships</text>
+
+    <text x="76" y="1532" font-size="11" font-weight="600" fill="var(--blue)" font-family="Inter, system-ui, sans-serif">WITHIN USER FLOWS</text>
+    <g>
+      <circle cx="90" cy="1552" r="4" fill="var(--blue)"/>
+      <text x="104" y="1556" font-size="11" fill="var(--fg-secondary)" font-family="Inter, system-ui, sans-serif">U2 → U1: Browse and discover leads into querying a selected KB</text>
+    </g>
+    <g>
+      <circle cx="90" cy="1577" r="4" fill="var(--blue)"/>
+      <text x="104" y="1581" font-size="11" fill="var(--fg-secondary)" font-family="Inter, system-ui, sans-serif">U1 → U3: Query results can be used directly in drafting workflow</text>
+    </g>
+    <g>
+      <circle cx="90" cy="1602" r="4" fill="var(--blue)"/>
+      <text x="104" y="1606" font-size="11" fill="var(--fg-secondary)" font-family="Inter, system-ui, sans-serif">U1 → U4/U5: Query results trigger feedback and nomination flows</text>
+    </g>
+
+    <text x="700" y="1532" font-size="11" font-weight="600" fill="var(--accent)" font-family="Inter, system-ui, sans-serif">ADMIN CONNECTIONS</text>
+    <g>
+      <circle cx="714" cy="1552" r="4" fill="var(--accent)"/>
+      <text x="728" y="1556" font-size="11" fill="var(--fg-secondary)" font-family="Inter, system-ui, sans-serif">U4 feedback → Admin A6 dashboard for quality monitoring</text>
+    </g>
+    <g>
+      <circle cx="714" cy="1577" r="4" fill="var(--accent)"/>
+      <text x="728" y="1581" font-size="11" fill="var(--fg-secondary)" font-family="Inter, system-ui, sans-serif">U5 nominations → Admin A2 upload and approval queue</text>
+    </g>
+    <g>
+      <circle cx="714" cy="1602" r="4" fill="var(--accent)"/>
+      <text x="728" y="1606" font-size="11" fill="var(--fg-secondary)" font-family="Inter, system-ui, sans-serif">Admin A4 permissions → enforced in U1 query pipeline (fail-closed)</text>
+    </g>
+
+    <text x="1200" y="1532" font-size="11" font-weight="600" fill="var(--purple)" font-family="Inter, system-ui, sans-serif">SYSTEM LOOPS</text>
+    <g>
+      <circle cx="1214" cy="1552" r="4" fill="var(--purple)"/>
+      <text x="1228" y="1556" font-size="11" fill="var(--fg-secondary)" font-family="Inter, system-ui, sans-serif">U1 follow-up queries maintain conversation context</text>
+    </g>
+    <g>
+      <circle cx="1214" cy="1577" r="4" fill="var(--purple)"/>
+      <text x="1228" y="1581" font-size="11" fill="var(--fg-secondary)" font-family="Inter, system-ui, sans-serif">U4 feedback improves retrieval ranking over time</text>
+    </g>
+    <g>
+      <circle cx="1214" cy="1602" r="4" fill="var(--purple)"/>
+      <text x="1228" y="1606" font-size="11" fill="var(--fg-secondary)" font-family="Inter, system-ui, sans-serif">U5 nominations create a crowdsourced content pipeline</text>
+    </g>
+  </g>
+
+</svg>
+</div>
+
+<div id="tooltip" class="tooltip">
+  <div class="tooltip-title"></div>
+  <div class="tooltip-body"></div>
+</div>
+
+<script>
+  const tooltip = document.getElementById('tooltip');
+  const tooltipTitle = tooltip.querySelector('.tooltip-title');
+  const tooltipBody = tooltip.querySelector('.tooltip-body');
+
+  document.querySelectorAll('.node').forEach(node => {
+    node.style.cursor = 'pointer';
+
+    node.addEventListener('mouseenter', (e) => {
+      const title = node.dataset.title;
+      const text = node.dataset.tooltip;
+      if (!title && !text) return;
+
+      tooltipTitle.textContent = title || '';
+      tooltipBody.textContent = text || '';
+      tooltip.classList.add('visible');
+
+      const rect = node.querySelector('rect') || node.querySelector('circle');
+      if (rect) {
+        rect.style.filter = 'brightness(1.2) drop-shadow(0 0 8px rgba(79,139,246,0.3))';
+      }
+    });
+
+    node.addEventListener('mousemove', (e) => {
+      const x = e.clientX + 16;
+      const y = e.clientY - 8;
+      const tipRect = tooltip.getBoundingClientRect();
+
+      tooltip.style.left = (x + tipRect.width > window.innerWidth)
+        ? (e.clientX - tipRect.width - 16) + 'px'
+        : x + 'px';
+      tooltip.style.top = (y + tipRect.height > window.innerHeight)
+        ? (e.clientY - tipRect.height - 8) + 'px'
+        : y + 'px';
+    });
+
+    node.addEventListener('mouseleave', () => {
+      tooltip.classList.remove('visible');
+      const rect = node.querySelector('rect') || node.querySelector('circle');
+      if (rect) {
+        rect.style.filter = '';
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

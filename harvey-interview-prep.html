@@ -1,0 +1,1873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harvey Onsite — Interview Prep</title>
+<style>
+  :root {
+    --bg-base: #0E0E0E;
+    --bg-raised: #1A1A1A;
+    --bg-surface: #222222;
+    --bg-hover: #2A2A2A;
+    --border: rgba(255,255,255,0.08);
+    --border-strong: rgba(255,255,255,0.14);
+    --fg-primary: #F5F0EB;
+    --fg-secondary: #C8C0B5;
+    --fg-tertiary: #A8A199;
+    --fg-subtle: #6B6560;
+    --fg-muted: #4A4540;
+    --accent: #C4956A;
+    --accent-soft: rgba(196, 149, 106, 0.10);
+    --accent-strong: rgba(196, 149, 106, 0.18);
+    --accent-border: rgba(196, 149, 106, 0.30);
+    --accent-hover: #D4A57A;
+    --green: #5CB88F;
+    --green-soft: rgba(92, 184, 143, 0.12);
+    --green-border: rgba(92, 184, 143, 0.25);
+    --blue: #6E8ED4;
+    --blue-soft: rgba(110, 142, 212, 0.12);
+    --blue-border: rgba(110, 142, 212, 0.25);
+    --purple: #9B7BC4;
+    --purple-soft: rgba(155, 123, 196, 0.12);
+    --purple-border: rgba(155, 123, 196, 0.25);
+    --yellow: #D4A04A;
+    --yellow-soft: rgba(212, 160, 74, 0.12);
+    --yellow-border: rgba(212, 160, 74, 0.25);
+    --red: #D46A6A;
+    --red-soft: rgba(212, 106, 106, 0.12);
+    --red-border: rgba(212, 106, 106, 0.25);
+    --radius: 8px;
+    --radius-lg: 12px;
+    --shadow: 0 4px 20px rgba(0,0,0,0.4);
+    --transition: 200ms ease;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg-base);
+    color: var(--fg-primary);
+    font-size: 14px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    display: flex;
+    min-height: 100vh;
+  }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    width: 290px;
+    background: var(--bg-base);
+    border-right: 1px solid var(--border);
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    overflow-y: auto;
+    flex-shrink: 0;
+    padding: 24px 0 80px;
+  }
+
+  .sidebar-header {
+    padding: 0 24px 20px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 8px;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .logo-mark { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; }
+  .logo-text {
+    font-size: 18px;
+    font-weight: 600;
+    font-family: 'Georgia', 'Times New Roman', serif;
+    letter-spacing: 0.3px;
+  }
+
+  .sidebar-subtitle {
+    font-size: 11px;
+    color: var(--fg-subtle);
+    font-weight: 500;
+    line-height: 1.5;
+  }
+
+  .nav-section { padding: 6px 0; }
+
+  .nav-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--fg-muted);
+    font-weight: 700;
+    padding: 12px 24px 6px;
+  }
+
+  .nav-item {
+    display: block;
+    padding: 7px 24px;
+    color: var(--fg-tertiary);
+    text-decoration: none;
+    font-size: 13px;
+    transition: all var(--transition);
+    border-left: 2px solid transparent;
+    line-height: 1.45;
+  }
+
+  .nav-item:hover { background: var(--accent-soft); color: var(--fg-primary); }
+  .nav-item.active {
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-left-color: var(--accent);
+    font-weight: 500;
+  }
+
+  /* ── Main content ── */
+  .main {
+    margin-left: 290px;
+    flex: 1;
+    padding: 56px 72px 120px;
+    max-width: 1000px;
+  }
+
+  .page-header {
+    margin-bottom: 56px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .page-title {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--fg-primary);
+    font-family: 'Georgia', 'Times New Roman', serif;
+    margin-bottom: 10px;
+    letter-spacing: -0.5px;
+    line-height: 1.15;
+  }
+
+  .page-subtitle {
+    color: var(--fg-tertiary);
+    font-size: 15px;
+    margin-bottom: 16px;
+    line-height: 1.6;
+  }
+
+  .page-meta {
+    color: var(--fg-subtle);
+    font-size: 13px;
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .meta-divider { color: var(--fg-muted); }
+
+  /* ── Sections ── */
+  section {
+    margin-bottom: 72px;
+    scroll-margin-top: 32px;
+  }
+
+  h1.section-title {
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--fg-primary);
+    margin-bottom: 8px;
+    font-family: 'Georgia', 'Times New Roman', serif;
+    letter-spacing: -0.3px;
+  }
+
+  .section-intro {
+    color: var(--fg-tertiary);
+    font-size: 14px;
+    margin-bottom: 32px;
+    line-height: 1.75;
+    max-width: 760px;
+  }
+
+  h2.subsection-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--fg-primary);
+    margin-top: 36px;
+    margin-bottom: 16px;
+    font-family: 'Georgia', serif;
+  }
+
+  h2.subsection-title:first-child { margin-top: 0; }
+
+  /* ── Story cards ── */
+  .story-card {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px 28px;
+    margin-bottom: 18px;
+    transition: all var(--transition);
+  }
+
+  .story-card:hover { border-color: var(--border-strong); }
+
+  .story-hook {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 16px;
+    font-family: 'Georgia', serif;
+    font-style: italic;
+    line-height: 1.45;
+  }
+
+  .story-row {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 10px;
+    align-items: flex-start;
+  }
+
+  .story-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--fg-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    width: 78px;
+    flex-shrink: 0;
+    padding-top: 3px;
+  }
+
+  .story-text {
+    color: var(--fg-secondary);
+    font-size: 13.5px;
+    line-height: 1.65;
+    flex: 1;
+  }
+
+  .story-text strong { color: var(--fg-primary); font-weight: 600; }
+
+  .story-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+  }
+
+  .story-tag {
+    font-size: 10px;
+    padding: 3px 9px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 4px;
+    color: var(--fg-tertiary);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+
+  /* ── QA cards ── */
+  .qa-card {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    margin-bottom: 14px;
+    overflow: hidden;
+    transition: all var(--transition);
+  }
+
+  .qa-card:hover { border-color: var(--border-strong); }
+
+  .qa-question {
+    padding: 18px 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    user-select: none;
+    transition: background var(--transition);
+  }
+
+  .qa-question:hover { background: var(--bg-surface); }
+
+  .qa-num {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    font-family: 'Georgia', serif;
+    border: 1px solid var(--accent-border);
+  }
+
+  .qa-q-text {
+    flex: 1;
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--fg-primary);
+    line-height: 1.5;
+    padding-top: 5px;
+  }
+
+  .qa-toggle {
+    flex-shrink: 0;
+    color: var(--fg-muted);
+    transition: transform var(--transition);
+    margin-top: 8px;
+    font-size: 11px;
+  }
+
+  .qa-card.open .qa-toggle { transform: rotate(180deg); }
+
+  .qa-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 500ms ease;
+  }
+
+  .qa-card.open .qa-answer { max-height: 4000px; }
+
+  .qa-answer-inner {
+    padding: 4px 28px 26px 70px;
+    color: var(--fg-secondary);
+    line-height: 1.78;
+    font-size: 14px;
+  }
+
+  .qa-answer-inner p { margin-bottom: 14px; }
+  .qa-answer-inner p:last-child { margin-bottom: 0; }
+  .qa-answer-inner ul, .qa-answer-inner ol { margin: 12px 0; padding-left: 22px; }
+  .qa-answer-inner li { margin-bottom: 8px; color: var(--fg-secondary); }
+  .qa-answer-inner strong { color: var(--fg-primary); font-weight: 600; }
+  .qa-answer-inner em { color: var(--accent); font-style: italic; }
+
+  .closing-thought {
+    margin-top: 16px;
+    padding: 12px 16px;
+    background: var(--accent-soft);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 6px 6px 0;
+    font-size: 13.5px;
+    color: var(--fg-primary);
+    font-style: italic;
+    line-height: 1.65;
+  }
+
+  .closing-thought strong {
+    font-style: normal;
+    color: var(--accent);
+    text-transform: uppercase;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* ── Round cards ── */
+  .round-card {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    margin-bottom: 24px;
+  }
+
+  .round-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 18px;
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .round-icon {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    background: var(--accent-soft);
+    border: 1px solid var(--accent-border);
+    border-radius: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+  }
+
+  .round-title-block { flex: 1; }
+
+  .round-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--fg-primary);
+    margin-bottom: 5px;
+    font-family: 'Georgia', serif;
+  }
+
+  .round-meta {
+    font-size: 12px;
+    color: var(--fg-subtle);
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .round-duration {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-strong);
+    padding: 3px 11px;
+    border-radius: 4px;
+    font-weight: 600;
+    color: var(--fg-tertiary);
+    font-size: 11px;
+  }
+
+  .round-content h3 {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 28px;
+    margin-bottom: 14px;
+  }
+
+  .round-content h3:first-child { margin-top: 0; }
+
+  .round-content p {
+    color: var(--fg-secondary);
+    margin-bottom: 14px;
+    line-height: 1.75;
+  }
+
+  .round-content ul {
+    margin-left: 22px;
+    margin-bottom: 16px;
+  }
+
+  .round-content li {
+    color: var(--fg-secondary);
+    margin-bottom: 10px;
+    line-height: 1.7;
+  }
+
+  .round-content strong { color: var(--fg-primary); }
+  .round-content em { color: var(--accent); font-style: italic; }
+
+  /* ── Talking points box ── */
+  .talking-points {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-strong);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 18px 22px;
+    margin-top: 20px;
+  }
+
+  .tp-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .talking-points ol, .talking-points ul {
+    margin: 0;
+    padding-left: 22px;
+  }
+
+  .talking-points li {
+    color: var(--fg-secondary);
+    margin-bottom: 7px;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  /* ── Golden answer block ── */
+  .golden-answer {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin: 14px 0 22px;
+  }
+
+  .golden-label {
+    font-size: 10px;
+    color: var(--accent);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .golden-answer p {
+    color: var(--fg-secondary);
+    margin-bottom: 12px;
+    line-height: 1.78;
+    font-size: 13.5px;
+  }
+
+  .golden-answer p:last-child { margin-bottom: 0; }
+
+  .golden-answer strong { color: var(--fg-primary); }
+  .golden-answer em { color: var(--accent); font-style: italic; }
+
+  /* ── Question block ── */
+  .question-block {
+    margin-bottom: 28px;
+  }
+
+  .question-text {
+    font-size: 15px;
+    color: var(--fg-primary);
+    font-weight: 600;
+    margin-bottom: 6px;
+    line-height: 1.5;
+  }
+
+  .question-prompt {
+    font-size: 12px;
+    color: var(--fg-subtle);
+    font-style: italic;
+    margin-bottom: 10px;
+  }
+
+  /* ── Values grid ── */
+  .values-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin-top: 24px;
+  }
+
+  .value-card {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px;
+    transition: all var(--transition);
+  }
+
+  .value-card:hover {
+    border-color: var(--accent-border);
+    background: var(--accent-soft);
+  }
+
+  .value-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 10px;
+    font-family: 'Georgia', serif;
+  }
+
+  .value-desc {
+    font-size: 12.5px;
+    color: var(--fg-tertiary);
+    line-height: 1.65;
+  }
+
+  /* ── Quote box ── */
+  .quote {
+    background: var(--accent-soft);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 18px 22px;
+    margin: 18px 0;
+    color: var(--fg-secondary);
+    font-size: 13.5px;
+    line-height: 1.75;
+  }
+
+  .quote::before {
+    content: '"';
+    font-family: 'Georgia', serif;
+    font-size: 32px;
+    color: var(--accent);
+    line-height: 0;
+    vertical-align: -10px;
+    margin-right: 4px;
+  }
+
+  /* ── Story coverage table ── */
+  .coverage-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 24px 0;
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .coverage-table th, .coverage-table td {
+    text-align: left;
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+
+  .coverage-table th {
+    background: var(--bg-surface);
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+  }
+
+  .coverage-table td { color: var(--fg-secondary); }
+  .coverage-table tr:last-child td { border-bottom: none; }
+  .coverage-table tr:hover td { background: var(--bg-surface); }
+
+  /* ── Tag ── */
+  .tag {
+    display: inline-block;
+    padding: 3px 10px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--fg-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-right: 6px;
+  }
+
+  .tag.behavioral { color: var(--blue); border-color: var(--blue-border); background: var(--blue-soft); }
+  .tag.case { color: var(--purple); border-color: var(--purple-border); background: var(--purple-soft); }
+  .tag.deepdive { color: var(--accent); border-color: var(--accent-border); background: var(--accent-soft); }
+  .tag.critical { color: var(--red); border-color: var(--red-border); background: var(--red-soft); }
+
+  /* ── Expand all button ── */
+  .expand-all {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-strong);
+    color: var(--fg-tertiary);
+    padding: 7px 16px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all var(--transition);
+    margin-bottom: 22px;
+  }
+
+  .expand-all:hover {
+    border-color: var(--accent-border);
+    color: var(--accent);
+    background: var(--accent-soft);
+  }
+
+  /* ── Day-of card ── */
+  .day-of-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-top: 24px;
+  }
+
+  .day-of-card {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px 24px;
+  }
+
+  .day-of-card h4 {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 14px;
+  }
+
+  .day-of-card ul {
+    margin-left: 20px;
+    color: var(--fg-secondary);
+  }
+
+  .day-of-card li {
+    margin-bottom: 8px;
+    line-height: 1.65;
+    font-size: 13px;
+  }
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.16); }
+
+  /* ── Responsive ── */
+  @media (max-width: 1100px) {
+    .sidebar { transform: translateX(-100%); }
+    .main { margin-left: 0; padding: 32px; }
+    .values-grid, .day-of-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="logo">
+      <div class="logo-mark"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M3 3h3v8h12V3h3v18h-3v-7H6v7H3V3z" fill="#F5F0EB"/></svg></div>
+      <span class="logo-text">Harvey Onsite</span>
+    </div>
+    <div class="sidebar-subtitle">Comprehensive interview prep<br>Isaac Ng · 5 rounds · 3.5 hours</div>
+  </div>
+
+  <nav class="nav-section">
+    <div class="nav-label">Foundation</div>
+    <a href="#values" class="nav-item">Harvey Values</a>
+    <a href="#schedule" class="nav-item">Schedule Overview</a>
+    <a href="#story-bank" class="nav-item">Story Bank</a>
+  </nav>
+
+  <nav class="nav-section">
+    <div class="nav-label">Interview Rounds</div>
+    <a href="#round-1" class="nav-item">1. Product Fundamentals</a>
+    <a href="#round-2" class="nav-item">2. Engineering Partner</a>
+    <a href="#round-3" class="nav-item">3. Product Marketing</a>
+    <a href="#round-4" class="nav-item">4. Cross-functional Design</a>
+    <a href="#round-5" class="nav-item">5. Take-Home Deep Dive</a>
+  </nav>
+
+  <nav class="nav-section">
+    <div class="nav-label">Deep Dive Q&A</div>
+    <a href="#selene" class="nav-item">Selene's 21 Questions</a>
+    <a href="#walkthrough" class="nav-item">Walkthrough Strategy</a>
+  </nav>
+
+  <nav class="nav-section">
+    <div class="nav-label">Day-Of</div>
+    <a href="#day-of" class="nav-item">Day-Of Tactics</a>
+    <a href="#if-blank" class="nav-item">If You Blank</a>
+  </nav>
+</aside>
+
+<main class="main">
+
+  <!-- ── Page Header ── -->
+  <div class="page-header">
+    <h1 class="page-title">Harvey PM Onsite</h1>
+    <p class="page-subtitle">Comprehensive interview prep with concrete answers grounded in your real work at Baton.</p>
+    <div class="page-meta">
+      <span><strong style="color:var(--fg-secondary);">Isaac Ng</strong></span>
+      <span class="meta-divider">·</span>
+      <span>5 rounds · 3.5 hours total</span>
+      <span class="meta-divider">·</span>
+      <span>201 3rd Street, San Francisco</span>
+      <span class="meta-divider">·</span>
+      <span>Anique + 4 others</span>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════ -->
+  <!-- HARVEY VALUES                                -->
+  <!-- ════════════════════════════════════════════ -->
+  <section id="values">
+    <h1 class="section-title">Harvey's Core Values</h1>
+    <p class="section-intro">These three values are the lens for the Product Fundamentals interview. Have a story ready for each. Your Blue Yonder, Mission Control, and Cardinal Migration stories cover all three.</p>
+
+    <div class="values-grid">
+      <div class="value-card">
+        <div class="value-name">Simplicity</div>
+        <div class="value-desc">Took complexity and made it executable. Your Blue Yonder deck went through v1-v5 because Grant said v1 "reads like an AI wrote it." Translating technical risk into business consequences.</div>
+      </div>
+      <div class="value-card">
+        <div class="value-name">Decisiveness</div>
+        <div class="value-desc">Made a high-stakes call with imperfect information and committed. The BY recommendation: proceed despite real integration risk because the alternative was missing Ryder's deadline entirely.</div>
+      </div>
+      <div class="value-card">
+        <div class="value-name">Jobs Not Finished</div>
+        <div class="value-desc">Shipped Mission Control to replace GeoTab and Turvo Control Tower, then kept iterating with engineering on 30-40% backend latency reduction because a control tower that lags is worse than no control tower.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════ -->
+  <!-- SCHEDULE                                     -->
+  <!-- ════════════════════════════════════════════ -->
+  <section id="schedule">
+    <h1 class="section-title">Schedule Overview</h1>
+    <p class="section-intro">Five rounds. The Take-Home Deep Dive with Anique is the highest-stakes round — they liked your PRD and want to probe your thinking, not look for problems.</p>
+
+    <div class="round-card">
+      <div class="round-header">
+        <div class="round-icon">📋</div>
+        <div class="round-title-block">
+          <div class="round-title">Total: ~3.5 hours across 5 sessions</div>
+          <div class="round-meta">
+            <span class="round-duration">45 min</span> Product Fundamentals
+            <span class="round-duration">45 min</span> Engineering
+            <span class="round-duration">30 min</span> PMM
+            <span class="round-duration">30 min</span> Design
+            <span class="round-duration">45 min</span> Deep Dive
+          </div>
+        </div>
+      </div>
+      <div class="round-content">
+        <div class="quote">User success and outcomes was good. Mockup tells a story really well. Requirements were clear. They're excited to deep dive into your thinking process. — Recruiter feedback on take-home</div>
+        <p>Translation: <strong>they already like the PRD.</strong> The deep dive isn't a re-evaluation — it's a chance to show how you think. Don't defend the PRD, narrate the decisions behind it.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════ -->
+  <!-- STORY BANK                                   -->
+  <!-- ════════════════════════════════════════════ -->
+  <section id="story-bank">
+    <h1 class="section-title">Story Bank</h1>
+    <p class="section-intro">Your real stories from Baton, organized by the type of question each one best answers. Drill the four highest-leverage stories until you can tell each one in 90 seconds: <strong>Blue Yonder, Mission Control, Cardinal, Team Drive ETAs.</strong></p>
+
+    <h2 class="subsection-title">Story Coverage Map</h2>
+    <table class="coverage-table">
+      <thead>
+        <tr><th>Question Type</th><th>Primary Story</th><th>Backup</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Zero-to-one product thinking</td><td>Mission Control</td><td>Adaptive Capacity</td></tr>
+        <tr><td>High-stakes decision under pressure</td><td>Blue Yonder</td><td>Lyndsey / Reorg</td></tr>
+        <tr><td>Simplifying complexity for execs</td><td>Blue Yonder deck v1-v5</td><td>Adaptive Capacity</td></tr>
+        <tr><td>Cross-functional disagreement</td><td>Cardinal Migration</td><td>Mission Control theme pivot</td></tr>
+        <tr><td>Coaching a direct report</td><td>Ross / Team Drive ETAs</td><td>Iuliia / Mobile Radius</td></tr>
+        <tr><td>Engineering tradeoff</td><td>Mission Control latency</td><td>Team Drive ETA logic</td></tr>
+        <tr><td>Working with design</td><td>Mission Control theme pivot</td><td>Mobile Radius / Iuliia</td></tr>
+        <tr><td>PMM / launch story</td><td>Adaptive Capacity</td><td>Q1 launches deck</td></tr>
+        <tr><td>Handling failure</td><td>Cardinal Migration</td><td>—</td></tr>
+        <tr><td>Pushing back on a leader</td><td>Blue Yonder</td><td>Grant "AI wrote it" feedback</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="subsection-title">Story 1: Mission Control Dashboard</h2>
+    <div class="story-card">
+      <div class="story-hook">A customer built the product himself in Google Maps — so we knew what to build.</div>
+      <div class="story-row"><div class="story-label">Setup</div><div class="story-text">Baton retired GeoTab and Turvo Control Tower, leaving DTS customers without a live network view. Fourteen customers asked for a replacement. <strong>One True Value operator stopped waiting and started plotting his own loads in Google Maps every morning.</strong></div></div>
+      <div class="story-row"><div class="story-label">What I did</div><div class="story-text">Treated that as the strongest signal I was going to get and moved Mission Control to the top of the roadmap. Anchored the product on International/EMA's White Glove workflow because they were the hardest user — high-priority loads, zero tolerance for stale data. Made "live GPS map inside CVT" the non-negotiable, cut everything else. Worked with engineering to strip 30-40% off backend latency through query optimization because a control tower that lags is worse than no control tower.</div></div>
+      <div class="story-row"><div class="story-label">Outcome</div><div class="story-text"><strong>Shipped March 3, 2026.</strong> Replaced two retired tools, unblocked 14+ DTS customers, gave International a usable White Glove view on day one.</div></div>
+      <div class="story-row"><div class="story-label">Lesson</div><div class="story-text">The best zero-to-one signal isn't a survey — it's a customer who built a worse version themselves. When you see that, stop researching and start shipping.</div></div>
+      <div class="story-tags">
+        <span class="story-tag">Zero-to-one</span><span class="story-tag">Customer-driven</span><span class="story-tag">Prioritization</span><span class="story-tag">Engineering tradeoff</span>
+      </div>
+    </div>
+
+    <h2 class="subsection-title">Story 2: Blue Yonder Recommendation</h2>
+    <div class="story-card">
+      <div class="story-hook">Recommended Ryder bet their LLP execution on a vendor with real risk — because the alternative was worse.</div>
+      <div class="story-row"><div class="story-label">Setup</div><div class="story-text">Ryder wanted to replace their in-house TMS (LMS) with Blue Yonder for LLP execution on a one-year timeline. Building in-house wasn't feasible in that window. Baton was on the hook for the recommendation, and it was going to <strong>Steve, Joel, and Karen at Ryder</strong>.</div></div>
+      <div class="story-row"><div class="story-label">What I did</div><div class="story-text">Ran the onsite evaluation with BY on February 26. Pressure-tested the integration surface and surfaced real issues — out-of-order updates, data overwrites, questionable data quality, a 2-day retention window. I didn't soften them. But I also didn't let the caveats dominate, because the counterfactual was missing Ryder's deadline entirely. <strong>Framed it as: proceed with BY, eyes open, with specific mitigations on the risks we identified.</strong></div></div>
+      <div class="story-row"><div class="story-label">Outcome</div><div class="story-text">Delivered a clear "go" recommendation with caveats intact. Deck went through five iterations to get the framing right for non-technical executives.</div></div>
+      <div class="story-row"><div class="story-label">Lesson</div><div class="story-text">The job of a senior PM on a high-stakes call isn't to hedge — it's to make the call, name the risks honestly, and give execs enough to either trust you or challenge you on specifics.</div></div>
+      <div class="story-tags">
+        <span class="story-tag">Decisiveness</span><span class="story-tag">Exec comms</span><span class="story-tag">Pushing back</span><span class="story-tag">Vendor evaluation</span>
+      </div>
+    </div>
+
+    <h2 class="subsection-title">Story 3: Cardinal Migration Crisis</h2>
+    <div class="story-card">
+      <div class="story-hook">Operators were blaming Radius for problems that were half product, half process — and I had to untangle which was which in front of customers who just wanted it fixed.</div>
+      <div class="story-row"><div class="story-label">Setup</div><div class="story-text">Cardinal was migrating from TMW to Radius at the same time they were going paperless and centralizing operations at CST. Three transitions stacked on top of each other. <strong>What took 20 minutes in TMW now took hours of manual CST review.</strong> Operators were experiencing it as one messy failure and pointing at the product.</div></div>
+      <div class="story-row"><div class="story-label">What I did</div><div class="story-text">Refused to let the conversation collapse into "Radius is broken." Separated the issues cleanly — real product gaps (no trailer-centric planning, no automation for accessorials/low-pay/stop-level pay) versus process gaps (lost TMW access, new CST handoffs, training that never distinguished product from process). <strong>Took ownership of the product gaps without flinching and pushed back hard on lumping the process changes into the product complaint.</strong> Aligned with ops and CST leadership on which lane each issue belonged in before committing to fixes.</div></div>
+      <div class="story-row"><div class="story-label">Outcome</div><div class="story-text">Got to a shared diagnosis across product, ops, and CST instead of a blame loop. Product gaps went on the roadmap with clear scope. Process gaps went to ops and training where they belonged.</div></div>
+      <div class="story-row"><div class="story-label">Lesson</div><div class="story-text">When multiple changes land at once, the loudest signal isn't always the right signal. The PM's job is to separate the threads before anyone commits a fix to the wrong problem.</div></div>
+      <div class="story-tags">
+        <span class="story-tag">Handling failure</span><span class="story-tag">XFN disagreement</span><span class="story-tag">Diagnosis</span><span class="story-tag">Hard conversations</span>
+      </div>
+    </div>
+
+    <h2 class="subsection-title">Story 4: Coaching Ross on Team Drive ETAs</h2>
+    <div class="story-card">
+      <div class="story-hook">Gave a first-time lead a project that could block two major customer migrations — and let him run it.</div>
+      <div class="story-row"><div class="story-label">Setup</div><div class="story-text">DTNA and Toyota use team drives where two drivers alternate, and our ETA logic was inserting mandatory rest stops the team drivers didn't actually take. ETAs were wrong, and it was the last blocker to fully offboarding both accounts from Turvo in Q1. <strong>Ross McIntyre had never run a project end-to-end.</strong></div></div>
+      <div class="story-row"><div class="story-label">What I did</div><div class="story-text">Gave Ross the project with real stakes attached and stayed out of his way on execution. Paired him with Minyoung on customer discovery so he had a strong partner on the account side. Coached him on the call that mattered most — when to skip Hours of Service modeling on a leg flagged as team drive — without making the call for him. Reviewed his work, pushed back where the logic was thin, and let him own the customer relationship.</div></div>
+      <div class="story-row"><div class="story-label">Outcome</div><div class="story-text"><strong>Shipped March 17, 2026.</strong> Unblocked DTNA and Toyota's Q1 Turvo offboarding. Ross now has a shipped project with real customer stakes under his belt.</div></div>
+      <div class="story-row"><div class="story-label">Lesson</div><div class="story-text">The fastest way to develop a PM is to give them a project where the outcome actually matters and resist the urge to take the wheel when it gets hard.</div></div>
+      <div class="story-tags">
+        <span class="story-tag">Coaching</span><span class="story-tag">Delegation</span><span class="story-tag">People leadership</span>
+      </div>
+    </div>
+
+    <h2 class="subsection-title">Story 5: Mission Control Theme Pivot</h2>
+    <div class="story-card">
+      <div class="story-hook">We built a beautiful dark "Radius" dashboard — then threw it out because it didn't match the product ops users live in.</div>
+      <div class="story-row"><div class="story-label">Setup</div><div class="story-text">First design direction for Mission Control was a dark "Radius" theme — dense, cinematic, looked like a NASA control room. Looked incredible in Figma. <strong>Problem: Rydershare is a light product, and ops users were going to context-switch between the two all day.</strong></div></div>
+      <div class="story-row"><div class="story-label">What I did</div><div class="story-text">Called the pivot to light theme and made the design philosophy explicit with the team: <em>match the product, not a mood board. Functional density over visual spectacle. Ops users need information, not atmosphere.</em> Worked with design to rebuild the layout so information density stayed high but the visual language matched Rydershare. Held the line that consistency mattered more than the dashboard winning a design award.</div></div>
+      <div class="story-row"><div class="story-label">Outcome</div><div class="story-text">Shipped a dashboard that lives inside the same visual system as the rest of Rydershare. Adoption hasn't fought a theme-switch tax.</div></div>
+      <div class="story-row"><div class="story-label">Lesson</div><div class="story-text">The best-looking design and the right design are not the same thing. Working with design means helping them pick the right constraint, not defending the first one that looked good.</div></div>
+      <div class="story-tags">
+        <span class="story-tag">Working with design</span><span class="story-tag">User empathy</span><span class="story-tag">Hard tradeoff</span>
+      </div>
+    </div>
+
+    <h2 class="subsection-title">Story 6: Mobile Radius (Iuliia)</h2>
+    <div class="story-card">
+      <div class="story-hook">Our designer built a mobile app over the holidays — my job was to not kill it with process.</div>
+      <div class="story-row"><div class="story-label">Setup</div><div class="story-text">Iuliia built Mobile Radius as a side project over the holiday break. Not scoped, not roadmapped, not asked for. The moment we showed it to ops, one operator told us <em>"I sat in the car the other day and assigned trips for my drivers."</em></div></div>
+      <div class="story-row"><div class="story-label">What I did</div><div class="story-text">Pulled it into a formal review in February instead of burying it in a backlog. Validated it with real operators, got it into pilot, and protected the design-led origin story instead of reframing it as a normal product workstream. Gave Iuliia room to keep driving the direction.</div></div>
+      <div class="story-row"><div class="story-label">Outcome</div><div class="story-text">Soft-launched February 2026, active pilot, operators already using it daily in real workflows.</div></div>
+      <div class="story-row"><div class="story-label">Lesson</div><div class="story-text">When someone on the team builds the right thing without being asked, the PM's job is to get out of the way and clear the path — not to reassert ownership of the roadmap.</div></div>
+      <div class="story-tags">
+        <span class="story-tag">Empowering team</span><span class="story-tag">Bottoms-up</span><span class="story-tag">Design partnership</span>
+      </div>
+    </div>
+
+    <h2 class="subsection-title">Story 7: Lyndsey's Departure & Reorg</h2>
+    <div class="story-card">
+      <div class="story-hook">A strong PM quit, and the exit interview told me the structure was the problem, not the person.</div>
+      <div class="story-row"><div class="story-label">Setup</div><div class="story-text">Lyndsey Bohall, our Product Platform PM, resigned to go be Staff PM at Confluent. In the exit, she named product-vs-eng tension, role scope drift, and unclear ownership. <strong>I had 5-6 PM direct reports already — my span was too wide to coach anyone well, which was part of how she ended up in that spot.</strong></div></div>
+      <div class="story-row"><div class="story-label">What I did</div><div class="story-text">Treated the departure as a signal on structure, not just a backfill problem. Started designing a Group PM management layer organized around three pillars — Execution, Customer Impact, and Platform — so ownership is clean and PMs have someone closer to them than me. Being deliberate because it's sensitive and the downstream consequences are real.</div></div>
+      <div class="story-row"><div class="story-label">Outcome</div><div class="story-text">Active planning in progress. The frame is a team where no PM reports to someone managing six people, and every pillar has an owner accountable for outcomes.</div></div>
+      <div class="story-row"><div class="story-label">Lesson</div><div class="story-text">When a strong person leaves, the first question isn't who replaces them — it's what the structure was asking them to absorb that it shouldn't have been.</div></div>
+      <div class="story-tags">
+        <span class="story-tag">People leadership</span><span class="story-tag">Org design</span><span class="story-tag">Decisiveness</span>
+      </div>
+    </div>
+
+    <h2 class="subsection-title">Story 8: Adaptive Capacity Positioning</h2>
+    <div class="story-card">
+      <div class="story-hook">We had good products and a bad story — so I wrote the story first.</div>
+      <div class="story-row"><div class="story-label">Setup</div><div class="story-text">Baton was shipping real product — Radius v3 was at 442 cost centers and 21K weekly loads, Mission Control was landing, Mobile was in pilot. <strong>But internally and with Ryder, the narrative was a list of features, not a category.</strong> Execs couldn't repeat the story back.</div></div>
+      <div class="story-row"><div class="story-label">What I did</div><div class="story-text">Defined Adaptive Capacity as the umbrella product and wrote the positioning — "Intelligent Transportation, Unified." Built the product definition deck, the RyderOne narrative deck, and stood up a marketing site so the story had an artifact you could send someone. Made sure every downstream launch — Mission Control, Mobile, AAD — laddered into the same frame instead of competing for airtime.</div></div>
+      <div class="story-row"><div class="story-label">Outcome</div><div class="story-text">Ryder leadership now has one narrative to carry instead of ten. Individual launches ladder up to the same story.</div></div>
+      <div class="story-row"><div class="story-label">Lesson</div><div class="story-text">A launch is only as strong as the category it lives in. If the category doesn't exist yet, a PM has to build it before any single launch can land.</div></div>
+      <div class="story-tags">
+        <span class="story-tag">PMM partnership</span><span class="story-tag">Launch strategy</span><span class="story-tag">Positioning</span><span class="story-tag">Narrative</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════ -->
+  <!-- ROUND 1 — PRODUCT FUNDAMENTALS               -->
+  <!-- ════════════════════════════════════════════ -->
+  <section id="round-1">
+    <h1 class="section-title">Round 1 — Product Fundamentals & Harvey Values</h1>
+    <p class="section-intro"><span class="tag behavioral">Behavioral</span> 45 minutes. Not a case interview. They want to see your product thinking and how you embody Harvey's values.</p>
+
+    <div class="round-card">
+      <div class="round-header">
+        <div class="round-icon">🎯</div>
+        <div class="round-title-block">
+          <div class="round-title">Likely Questions with Golden Answers</div>
+          <div class="round-meta">Product sense · Zero-to-one · Harvey values</div>
+        </div>
+      </div>
+      <div class="round-content">
+
+        <div class="question-block">
+          <div class="question-text">"You're a few months into a new PM role with no roadmap. How do you define what to build?"</div>
+          <div class="question-prompt">Tests zero-to-one thinking and how you partner with stakeholders.</div>
+          <div class="golden-answer">
+            <span class="golden-label">Golden answer</span>
+            <p>My first move isn't research — it's looking for the customer who already built a worse version of what we should be shipping. That's the strongest signal I'll ever get, and it shortcuts weeks of survey work.</p>
+            <p>At Baton I had no roadmap when I joined the Mission Control problem. Fourteen customers had asked us for "a control tower." <strong>I ignored all fourteen and went and watched the one True Value operator who'd stopped waiting and was plotting his loads in Google Maps every morning.</strong> That's not feedback — that's a working prototype telling me the priority and the spec. He'd already decided what mattered most: he wanted to see his loads on a map, color-coded by status, on one screen. The fourteen customers couldn't have given me that level of clarity if I'd interviewed them for a month.</p>
+            <p>Once I have that signal, I commit in two weeks, not six. The internal work is targeted: I find the engineer who knows the data flow best, the designer who's closest to the operator workflow, and the support lead who hears the complaints daily. I'm not trying to build consensus — I'm pressure-testing the call I'm about to make. <em>If they can't poke a hole in it in two weeks, I ship it.</em></p>
+            <p>The trap I avoid is the framework answer: "I'd talk to ten customers, sit with engineering, synthesize, propose." That's how PMs sound senior without being senior. <strong>Senior PM work is making the call with imperfect information and being honest about what you don't know yet.</strong></p>
+          </div>
+        </div>
+
+        <div class="question-block">
+          <div class="question-text">"Tell me about a zero-to-one product where you had to define the problem, not just the solution."</div>
+          <div class="question-prompt">→ Use Mission Control or Adaptive Capacity</div>
+          <div class="golden-answer">
+            <span class="golden-label">Golden answer (Mission Control)</span>
+            <p>Baton retired GeoTab and Turvo Control Tower, leaving DTS customers without a live network view of their loads. The defined problem was "build a replacement." But the replacement framing was wrong — we'd have built a control tower, customers would've used it, and it would have been forgettable.</p>
+            <p>The real problem was that an International ops manager managing White Glove loads needed to know in five seconds whether any of his trucks were running late, where they were on the map, and whether to escalate. Fourteen customers asked for "a control tower." <strong>One True Value operator stopped waiting and built his own version in Google Maps every morning.</strong> That told me the problem wasn't "we need a tool" — it was "we need this specific decision-making surface, and they'll build it themselves if we don't."</p>
+            <p>So I anchored the product on the hardest user — White Glove ops at International — and made "live GPS map inside CVT" the non-negotiable. Cut everything else. Worked with engineering to get 30-40% backend latency reduction because <em>a control tower that lags is worse than no control tower</em>. Shipped March 3.</p>
+            <p>The lesson I took: a defined problem is usually a poorly framed problem. A senior PM's first job on a zero-to-one product is to find the one user whose pain rewrites the problem statement, then build for them.</p>
+          </div>
+        </div>
+
+        <div class="question-block">
+          <div class="question-text">"Talk about a time you took something complex and made it simple for others to understand."</div>
+          <div class="question-prompt">→ Harvey value: Simplicity. Use the Blue Yonder deck story.</div>
+          <div class="golden-answer">
+            <span class="golden-label">Golden answer (Blue Yonder deck v1-v5)</span>
+            <p>I wrote the first draft of the Blue Yonder recommendation for Ryder leadership — Steve, Joel, Karen, all SVP/President level, all non-technical. Recommendation was high-stakes: replace Ryder's in-house TMS with a vendor we'd just spent two days pressure-testing, with real integration risks I couldn't paper over.</p>
+            <p>My first draft was technically airtight and completely wrong for the audience. Grant read it and told me <em>"this reads like an AI wrote it."</em> He was right. I'd written every risk in engineering language — "out-of-order updates," "data overwrites," "2-day retention window" — and an executive had no way to act on any of it.</p>
+            <p>I threw out the draft. Rewrote every technical risk as a business consequence. <strong>"Out-of-order updates" became "orders you think are confirmed may silently change."</strong> "2-day retention" became "if a load is in dispute and we look at it on day three, the data is gone." Cut every piece of jargon. Made every slide answer one question: what are we buying, what's the risk, what's the call. Iterated through five versions with Grant pressure-testing each pass.</p>
+            <p>Final deck landed. Execs could repeat the recommendation back to me in their own words — that's the test I use now. <em>Executives don't reward depth, they reward clarity. If I can't explain a technical risk as a business consequence in one sentence, I don't understand it well enough yet.</em></p>
+          </div>
+        </div>
+
+        <div class="question-block">
+          <div class="question-text">"Tell me about a high-stakes decision you had to make quickly with incomplete information."</div>
+          <div class="question-prompt">→ Harvey value: Decisiveness. Use Blue Yonder or Lyndsey reorg.</div>
+          <div class="golden-answer">
+            <span class="golden-label">Golden answer (Blue Yonder)</span>
+            <p>Ryder needed to replace their in-house TMS for LLP execution within a one-year window. Building in-house wasn't feasible inside that window. I led the onsite evaluation of Blue Yonder on February 26 and found real integration problems — data overwrites, out-of-order updates, a 2-day retention window. The clean answer would've been "wait, evaluate more vendors, run a longer pilot."</p>
+            <p>I didn't have time for the clean answer. The recommendation was due to Steve, Joel, and Karen the following week, and the only options were "go with BY despite the risks" or "miss Ryder's deadline entirely." <strong>I made the call to recommend proceeding with BY, with caveats intact.</strong> Didn't soften the integration risks. Paired each one with a specific mitigation. Held the position through five deck iterations and direct feedback from Grant.</p>
+            <p>What I'd do differently: I underweighted how much I needed to bring Ryder's IT team into the technical risk conversation earlier. They eventually became my best validators, but I waited until v3 of the deck to loop them in. Should've been v1.</p>
+            <p><em>The job of a senior PM on a high-stakes call isn't to hedge — it's to make the call, name the risks honestly, and give the people above you enough to either trust you or challenge you on specifics.</em></p>
+          </div>
+        </div>
+
+        <div class="question-block">
+          <div class="question-text">"Tell me about a time you had to push back on a manager or senior leader."</div>
+          <div class="question-prompt">→ Use the Grant feedback story or Cardinal migration</div>
+          <div class="golden-answer">
+            <span class="golden-label">Golden answer (Grant + BY deck)</span>
+            <p>Two angles to this from the same project. The first one is when I had to take Grant's feedback fully — when he said v1 of my BY deck "reads like an AI wrote it," the easy move would've been to defend the technical rigor. I didn't. He was right, and I rewrote the entire thing with business outcomes leading every slide.</p>
+            <p>The pushback came on the technical risks themselves. There were two specific risks — data overwrites and the 2-day retention window — that Grant initially wanted me to soften because they'd make the recommendation harder to land. <strong>I held the line on both.</strong> Not because I was being stubborn, but because softening them would've meant Ryder leadership making a bet they didn't fully understand. If something went wrong six months later, <em>"we told you about that risk in the deck"</em> needed to be defensible.</p>
+            <p>The way I made the case: I rewrote both risks in plainer language and proposed a mitigation for each, so Grant could see I wasn't being dramatic — I was being specific. He agreed. Both risks made it into the final v5, framed as "what we're choosing to accept and how we're managing it."</p>
+            <p><em>Pushing back on a leader only works if you're also willing to take the feedback you deserve. The credibility to disagree is built by being honest when they're right.</em></p>
+          </div>
+        </div>
+
+        <div class="question-block">
+          <div class="question-text">"How do you partner with cross-functional stakeholders?"</div>
+          <div class="golden-answer">
+            <span class="golden-label">Golden answer</span>
+            <p>I'll be honest — I don't have a framework answer to this question, because the framework answers are mostly wrong. Most PMs describe cross-functional partnership as "I bring people in early." That's a calendar habit, not a partnership.</p>
+            <p>What I actually do is more uncomfortable: <strong>I pick the one person in each function whose judgment I'd protect over my own, and I overinvest in them at the expense of the other relationships in that function.</strong></p>
+            <p>On Mission Control, that person on engineering was Mat — our tech lead. We had a real disagreement about the latency strategy. He wanted query optimization, I'd been leaning toward a caching layer because it felt safer. <em>I gave him the call.</em> Not because I'd been convinced — because I'd decided his judgment on the hot path was worth more than mine, and the cost of being wrong on caching versus optimization was smaller than the cost of him not feeling ownership over the system he was about to maintain for two years. He shipped the right thing.</p>
+            <p>On the Blue Yonder recommendation, the person was Grant — my manager. He killed v1 of my deck publicly with the line "this reads like an AI wrote it." I could have defended the technical rigor. Instead I burned the draft and started over. <strong>The credibility I bought by taking the hit publicly was worth more than the rewrite cost</strong> — and it was the thing that gave me standing to push back two drafts later when he wanted me to soften the data overwrite risk. I won that argument because I'd lost the first one cleanly.</p>
+            <p>The principle behind both: cross-functional partnership isn't a meeting cadence. It's a series of small bets you make about whose judgment to trust over your own, and then making those bets visible so the other person knows you made them. <em>The reason most PMs feel cross-functional partnership is hard is they're trying to win every call. Senior PMs decide which calls to lose on purpose.</em></p>
+          </div>
+        </div>
+
+        <div class="talking-points">
+          <div class="tp-label">Round 1 Cheatsheet</div>
+          <ul>
+            <li><strong>Lead with the result</strong> — STAR works, but flip it. Start with "Here's what shipped and why it mattered" then back into the situation.</li>
+            <li><strong>Quantify where you can</strong> — 14 customers, 30-40% latency reduction, 442 cost centers, March 3. Numbers ground the story.</li>
+            <li><strong>Always include cross-functional partnership</strong> — every story should mention engineering, design, or a stakeholder by role.</li>
+            <li><strong>End with reflection</strong> — "What I'd do differently" is a senior PM signal. Junior PMs don't have it.</li>
+            <li><strong>Use your real Baton stories</strong> — Mission Control, Blue Yonder, Cardinal, Team Drive ETAs are all stronger than any framework you can recite.</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════ -->
+  <!-- ROUND 2 — ENGINEERING                        -->
+  <!-- ════════════════════════════════════════════ -->
+  <section id="round-2">
+    <h1 class="section-title">Round 2 — Engineering Partner</h1>
+    <p class="section-intro"><span class="tag behavioral">Behavioral</span> <span class="tag case">Live Case</span> 45 minutes split into two parts. First 20 minutes: past technical project. Second 25 minutes: live case on Harvey Vault problems.</p>
+
+    <div class="round-card">
+      <div class="round-header">
+        <div class="round-icon">⚙️</div>
+        <div class="round-title-block">
+          <div class="round-title">Part 1: Past Technical Project (20 min)</div>
+          <div class="round-meta">Use Mission Control as your primary story</div>
+        </div>
+      </div>
+      <div class="round-content">
+
+        <div class="question-block">
+          <div class="question-text">"Walk me through a technical product you shipped recently where you were really embedded with engineering."</div>
+          <div class="golden-answer">
+            <span class="golden-label">Golden answer (Mission Control — 90 second version)</span>
+            <p><strong>The product:</strong> Mission Control is Baton's live network map for Rydershare. Every active load on a GPS map inside the CVT app, with status filters, click-through to load detail, and a sidebar for the loads operators care about most — running late, White Glove, exceptions. Shipped March 3 to replace two retired tools, GeoTab and Turvo Control Tower.</p>
+            <p><strong>Why it was technically interesting:</strong> Our hot path was the GET that loaded all active loads for the viewport. P95 was around 4 seconds because we were joining against an exception table on every render to compute the "running late" badge. The data flow is non-trivial — GPS pings come from RyderDrive, status updates come from a separate exception engine, and the map has to render hundreds of loads without lag while staying in sync with the underlying load detail views. <em>If an International ops manager can't trust that the map reflects reality in under three seconds, they go back to their phone and the product is dead.</em></p>
+            <p><strong>The tradeoff I made with engineering:</strong> Two paths. Add a caching layer (safer, but 6-week delay and cache invalidation problems on every exception update), or denormalize the join into a field we update on the exception ingest path. I worked with our tech lead Mat on the second option. <strong>P95 dropped from 4 seconds to ~2.5. P50 dropped from 1.8 to ~1.1.</strong> That's the 30-40% I quote — and the reason we picked it over caching is that caching meant cache invalidation on exception updates, which was the same problem with more moving parts.</p>
+            <p><strong>Where I pushed back on engineering:</strong> The first design from engineering treated latency as P1 — something to optimize after launch. I held the line that it was P0, equal weight with correctness. The reason: there's a class of product where the latency budget IS the spec. If the map takes more than three seconds to refresh, the operator goes back to their phone, and we lose. <em>That number was our P0, not a polish item.</em></p>
+            <p><strong>Where I deferred to engineering:</strong> The chunking and pagination strategy on the map. Mat had a strong opinion on viewport-based loading versus loading the full network and filtering client-side. I had a weaker opinion. He was right — viewport loading was the only thing that scaled when International turned on the firehose of White Glove loads.</p>
+            <p><strong>Outcome:</strong> Shipped on schedule, 14+ DTS customers unblocked, International operating White Glove on day one. The latency story is the number I quote because it's the thing that made the product trustable.</p>
+          </div>
+        </div>
+
+        <div class="talking-points">
+          <div class="tp-label">Part 1 — Watch out for</div>
+          <ul>
+            <li><strong>Don't pretend to be the engineer.</strong> The interviewer is an engineer. They'll respect "I deferred to my tech lead on X" more than fake technical depth.</li>
+            <li><strong>Have one specific technical detail ready</strong> — the denormalized join, the P95 number. If they probe deeper, "Mat handled the implementation, but the bottleneck was..." is fine.</li>
+            <li><strong>Be specific about "deeply embedded"</strong> — daily standups? Pairing on the design doc? Joint customer calls? Don't use the phrase as a buzzword.</li>
+            <li><strong>Have a real disagreement story.</strong> A senior PM has pushed back on engineering and been wrong sometimes. Show both.</li>
+            <li><strong>The frame to use:</strong> "There's a class of product where the latency budget IS the spec." Don't say "performance is a feature" — that's a Twitter cliché.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="round-card">
+      <div class="round-header">
+        <div class="round-icon">🔧</div>
+        <div class="round-title-block">
+          <div class="round-title">Part 2: Live Case — Harvey Vault Problems (25 min)</div>
+          <div class="round-meta">Diagnostic case · You're collaborating with the engineer interviewer</div>
+        </div>
+      </div>
+      <div class="round-content">
+
+        <div class="question-block">
+          <div class="question-text">"We're seeing two emerging problems in Harvey Vault. Upload pipeline is failing or timing out under load. Lawyers can't find their files easily — search and organization are breaking down. How do you think about next steps?"</div>
+          <div class="golden-answer">
+            <span class="golden-label">Golden response framework (don't memorize — internalize the structure)</span>
+            <p><strong>Step 1 — Define scope before solving.</strong> "Before I start prioritizing fixes, I want to make sure I understand the shape of each problem. For uploads failing — how many users are affected, what's the failure rate, when did it start, and is it tied to a specific file type or size? For search — is this a relevance complaint or a 'where did my file go' complaint? Those are two different problems."</p>
+            <p><strong>Step 2 — Treat the engineer as a partner, not a quizmaster.</strong> "What do you think the most likely root cause is on uploads? Have we seen this at other scale thresholds before, or is this new behavior?" <em>Ask before you guess.</em> They're testing whether you can collaborate, not whether you can solo-diagnose.</p>
+            <p><strong>Step 3 — Diagnose uploads.</strong> "If uploads are failing under load, my first hypothesis is infrastructure — we're hitting rate limits, the upload service is saturated, or the processing pipeline downstream is the bottleneck. To test that I'd want to see: where in the pipeline are requests dying? Is it at ingress, parsing, chunking, embedding, or storage? The error logs should tell us where the failures cluster."</p>
+            <p><strong>Step 4 — Diagnose search.</strong> "For 'lawyers can't find files,' I want to look at the actual queries. Are users searching by filename and getting nothing back? Are they searching by content and getting too many results? Are they using filters that don't exist? <strong>The query log is the most underused data source in any product.</strong> If we can see what people typed, we can usually see what's broken."</p>
+            <p><strong>Step 5 — Prioritize.</strong> "If I had to call it right now: upload failures are the higher priority. They're a hard blocker — users literally can't use the product. Search quality is a satisfaction issue — frustrating but not blocking. I'd put engineering on root-causing the upload pipeline today and have someone pull search query logs in parallel so we can come back to it tomorrow with data instead of speculation."</p>
+            <p><strong>Step 6 — Surface what I'd want to validate.</strong> "Two things I'd want to confirm before committing to this: are these problems actually correlated — i.e., is the upload pipeline corrupting metadata in a way that breaks search downstream? And is this affecting all customers or one big firm that's hammering the system? Different fixes if it's one customer versus systemic."</p>
+            <p><strong>Closing thought:</strong> "What I'm trying to avoid is the trap of jumping to a solution. The first 24 hours after a production issue, the highest-leverage thing a PM can do is keep everyone aligned on diagnosis and resist premature commitment. I'd want to run a 30-minute working session with you, the on-call engineer, and the customer-facing team to align on what we know, what we don't, and what we're going to test first."</p>
+          </div>
+        </div>
+
+        <div class="talking-points">
+          <div class="tp-label">Live Case — Critical Behaviors</div>
+          <ul>
+            <li><strong>This is COLLABORATION, not solo problem-solving.</strong> The interviewer is your engineering partner. Ask them questions.</li>
+            <li><strong>Show your reasoning out loud.</strong> "My hypothesis is X because Y" is more important than landing on the right answer.</li>
+            <li><strong>It's okay to say "I don't know."</strong> Follow it with "what would you check first?"</li>
+            <li><strong>Diagnosis before solutions.</strong> If you propose a fix in the first 5 minutes, you've failed the test.</li>
+            <li><strong>Prioritize ruthlessly.</strong> Two problems competing for engineering time — name which one wins and why.</li>
+            <li><strong>Reference the eng partner by role.</strong> "Working with the on-call engineer" or "I'd want your help on..." — partnership framing.</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════ -->
+  <!-- ROUND 3 — PMM                                -->
+  <!-- ════════════════════════════════════════════ -->
+  <section id="round-3">
+    <h1 class="section-title">Round 3 — Product Marketing</h1>
+    <p class="section-intro"><span class="tag behavioral">Behavioral</span> 30 minutes. How you partner with PMM through launches. They overlap with sales enablement at Harvey, so battlecards and demos come up.</p>
+
+    <div class="round-card">
+      <div class="round-header">
+        <div class="round-icon">📢</div>
+        <div class="round-title-block">
+          <div class="round-title">PMM Partnership</div>
+          <div class="round-meta">Story-telling · Sales enablement · New categories</div>
+        </div>
+      </div>
+      <div class="round-content">
+
+        <div class="question-block">
+          <div class="question-text">"How do you partner with PMM throughout a product launch?"</div>
+          <div class="golden-answer">
+            <span class="golden-label">Golden answer</span>
+            <p>The frame I use: PMM is in the room when we're choosing what to build, not just when we're choosing how to talk about it. <strong>By the time PMM gets the launch brief, the most important decisions about positioning are already locked.</strong> If we built a feature that's hard to explain, that's a product failure, not a marketing problem.</p>
+            <p>What that looks like in practice — when I shipped Mission Control at Baton, PMM was in the early customer conversations with me. Not because they needed the input for messaging yet, but because they needed to hear the actual customer pain in the operator's own words. The line that ended up driving our positioning — "I built my own version in Google Maps every morning" — came from one of those joint customer calls. PMM heard it firsthand and used it in the launch deck and the sales demo. It landed because it was real, not because someone in marketing wrote a punchier version.</p>
+            <p>The other principle: I co-own launch metrics with PMM. Adoption, qualified pipeline influence, sales-team confidence — those are shared, not handed off. <em>If I treat the launch as something I throw over the wall, PMM has every incentive to over-promise to make their job easier, and I have every incentive to under-deliver to manage expectations. Co-ownership kills both.</em></p>
+            <p>The mistake I see most often is PMs treating PMM as a downstream service. PMM is a strategic partner — they spend more time with sales, customers, and competitors than I do. Their input on positioning is often sharper than mine.</p>
+          </div>
+        </div>
+
+        <div class="question-block">
+          <div class="question-text">"How do you help a PMM tell a story about a technical capability?"</div>
+          <div class="golden-answer">
+            <span class="golden-label">Golden answer</span>
+            <p>The mistake PMs make is handing PMM a feature spec and expecting a story. PMM can't write a story about a feature they don't understand the user pain behind. So my job is to give them three things: the user's pain in their own words, the moment the product changes that pain, and the after-state.</p>
+            <p>Concrete example. When we shipped Team Drive ETAs at Baton, the technical capability is "skip Hours of Service modeling on a leg flagged as team drive." That's incomprehensible to anyone outside the product. <strong>The story PMM landed on was: "When DTNA dispatchers planned their routes, the ETAs were lying to them — and the lie was making them late to customers. We fixed the lie."</strong> Same feature, totally different story. The way we got there was a 30-minute working session where I walked PMM through the customer call where a DTNA planner explained exactly what "wrong ETA" cost them in customer trust.</p>
+            <p>The bigger lesson — at Baton I built out Adaptive Capacity as a product category to give PMM a frame they could rally around. Before that, every launch was a feature on a list. Mission Control, Mobile Radius, AAD — they all competed for airtime instead of laddering up to one story. Once we had "Intelligent Transportation, Unified" as the umbrella, every launch could pull the same narrative thread. <em>A launch is only as strong as the category it lives in. If the category doesn't exist, build it before any single launch can land.</em></p>
+            <p>For Harvey, I'd think about it this way — Knowledge Bases isn't really a feature. It's the proof point for a category claim Harvey is already making: <strong>AI grounded in your firm's actual knowledge, not the internet's.</strong> PMM should be telling the category story, not the feature story.</p>
+          </div>
+        </div>
+
+        <div class="question-block">
+          <div class="question-text">"How do you think about creating sales enablement materials — battlecards, demos, training?"</div>
+          <div class="golden-answer">
+            <span class="golden-label">Golden answer</span>
+            <p>Three principles, in order of importance.</p>
+            <p><strong>First, sales reps don't read documents.</strong> If your sales enablement strategy depends on AEs reading a 12-page battlecard, you don't have a strategy. You have a content library nobody opens. The good versions are: (1) a 90-second video an AE can watch in the car before a call, (2) a single slide with three bullets they can pull into their own deck, and (3) a working demo environment that doesn't break in front of a customer. Nothing else gets used.</p>
+            <p><strong>Second, demos rot.</strong> A demo environment with reusable data and daily refreshing is worth more than ten polished decks. At Baton we're building demo data that refreshes nightly so the AE always opens to a clean state. If a customer asks "can I see how this would look with our data," the AE shouldn't have to explain why the demo is from October.</p>
+            <p><strong>Third, battlecards are conversational scripts, not feature comparisons.</strong> A bad battlecard says "Harvey beats CoCounsel because we have multi-agent verification." A good battlecard says <em>"When a prospect tells you they're already evaluating CoCounsel, ask them this: 'What's your firm's plan for handling AI hallucinations on a live deal?' Then walk them through how Harvey's verification architecture makes that question answerable."</em> Battlecards are about what the customer is already thinking, not about us.</p>
+            <p>Honest caveat — Baton's GTM motion is mostly executive-led, so I haven't built traditional rep enablement at scale. <strong>What I'd do at Harvey:</strong> in the first 30 days I'd ride along on five live evaluation calls, write down the five questions a buyer asks that an AE struggles to answer in real time, and build the enablement around exactly those five moments. <em>Battlecards aren't documents — they're answers to the questions that lose deals.</em></p>
+          </div>
+        </div>
+
+        <div class="question-block">
+          <div class="question-text">"How do you think about launching into a new product category?"</div>
+          <div class="golden-answer">
+            <span class="golden-label">Golden answer</span>
+            <p>New categories are won by the company that defines them, not the company that has the best feature in them. So before I think about the launch, I think about the category boundaries — what's in, what's out, what does the competition force us to call ourselves, and what does our customer already understand.</p>
+            <p>I did this at Baton when I built out Adaptive Capacity. We had Radius, Mission Control, Mobile Radius, AAD — strong individual products, no category. Customers couldn't repeat what we did back to us in one sentence. So I wrote the category positioning first — "Intelligent Transportation, Unified" — and then built every launch as evidence for that claim. <strong>Mission Control became "the proof we deliver visibility." Mobile Radius became "the proof we meet operators where they work." AAD became "the proof we automate the decisions humans shouldn't have to make."</strong> Same products, but now they laddered up to a story Steve and Joel could repeat.</p>
+            <p>For Harvey Knowledge Bases, the category claim is something like: "AI for legal work, grounded in your firm's actual knowledge." Knowledge Bases isn't a feature — it's the artifact that makes the claim true. The launch should be framed as the moment Harvey moves from "AI assistant" to "AI built on what your firm knows." That's a category conversation, not a feature announcement.</p>
+            <p>The execution framework I use: define the category in one sentence, name three competitors who don't fit it, give PMM three customer quotes that prove the category is real, and then let PMM drive everything downstream. <em>The PM owns the category claim. PMM owns making it land.</em></p>
+          </div>
+        </div>
+
+        <div class="talking-points">
+          <div class="tp-label">PMM Round Cheatsheet</div>
+          <ul>
+            <li><strong>Reference your PRD's Sales Enablement section</strong> — you already wrote about battlecards, demo environments, training materials. Show them you think this way.</li>
+            <li><strong>Adaptive Capacity is your strongest PMM story</strong> — building a category before launching products into it.</li>
+            <li><strong>Frame Harvey KB as a category claim, not a feature</strong> — "AI grounded in your firm's knowledge" is the line.</li>
+            <li><strong>Co-ownership of metrics</strong> is the senior PM signal. Junior PMs hand off launches.</li>
+            <li><strong>Trust > features</strong> for legal AI marketing. Buyers are skeptical of AI claims.</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════ -->
+  <!-- ROUND 4 — DESIGN                             -->
+  <!-- ════════════════════════════════════════════ -->
+  <section id="round-4">
+    <h1 class="section-title">Round 4 — Cross-functional with Design</h1>
+    <p class="section-intro"><span class="tag behavioral">Behavioral</span> 30 minutes. How you work with designers and across stakeholders. Mission Control theme pivot is your strongest story here.</p>
+
+    <div class="round-card">
+      <div class="round-header">
+        <div class="round-icon">🎨</div>
+        <div class="round-title-block">
+          <div class="round-title">Design Partnership</div>
+          <div class="round-meta">Disagreement · Hard tradeoffs · Empowering design</div>
+        </div>
+      </div>
+      <div class="round-content">
+
+        <div class="question-block">
+          <div class="question-text">"How do you like to work with designers?"</div>
+          <div class="golden-answer">
+            <span class="golden-label">Golden answer</span>
+            <p>The shortest version: design is in the room at problem definition, not at the wireframe. If a designer is getting handed a fully scoped problem and asked to make it look good, the partnership has already failed.</p>
+            <p>What that looks like in practice. At Baton, when our designer Iuliia built Mobile Radius over the holidays as a side project, my job wasn't to retrofit it into a normal product workstream. <strong>It was to recognize that she'd seen something in the user research that the product team had missed</strong> — operators wanted to assign trips from their phones — and to clear the path for her to keep driving it. That's a design partnership working: design surfaces the right problem, PM removes the obstacles.</p>
+            <p>The other principle: I treat design disagreement as data. The designer almost always sees something the PM doesn't. If we disagree on a tradeoff, my first move is to ask why — not to relitigate the decision. Mission Control is the example. Our first design direction was a beautiful dark "Radius" theme — looked like a NASA control room. I called the pivot to light theme and matched it to the existing Rydershare visual system. <em>The designer was initially right that the dark theme was more striking. I was right that it would create a context-switching tax for users who lived in Rydershare all day. We worked through that disagreement explicitly, not implicitly.</em></p>
+            <p>The thing I avoid: making design feel like a service. Design is a strategic partner whose discipline is about user empathy. PMs who treat them as a render shop end up with products that look polished and don't get used.</p>
+          </div>
+        </div>
+
+        <div class="question-block">
+          <div class="question-text">"Tell me about a time you disagreed with design and how you resolved it."</div>
+          <div class="question-prompt">→ Mission Control theme pivot is the cleanest story</div>
+          <div class="golden-answer">
+            <span class="golden-label">Golden answer (Mission Control theme pivot)</span>
+            <p>First design direction for Mission Control was a dark, cinematic "Radius" theme — dense data display, glowing accents, the kind of thing that looks incredible in a Figma frame. The designer was excited about it. It was genuinely good work. But Rydershare — the product Mission Control lives inside — is a light, functional, ops-tool aesthetic. Operators were going to context-switch between the two all day.</p>
+            <p>I had a hunch the dark theme would create a tax I couldn't quantify yet. But I knew arguing taste with a designer is a losing move. <strong>What actually changed her mind wasn't a clever question I asked — it was a screen recording I made.</strong> I recorded an operator using Rydershare for ten minutes, then pulled up the dark Mission Control mockup in a new tab. Watching the context switch was visceral. It looked like opening a different application, not a new page.</p>
+            <p>I sent her the recording with one line: "What do you see?" She came back the next day with the light version, and it was better than what I would've spec'd. Better hierarchy, better information density, a way to use accent color to signal exception severity that I hadn't thought of. <em>The pivot worked because I trusted her to read the same evidence I was seeing — and she made a sharper call than I would have alone.</em></p>
+            <p>What we kept from the original vision: the information density, the strong hierarchy, the radar/dashboard icon for the navigation. What we changed: every color choice, the background, the shadows, the typography. The dashboard looks like Rydershare now, which means operators don't have to learn a new visual language to use it.</p>
+            <p>The lesson I took: <strong>the right move on a design disagreement is almost never to make a better argument. It's to put the designer in front of the same evidence I'm seeing and trust her to read it.</strong> Designers are usually faster at seeing the right answer than PMs are. They just need the same data.</p>
+          </div>
+        </div>
+
+        <div class="question-block">
+          <div class="question-text">"How do you bring user research into the design process?"</div>
+          <div class="golden-answer">
+            <span class="golden-label">Golden answer</span>
+            <p>The principle I hold: research is shared, not owned by either side. The worst version of this is a PM who runs interviews, writes a research summary, and emails it to design with "let me know if you have questions." Design needs to be in the interview, not reading about it.</p>
+            <p>Concrete example from Mission Control. Before we built anything, I scheduled three customer calls — International, Hill's Pet, True Value — and brought our designer with me. We weren't there to validate a wireframe. We were there to watch operators use their existing tools. <strong>The True Value operator opened Google Maps and showed us the system he'd built himself to track his loads.</strong> That moment was worth more than any research summary. The designer saw it firsthand and built the dashboard around what she'd watched, not around what I told her later.</p>
+            <p>The other thing I do: I keep a running collection of customer quotes that get pinned in Slack and revisited when the team is making design tradeoffs. <em>"I built my own version in Google Maps every morning"</em> wasn't a research finding — it was the tiebreaker for every "should we cut this" conversation we had during the build.</p>
+            <p>What I avoid: research-as-decoration. Putting a quote on slide 3 of a design review and then ignoring it when the tradeoffs get hard. If the research isn't shaping the actual decisions, you didn't need the research — you needed cover for a decision you'd already made.</p>
+          </div>
+        </div>
+
+        <div class="question-block">
+          <div class="question-text">"Tell me about a time when design pushed back on PRD requirements and you adjusted."</div>
+          <div class="golden-answer">
+            <span class="golden-label">Golden answer</span>
+            <p>This came up on Mission Control. My initial PRD asked for six filter options on the load list: status, priority, customer, lane, ETA accuracy, and exception type. The designer pushed back hard. Her argument: <em>"Six filters is the symptom of a PM who doesn't know which filter matters most. If you can't tell me which one operators will use first, we shouldn't ship any of them."</em></p>
+            <p>I bristled at first because I'd written the PRD with customer input behind every filter. But she was right — and the lesson wasn't about customer research. <strong>The lesson was about my own hedging.</strong> I'd shipped a PRD with six filters because I didn't have the courage to bet on which one mattered. The designer's pushback wasn't a UX critique. It was a forcing function that exposed my own hedging back to me.</p>
+            <p>The fix wasn't "go back to the customer." The fix was to admit I was trying to satisfy six users at the cost of all six. I went back, asked a sharper question — <strong>"if you could only have one filter, which one would unblock you tomorrow?"</strong> — and five out of six said the same thing: status, specifically running late. We shipped one filter and one saved view (White Glove). The other four went on the fast-follow list and have never been pulled forward because nobody actually needed them.</p>
+            <p>The senior PM lesson I keep relearning: <em>when you can't pick, the answer isn't to ship everything — it's to admit you haven't done the work yet.</em> Designers see PM hedging from a mile away, and the right response when called on it is to take the hit and go back to the work, not to defend the spec.</p>
+          </div>
+        </div>
+
+        <div class="talking-points">
+          <div class="tp-label">Design Round Cheatsheet</div>
+          <ul>
+            <li><strong>Mission Control theme pivot is your gold story.</strong> Make the designer the hero, not yourself.</li>
+            <li><strong>Mobile Radius / Iuliia is your second story.</strong> Empowering design and bottoms-up innovation.</li>
+            <li><strong>Reference your Harvey KB mockups.</strong> The dark mode pivot to match Harvey's brand is the same move as the Mission Control pivot.</li>
+            <li><strong>The line to use:</strong> "When a designer pushes back, my first question is always 'what are you seeing that I'm not?' — not 'why don't you like this?' The first question opens up evidence; the second invites taste."</li>
+            <li><strong>Designers are usually faster at seeing the right answer than PMs.</strong> They just need the same data.</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════ -->
+  <!-- ROUND 5 — DEEP DIVE                          -->
+  <!-- ════════════════════════════════════════════ -->
+  <section id="round-5">
+    <h1 class="section-title">Round 5 — Take-Home Deep Dive</h1>
+    <p class="section-intro"><span class="tag deepdive">Deep Dive</span> 45 minutes with Anique (Head of Product) and one other product leader. Anchored on your PRD. Recruiter said: <em>"User success and outcomes was good. Mockup tells a story really well. Requirements were clear."</em> They like it. Don't defend it — narrate it.</p>
+
+    <h2 class="subsection-title" id="walkthrough">Walkthrough Strategy</h2>
+
+    <div class="round-card">
+      <div class="round-content">
+        <p>Anique already read the PRD. Don't read it back to her. Tell the story behind the decisions. The strongest version goes like this:</p>
+
+        <h3>Opening (90 seconds)</h3>
+        <p><em>"I'd like to walk you through how I got to this PRD before you ask about specific sections, because the decisions only make sense if you see what I cut and why. The thing I anchored on early is that legal AI's bottleneck isn't accuracy — it's verifiability. 83% of legal leaders have AI access; only 22% report high trust in the outputs. That gap framed everything downstream — the multi-agent verification, the fail-closed permissions, the citation-as-hard-gate eval design."</em></p>
+
+        <h3>Frame the three biggest decisions</h3>
+        <ul>
+          <li><strong>Trust as the product thesis.</strong> "Every architectural choice in the PRD ladders up to: lawyers must be able to trace every claim to a source. That's why citation verification is a hard gate, not a best-effort check. That's why the Verification Agent is adversarial by design. That's why permissions fail closed even at the cost of latency."</li>
+          <li><strong>The admin's real problem is adoption, not curation.</strong> "I started with the assumption that the persona's pain was 'curation doesn't scale.' It's not. The deeper pain is that she builds it and nobody uses it. That's why P0 prioritizes the end-user query experience, not the admin tools. If usage works, curation becomes worth doing. If usage doesn't work, no amount of admin tooling matters."</li>
+          <li><strong>I cut aggressively to land at six sections.</strong> "Earlier drafts had 14 sections. I cut technical architecture because PMs shouldn't write TDDs. I cut a separate trust architecture section because trust isn't a feature, it's a thesis that should run through everything. I cut competitive positioning from the body and made it a Sales Enablement table because PMM owns messaging. The cut shows decisiveness — knowing what to remove is harder than knowing what to include."</li>
+        </ul>
+
+        <h3>Then invite the dive</h3>
+        <p><em>"What would you like to push on first?"</em></p>
+
+        <div class="talking-points">
+          <div class="tp-label">Walkthrough Principles</div>
+          <ol>
+            <li><strong>Show your reasoning, not just your conclusions.</strong> "I considered X, but landed on Y because Z" is the move.</li>
+            <li><strong>Be willing to change your mind in real-time.</strong> "Now that you ask, I'd actually..." is a senior PM signal, not a weakness.</li>
+            <li><strong>Acknowledge tradeoffs openly.</strong> No PRD is perfect. The ability to name your own gaps is a strength.</li>
+            <li><strong>Engage Anique as a thinking partner.</strong> Ask what she'd push back on. The best deep-dives become collaborative.</li>
+            <li><strong>Have one "what I'd do differently" answer ready.</strong> Not as a weakness — as growth.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="subsection-title" id="selene">Selene's 21 Questions — Golden Answers</h2>
+    <p class="section-intro" style="margin-bottom: 20px;">Selene reviewed your PRD and surfaced the questions Anique is most likely to ask. Each answer is 150-250 words and ends with a closing thought you can land. Click to expand.</p>
+    <button class="expand-all" onclick="toggleAll()">Expand all 21</button>
+
+    <!-- Q1 -->
+    <div class="qa-card">
+      <div class="qa-question" onclick="toggleCard(this)">
+        <div class="qa-num">1</div>
+        <div class="qa-q-text">What's the riskiest assumption in this PRD? How would you test it before writing a line of code?</div>
+        <div class="qa-toggle">▼</div>
+      </div>
+      <div class="qa-answer">
+        <div class="qa-answer-inner">
+          <p>The riskiest assumption isn't technical — it's behavioral. The PRD assumes admins will actually curate. The KM Director persona spends 60% of her time on manual curation today with ~30% attorney tagging compliance. We're betting she'll lean into a new tool instead of treating it as more work on top of her existing backlog. <strong>If curation stalls, everything downstream collapses</strong>: no corpus, no retrieval quality, no trust, no usage, no flywheel.</p>
+          <p>I'd test this with a zero-code concept pilot. Pick three design-partner firms, give their KM Directors a Figma prototype of the admin flow plus a shared Notion page, and ask them to walk through standing up an M&A KB using their actual iManage folder structure. Measure three things: how many documents they'd commit to curating in the first 30 days, where they get stuck in the taxonomy decisions, and whether they'd assign a PSL to own it. <em>If two out of three can't articulate a 90-day curation plan, the product needs to shift more weight to AI-assisted classification at P0 — not P1.</em></p>
+          <div class="closing-thought"><strong>The closing thought</strong>The model risk is solvable with engineering; the curation risk is solvable only by understanding whether we're building a tool KM Directors want or another system they'll resent.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="qa-card">
+      <div class="qa-question" onclick="toggleCard(this)">
+        <div class="qa-num">2</div>
+        <div class="qa-q-text">Trust is the core bottleneck — but multi-agent verification adds latency. How do you decide how much latency is acceptable?</div>
+        <div class="qa-toggle">▼</div>
+      </div>
+      <div class="qa-answer">
+        <div class="qa-answer-inner">
+          <p>Latency is a trust input, not a trust tax. The right frame: what latency causes the user to <strong>stop trusting</strong> the system, and what latency causes them to <strong>stop using</strong> it? Those are different thresholds. The PRD targets first token under 2 seconds and full response under 8. I'd hold the first-token target hard because that's what governs the "is this thing working" feeling. I'd let full-response latency flex up to ~12 seconds for queries the Retrieval Evaluator flags as complex.</p>
+          <p>The non-obvious move is <em>making latency legible</em>. If the Verification Agent is adding 3 seconds, surface it: "Checking every citation against source documents." Users tolerate latency they understand. That turns our worst tradeoff into a trust signal — the user sees the work happening, which actually reinforces the verification thesis.</p>
+          <p>The hard floor is simpler: if latency causes users to bail before reading the answer — measured via the query abandonment metric in the PRD — we've gone too far. I'd instrument latency against override rate and abandonment, not against a fixed SLA. <strong>If a 9-second response has a 10% override rate and a 4-second response has 25%, the slower answer is the better product.</strong></p>
+          <div class="closing-thought"><strong>The closing thought</strong>The right SLA isn't a fixed latency target. It's the latency at which override rate starts climbing — that's the trust threshold, and it's the only one that actually matters.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="qa-card">
+      <div class="qa-question" onclick="toggleCard(this)">
+        <div class="qa-num">3</div>
+        <div class="qa-q-text">A design partner says your KB gave a wrong answer on a live deal and they almost sent it to the client. How do you respond?</div>
+        <div class="qa-toggle">▼</div>
+      </div>
+      <div class="qa-answer">
+        <div class="qa-answer-inner">
+          <p>First call is to the partner, same day, and I'm on it with the CSM — not an email, not a postmortem deck. I want to hear exactly what the query was, which citations rendered, what the confidence indicator said, and what almost got sent. Then I pull the full trace: retrieval chunks, Verification Agent output, Citation Agent output, raw sources. <strong>By end of day, I should know whether this was a retrieval miss, a synthesis error with correct citations, or a confidence calibration failure.</strong> Those three root causes have very different fixes.</p>
+          <p>What it changes depends on the root cause. If retrieval missed a contradicting document, we tighten hybrid retrieval and add that query to the adversarial test suite. If synthesis went beyond the sources, that's the Verification Agent failing at its one job — and I'd consider whether we need a stricter claim-evidence structured output. If confidence was high when it shouldn't have been, semantic entropy calibration gets accelerated from frontier technique to P0.</p>
+          <p>But the deeper product change is this: <em>we need a "high-stakes mode" the user can opt into for live deal work. Slower, more conservative, higher human-review threshold.</em> Right now we treat every query the same, and live deal context deserves different defaults.</p>
+          <div class="closing-thought"><strong>The closing thought</strong>The answer to "almost sent it" isn't better accuracy — it's better friction at the exact moment accuracy matters most.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="qa-card">
+      <div class="qa-question" onclick="toggleCard(this)">
+        <div class="qa-num">4</div>
+        <div class="qa-q-text">Walk me through one requirement you deliberately pushed to P1 that you considered making P0, and why.</div>
+        <div class="qa-toggle">▼</div>
+      </div>
+      <div class="qa-answer">
+        <div class="qa-answer-inner">
+          <p>Knowledge nomination. It's a feature that creates a natural engagement loop and would solve part of the cold-start problem at scale. I considered making it P0 because it sounds like a force multiplier on curation.</p>
+          <p>I pushed it to P1 for a specific architectural reason. <strong>Nomination is a workflow product, not a data product</strong> — it has to compose with mature admin tooling to work. You need queue management, bulk approval, suggested-metadata, status tracking, and a way for the admin to give feedback to the nominator without it becoming a Slack thread. The PRD's P0 admin flow has none of that infrastructure yet. Shipping nomination on top of a thin admin layer means a backlog of half-tagged suggestions the KM Director can't triage, and she'd disable the feature within a month. <em>Nomination without admin tooling is worse than no nomination — it's a feature that actively damages trust in the curation process.</em></p>
+          <p>The other reason: in Alpha and Private Beta we're working with 2-3 firms and synthetic-to-real data. Cold start is real, but at that scale it's solved through quick-start templates and the "Bootstrap from iManage" wizard. Nomination matters once you have 20+ firms with mature curation workflows — not when you have three firms still figuring out their taxonomy.</p>
+          <p>The tradeoff I'm accepting: slower flywheel ignition. If a competitor ships nomination first and markets it hard, we look passive. I'm betting the quality story wins over the coverage story in year one.</p>
+          <div class="closing-thought"><strong>The closing thought</strong>Nomination is a feature that looks great in a demo and dies in an inbox. I'd rather ship it once the admin side can absorb the load.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="qa-card">
+      <div class="qa-question" onclick="toggleCard(this)">
+        <div class="qa-num">5</div>
+        <div class="qa-q-text">How is building KB at Harvey fundamentally different from building one in other industries?</div>
+        <div class="qa-toggle">▼</div>
+      </div>
+      <div class="qa-answer">
+        <div class="qa-answer-inner">
+          <p>Three things compound in legal that don't in other verticals.</p>
+          <p><strong>First, the consequences of being wrong are asymmetric to the extreme.</strong> A hallucinated citation in a brief can result in court sanctions ($30K+ per incident, Sixth Circuit 2025) and professional discipline. No enterprise search product in sales or HR operates under that threat model — which is why we can justify the 2x cost and latency of multi-agent verification. In most industries, that architecture would be over-engineered.</p>
+          <p><strong>Second, the permissioning requirements are categorically different.</strong> Ethical walls aren't a nice-to-have ACL — they're a bar ethics obligation (Model Rule 1.10). A single leak between two matters on opposing sides of the same dispute is a firm-ending event. That's why the PRD makes fail-closed permissions a hard gate with zero breaches allowed, and why Intapp Walls integration is P0 — not P2.</p>
+          <p><strong>Third, the source-of-truth hierarchy is inverted.</strong> In most industries, the most valuable knowledge is tribal — what senior people know. In law, the most valuable knowledge is documentary and precedent-based — attorneys have trained for decades to cite sources. <em>That means legal users demand and know how to evaluate verifiable citations, which is actually a gift: the audience is pre-trained to trust the exact trust model we're building.</em></p>
+          <div class="closing-thought"><strong>The closing thought</strong>In most industries, "trust the AI" is a persuasion problem. In legal, it's a compliance problem — which is a much cleaner product brief.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q6 -->
+    <div class="qa-card">
+      <div class="qa-question" onclick="toggleCard(this)">
+        <div class="qa-num">6</div>
+        <div class="qa-q-text">What different types of docs should make it into the KB? How should they be treated differently?</div>
+        <div class="qa-toggle">▼</div>
+      </div>
+      <div class="qa-answer">
+        <div class="qa-answer-inner">
+          <p>Firm-specific is the entire thesis. Public law is commoditized — Westlaw and LexisNexis own it, and CoCounsel's angle is re-ranking over that. Harvey's defensible position is everything downstream of public law: how <em>this firm</em> interprets the MAC clause, which carve-outs they've successfully negotiated, what their playbook says, and what their partners actually sign off on.</p>
+          <p>I'd treat three document classes differently:</p>
+          <p><strong>Ground-truth legal content</strong> (statutes, regulations, case law): shouldn't live in the KB at all. Reference it via integration, don't duplicate. These are stable, public, and better served by Westlaw.</p>
+          <p><strong>Firm proprietary content</strong> (precedent agreements, playbooks, memos, model forms): this is the KB's heart. Admin-curated, version-controlled, tagged by practice area, associated with the partner or practice group that owns it. Citation format includes document, section, and matter context.</p>
+          <p><strong>Client-specific content</strong> (work product from a specific matter): the trickiest bucket. Has ethical wall implications — a precedent from the Acme deal can't surface to a lawyer working against Acme. <em>These documents need matter-level tagging, auto-synced to Intapp Walls, and should be retrievable only to users authorized for that matter — or anonymized for general use after a cooling period.</em></p>
+          <div class="closing-thought"><strong>The closing thought</strong>A KB that treats a statute the same as a matter memo is a KB that will either leak client data or drown users in irrelevance. The whole game is knowing which bucket a document belongs in.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q7 -->
+    <div class="qa-card">
+      <div class="qa-question" onclick="toggleCard(this)">
+        <div class="qa-num">7</div>
+        <div class="qa-q-text">What's the biggest problem — getting knowledge to a single surface, getting it curated, or increasing usage?</div>
+        <div class="qa-toggle">▼</div>
+      </div>
+      <div class="qa-answer">
+        <div class="qa-answer-inner">
+          <p><strong>Curation. The other two are downstream of it.</strong></p>
+          <p>Getting knowledge to a single surface is an integration problem. It's hard but it's solved — iManage has a REST API, NetDocuments has one, Harvey already has Vault infrastructure. Money and engineering time fix it.</p>
+          <p>Increasing usage is a trust problem, which is an output of curation quality. If the KB has the right documents and the retrieval works, lawyers use it — our research shows 83% of legal leaders already have AI access and actively want the trusted version. Usage will follow quality, not the other way around.</p>
+          <p>Curation is the bottleneck because it's the one problem that can't be solved with more engineering or better UX. It requires humans — specifically PSLs and KM Directors — to make judgment calls: <em>is this the canonical MAC clause approach or an outlier? Is this playbook still current post-2024 FTC rules? Does this memo represent firm position or one partner's view?</em> No model can answer these questions with high confidence today, and the cost of getting them wrong is admitting a bad precedent into the corpus that poisons every downstream query.</p>
+          <p>That's why AI-assisted classification is P1 and admin curation tools are P0. <strong>We're building the curation workflow before we optimize the curation effort.</strong></p>
+          <div class="closing-thought"><strong>The closing thought</strong>You can engineer your way out of a bad UX and you can market your way into adoption, but you can't shortcut your way to a high-quality corpus. That has to be earned by humans making hard calls.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q8 -->
+    <div class="qa-card">
+      <div class="qa-question" onclick="toggleCard(this)">
+        <div class="qa-num">8</div>
+        <div class="qa-q-text">How is Harvey better positioned than competitors? Can't they all build firm-specific KBs?</div>
+        <div class="qa-toggle">▼</div>
+      </div>
+      <div class="qa-answer">
+        <div class="qa-answer-inner">
+          <p>They can build the feature. They can't build the position. Three reasons.</p>
+          <p><strong>First, distribution.</strong> Harvey has 100K+ lawyers and $190M ARR already inside the firms that matter. Every one of those accounts is a running start — we're adding a capability to an existing contract, not selling a new procurement cycle into legal, which averages 9-12 months. CoCounsel has scale but skews toward litigation and mid-market. Luminance is strong in review but doesn't have the assistant surface.</p>
+          <p><strong>Second, the trust architecture is purpose-built, not retrofitted.</strong> Multi-agent verification, fail-closed permissions, Intapp Walls at the retrieval layer, binary pass/fail citation gates — these are decisions you make when trust is your thesis from day one. Retrofitting this into CoCounsel's search-and-summarize flow means rebuilding their core. They'll ship something; it won't carry the same architectural commitments.</p>
+          <p><strong>Third, and underweighted: switching costs on firm-specific KBs are brutally high.</strong> Once a firm has invested PSL hours into curating 10,000 documents with your taxonomy, tagging, and approval history, migrating that to a competitor means redoing the work. <em>The knowledge isn't portable in any meaningful way.</em> First-mover advantage here is real because the flywheel is a moat, not a marketing line.</p>
+          <div class="closing-thought"><strong>The closing thought</strong>Competitors can copy the feature list in a quarter. They can't copy two years of curated corpora and the trust a firm has placed in them.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q9 -->
+    <div class="qa-card">
+      <div class="qa-question" onclick="toggleCard(this)">
+        <div class="qa-num">9</div>
+        <div class="qa-q-text">What's the MVP? Do you need all the P0s to launch Alpha?</div>
+        <div class="qa-toggle">▼</div>
+      </div>
+      <div class="qa-answer">
+        <div class="qa-answer-inner">
+          <p>Alpha isn't GA — the gate is "validate core AI pipeline," not "deliver customer value." So no, I don't need all P0s. What I need for Alpha is the minimum loop that lets us run permission penetration tests and measure precision@10, citation accuracy, and hallucination rate against synthetic legal data.</p>
+          <p><strong>Cut list for Alpha:</strong> iManage sync (use manual upload), analytics dashboard (logs are enough), Intapp ethical wall integration (mock it with a fail-closed stub), and bulk admin workflows (individual upload is fine for 50 synthetic docs). <strong>Keep:</strong> create KB, upload docs, set KB-level permissions, query via Assistant, multi-agent verification pipeline, citation rendering, and the behavioral constraints.</p>
+          <p>The real MVP is the query flow plus the verification pipeline. <em>If those don't hit the Alpha gates — precision@10 >80%, citation accuracy >98%, zero permission bypasses — nothing else matters and we delay Beta.</em> If they do hit the gates, we've de-risked the hardest technical part of the product and can parallelize the sync, admin, and analytics work during the Beta ramp.</p>
+          <p>Beta is different. For Beta you need the full P0 set because you're running with real firms on real data, and cutting corners on admin workflow or DMS sync means you'll burn your three best design partners.</p>
+          <div class="closing-thought"><strong>The closing thought</strong>Alpha proves the engine works. Beta proves the car drives. Don't confuse the two or you'll either over-scope Alpha or under-scope Beta.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q10 -->
+    <div class="qa-card">
+      <div class="qa-question" onclick="toggleCard(this)">
+        <div class="qa-num">10</div>
+        <div class="qa-q-text">Do you expect admins to have access to all the data? Or should end users contribute to the KB?</div>
+        <div class="qa-toggle">▼</div>
+      </div>
+      <div class="qa-answer">
+        <div class="qa-answer-inner">
+          <p>Both, but with very different permission models and at different points in the rollout.</p>
+          <p><strong>Admins — specifically KM Directors and PSLs — need broad read access during curation but not blanket access to all firm content.</strong> They should see what falls into the KB's scope (e.g., M&A deals for the M&A KB) filtered through their own ethical wall standing. A KM Director who's walled off from a sensitive matter shouldn't see those documents during curation either, even if she's an admin. <em>That's the fail-closed principle — admin is not a permission escape hatch.</em> The PRD's three-layer permission model supports this; we just need to make sure we don't accidentally carve out an admin bypass during implementation.</p>
+          <p><strong>End users contributing is P1 — it's the knowledge nomination workflow.</strong> The key design decision is that users nominate from documents they already have access to, which means the ethical wall is enforced upstream. What enters the queue is a pointer plus suggested metadata; the admin makes the call on whether to formally admit it to the KB. <em>Never let user nominations auto-promote.</em> That's how a junior associate accidentally contributes a confidential memo from a walled matter to the general corpus.</p>
+          <div class="closing-thought"><strong>The closing thought</strong>Admin is a role, not a security bypass. If your system relies on admins to see everything, you've already lost the ethical wall game.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q11 -->
+    <div class="qa-card">
+      <div class="qa-question" onclick="toggleCard(this)">
+        <div class="qa-num">11</div>
+        <div class="qa-q-text">What are examples of appropriate tags and taxonomy? Common across customers or tied to their specialties?</div>
+        <div class="qa-toggle">▼</div>
+      </div>
+      <div class="qa-answer">
+        <div class="qa-answer-inner">
+          <p>Both layers, and keeping them separate matters.</p>
+          <p><strong>The global layer should be a common taxonomy across all customers:</strong> practice area (M&A, Litigation, Finance, Real Estate, Employment), document type (precedent agreement, playbook, memo, model form, checklist), jurisdiction (Delaware, NY, UK, EU), and lifecycle status (current, superseded, archived). This is what the PRD ships in the quick-start templates. It lets Harvey benchmark retrieval quality across firms, train better classifiers, and avoid every admin reinventing the wheel.</p>
+          <p><strong>The firm-specific layer is where the real value lives.</strong> Firm practice groups don't map one-to-one. One firm's "Healthcare M&A" is another firm's "Life Sciences Transactions." Firm-specific tags include practice sub-groups, partner or originating attorney, client or matter code (with ethical wall implications), risk rating, negotiation outcome (accepted/rejected/modified), and playbook tier ("tier 1 precedent" versus "reference only"). <em>These tags reflect how the firm actually thinks about its work product, and the admin should be able to add or retire them without Harvey gatekeeping.</em></p>
+          <p>AI-assisted classification (P1) applies the global taxonomy automatically with high confidence. Firm-specific tagging gets AI <em>suggestions</em> that admins approve, because the stakes of getting "tier 1 precedent" wrong are meaningful.</p>
+          <div class="closing-thought"><strong>The closing thought</strong>Global taxonomy is what Harvey owns. Firm-specific taxonomy is what firms own. Conflate them and you'll build something too rigid for any firm to actually use.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q12 -->
+    <div class="qa-card">
+      <div class="qa-question" onclick="toggleCard(this)">
+        <div class="qa-num">12</div>
+        <div class="qa-q-text">How would you create a feedback loop to improve the KB from usage?</div>
+        <div class="qa-toggle">▼</div>
+      </div>
+      <div class="qa-answer">
+        <div class="qa-answer-inner">
+          <p>Three loops operating at different time horizons.</p>
+          <p><strong>Immediate loop (per-query):</strong> thumbs up/down on the answer, with optional "why" — was the retrieval wrong, the synthesis wrong, or the cited document wrong? Plus the implicit signals the PRD already tracks: query abandonment, override rate, did the user click into sources, did they copy text, did they open the "Use in Draft" flow. <em>Override rate is the most honest signal because it can't be gamed — if users rewrite the output, they didn't trust it.</em></p>
+          <p><strong>Medium loop (weekly):</strong> admin dashboard surfaces content coverage gaps — queries with low retrieval confidence, queries that returned <2 sources, queries that were abandoned. The KM Director sees "attorneys are asking about pandemic carve-outs and we don't have good coverage" and that directly drives her next curation sprint. This turns usage data into a curation roadmap.</p>
+          <p><strong>Long loop (monthly/quarterly):</strong> the eval pipeline. Ground-truth queries annotated by practicing attorneys become part of the precision@10 test set. Low-confidence answers go to human review and the results feed back into retrieval tuning and synthesis prompt updates.</p>
+          <p>The critical design choice: <strong>feedback must be decoupled from auto-updating the corpus.</strong> No learning loop writes to the KB without admin approval. That's the bright line between a product that improves and a product that drifts.</p>
+          <div class="closing-thought"><strong>The closing thought</strong>A feedback loop that updates the corpus without human approval is how a trust product turns into a liability product.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q13 -->
+    <div class="qa-card">
+      <div class="qa-question" onclick="toggleCard(this)">
+        <div class="qa-num">13</div>
+        <div class="qa-q-text">Aren't most legal cases drawing from ground truth laws and precedents available to all? What's the assumption behind "firm-specific"?</div>
+        <div class="qa-toggle">▼</div>
+      </div>
+      <div class="qa-answer">
+        <div class="qa-answer-inner">
+          <p>Public law is the floor, not the ceiling. Yes, every firm draws from the same statutes and case law — that's commodity. The differentiation lives above that layer, and it's substantial.</p>
+          <p>Consider the MAC clause example in the PRD. Delaware case law on materiality (Akorn, Hexion) is public and every firm knows it. <strong>But how a firm drafts MAC clauses is not public:</strong> their preferred carve-out structure, which pandemic language they accept versus reject, which industries they treat as higher-risk, which partners sign off on aggressive positions, and what negotiating outcomes they've seen across 50 deals. That institutional knowledge is the firm's actual competitive asset — <em>it's why clients pay $1,800/hour for a Cravath partner instead of reading the statute themselves.</em></p>
+          <p>The assumption behind "firm-specific" is that lawyers spend most of their billable time not discovering law but applying firm-specific interpretation and drafting patterns to new situations. Stanford HAI data supports this — associates spend 20-30% of time searching for prior work product, and the prior work product is internal, not external. CoCounsel can give you the statute. Only Harvey KB can give you how your firm has handled the statute across 200 deals.</p>
+          <div class="closing-thought"><strong>The closing thought</strong>If public law were the answer, Westlaw would own this market. The fact that firms still pay PSLs to curate internal knowledge tells you where the real value is.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q14 -->
+    <div class="qa-card">
+      <div class="qa-question" onclick="toggleCard(this)">
+        <div class="qa-num">14</div>
+        <div class="qa-q-text">Legal-aware chunking — different from semantic chunking?</div>
+        <div class="qa-toggle">▼</div>
+      </div>
+      <div class="qa-answer">
+        <div class="qa-answer-inner">
+          <p>Yes, meaningfully. Semantic chunking uses embedding similarity to group related sentences — it's domain-agnostic and treats a document as prose. Legal documents aren't prose. They're structured artifacts where hierarchy and cross-reference carry legal meaning.</p>
+          <p>Legal-aware chunking respects three things semantic chunking doesn't.</p>
+          <p><strong>First, the section hierarchy.</strong> Section 7.2(a)(iii) isn't a paragraph, it's a legally cited location. A chunk that splits mid-subsection loses the ability to cite precisely, which breaks citation accuracy. Chunks should align to section boundaries and carry the full section path as metadata.</p>
+          <p><strong>Second, defined terms.</strong> Legal documents define terms in one place and use them everywhere. A chunk containing "Material Adverse Effect" 40 pages after the definition is useless unless the chunk carries the definition with it. Legal-aware chunking propagates definitions into dependent chunks, either inline or via metadata.</p>
+          <p><strong>Third, self-reference.</strong> Clauses say things like "subject to Section 4.3" or "as defined in Schedule A." Retrieving the clause without the cross-referenced section gives you a partial answer. Legal-aware chunking expands or links cross-references so retrieval pulls the full context.</p>
+          <p>Practically, it's a hybrid: structural parsing (section boundaries, definitions, cross-refs) layered under semantic chunking for long prose sections like preambles or narrative memos. The chunks are then enriched with structural metadata — section path, document type, governing law — which the Retrieval Agent uses as filters.</p>
+          <div class="closing-thought"><strong>The closing thought</strong>Semantic chunking asks "what's this paragraph about." Legal-aware chunking asks "what does this clause legally mean in context." The difference shows up in every citation.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q15 -->
+    <div class="qa-card">
+      <div class="qa-question" onclick="toggleCard(this)">
+        <div class="qa-num">15</div>
+        <div class="qa-q-text">How can you measure text extraction accuracy?</div>
+        <div class="qa-toggle">▼</div>
+      </div>
+      <div class="qa-answer">
+        <div class="qa-answer-inner">
+          <p>The most important measurement decision isn't the metric — it's making it a gate, not a lab number. Every document that comes through ingestion gets a parse-quality score, and documents below threshold get flagged for admin review before entering the KB. <em>That's how extraction accuracy stops being a benchmark and becomes a property of the corpus.</em></p>
+          <p>Two layers feed that score. <strong>Character-level</strong> is the easier problem — build a golden corpus of 500-1000 legal documents across DOCX, PDF (native and scanned), and RTF. Validate ground truth manually. Measure character error rate and word error rate. Important: weight the corpus toward failure modes that matter — scanned PDFs with redlines, complex tables in credit agreements, footnotes in memos. A 98% average that hides 80% accuracy on scanned tables is lying to you.</p>
+          <p><strong>Structure-level is harder and more important.</strong> Did Section 7.2(a)(iii) extract as hierarchical metadata or as flat text? Did the table retain row-column relationships? Did defined terms get linked to their definitions? These are testable with a legal parsing test suite, plus human review on a 50-document sample per release.</p>
+          <div class="closing-thought"><strong>The closing thought</strong>Extraction is the foundation of every downstream claim. If you're 98% accurate on text but 70% accurate on structure, your citations will point to the wrong places and you'll never know why.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q16 -->
+    <div class="qa-card">
+      <div class="qa-question" onclick="toggleCard(this)">
+        <div class="qa-num">16</div>
+        <div class="qa-q-text">Do you suggest we develop our own embedding model? If not, how do you choose one?</div>
+        <div class="qa-toggle">▼</div>
+      </div>
+      <div class="qa-answer">
+        <div class="qa-answer-inner">
+          <p>No, not at this stage. Training a legal-domain embedding model from scratch is a 6-12 month research project with uncertain payoff, and it's not Harvey's competitive edge. <strong>The edge is the verification architecture, permission model, and curated corpus.</strong> Spending headcount on a custom embedder is the wrong bet when foundation-model embeddings (OpenAI text-embedding-3, Cohere embed-v3, Voyage-law-2) already exist and legal-specific options are appearing.</p>
+          <p>What I'd do instead is run a proper bake-off on a legal-domain benchmark we build ourselves. Take 500 annotated queries from design partners with known-relevant documents (the same set the PRD uses for precision@10), run each candidate embedder through the retrieval pipeline, and measure precision@10, recall@20, and MRR. Include a legal-specific embedder (Voyage-law-2 is the obvious one), a strong general-purpose option (OpenAI or Cohere), and an open-source baseline (BGE) in case we later need on-prem. Check cost per 1M embeddings and latency while you're at it — those matter for the cost-per-query analysis.</p>
+          <p>The winning embedder gets paired with BM25 in the hybrid retriever, and we build a swap-ready abstraction so we can upgrade when a better model ships. <em>Embedder selection is a quarterly re-evaluation, not a permanent decision.</em> Two years from now we might fine-tune on firm-specific data — that's when the calculus changes.</p>
+          <div class="closing-thought"><strong>The closing thought</strong>Build the benchmark, not the model. Whoever owns the eval harness owns the decision, and that decision will change three times in the next two years.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q17 -->
+    <div class="qa-card">
+      <div class="qa-question" onclick="toggleCard(this)">
+        <div class="qa-num">17</div>
+        <div class="qa-q-text">Are there retrieval challenges unique to legal? (e.g., self-referential language, exact section matching)</div>
+        <div class="qa-toggle">▼</div>
+      </div>
+      <div class="qa-answer">
+        <div class="qa-answer-inner">
+          <p>Several, and they're why generic RAG underperforms in legal.</p>
+          <p><strong>Exact section matching is the first one.</strong> When a lawyer asks "what does Section 7.2 say about MAC carve-outs," they want that exact section retrieved, not semantically similar clauses. Pure vector search will happily return a semantically close clause from a different document. This is why the PRD uses hybrid retrieval — BM25 handles exact terminology and section references while embeddings handle conceptual queries. Without BM25, you lose the "find me this specific thing" query pattern entirely.</p>
+          <p><strong>Self-referential language is the second.</strong> "As defined herein," "subject to the foregoing," "pursuant to Section 4.3" — these are semantically meaningful only in the context of the document they reference. A chunk containing these phrases without the referenced content retrieves poorly and synthesizes worse. Legal-aware chunking mitigates this by expanding or linking cross-references at ingestion time.</p>
+          <p><strong>Third: defined terms.</strong> "Material Adverse Effect" means something different in every deal because every deal defines it differently. Retrieval has to carry the definition with the clause, and synthesis has to cite the clause <em>and</em> the definition. Otherwise you get technically-correct answers that mean nothing outside the source document's context.</p>
+          <p><strong>Fourth, and underrated: temporal relevance.</strong> Legal positions change — a 2019 memo on crypto custody is misleading in 2026 post-FTX. The retriever needs to weight recency and surface supersession flags, which ties into the stale content detection workflow in P1.</p>
+          <div class="closing-thought"><strong>The closing thought</strong>Legal retrieval isn't "RAG with legal documents." It's a different retrieval problem because legal language is deliberately self-referential and context-bound in ways generic text isn't.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q18 -->
+    <div class="qa-card">
+      <div class="qa-question" onclick="toggleCard(this)">
+        <div class="qa-num">18</div>
+        <div class="qa-q-text">Besides scalability, how can you ensure document-level permissions are respected?</div>
+        <div class="qa-toggle">▼</div>
+      </div>
+      <div class="qa-answer">
+        <div class="qa-answer-inner">
+          <p>Five things, layered, because one failure mode can't compromise the whole system.</p>
+          <p><strong>First, enforce at the retrieval layer, not the generation layer.</strong> The LLM should never see content the user isn't authorized for. Filter the chunks <em>before</em> they go into the synthesis prompt. This is the most important architectural decision — it makes prompt injection and jailbreak attacks irrelevant to the permission model because the forbidden content never enters the context window.</p>
+          <p><strong>Second, fail-closed defaults.</strong> If a permission check errors, returns ambiguous state, or times out, the document is excluded. Never default-allow on a permission system edge case. This is non-negotiable and should be unit tested on every PR.</p>
+          <p><strong>Third, don't leak through acknowledgment.</strong> The system must not reveal that a document exists if the user isn't authorized to see it — that's a side-channel leak that lawyers will catch. "No results found" is the only acceptable response, not "3 results found but you don't have access."</p>
+          <p><strong>Fourth, continuous penetration testing.</strong> The PRD makes permission breaches a hard release gate (zero breaches). That requires an adversarial test suite that probes: cross-KB leakage, ethical wall bypass via reformulated queries, citation leakage to walled documents, and admin role escalation. Run it on every build, not just pre-release.</p>
+          <p><strong>Fifth, immutable audit logs.</strong> Every permission decision is logged with user, document, timestamp, and outcome. When a firm's GC asks "did we leak the Acme documents," we can answer definitively.</p>
+          <div class="closing-thought"><strong>The closing thought</strong>Permission enforcement isn't a feature you test once — it's a property the system has to maintain under adversarial conditions forever. Which means it has to be architecturally impossible to violate, not just procedurally prevented.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q19 -->
+    <div class="qa-card">
+      <div class="qa-question" onclick="toggleCard(this)">
+        <div class="qa-num">19</div>
+        <div class="qa-q-text">How does the KB add to costs?</div>
+        <div class="qa-toggle">▼</div>
+      </div>
+      <div class="qa-answer">
+        <div class="qa-answer-inner">
+          <p>Five cost drivers, in rough order of magnitude.</p>
+          <p><strong>Inference cost dominates.</strong> The multi-agent pipeline runs 3-4 LLM calls per query (retrieval evaluation, synthesis, verification, citation check), and they're not cheap — most require GPT-4-class models for legal accuracy. The PRD flags per-query cost at $0.30-0.80. For a 1,000-lawyer firm at a 30% weekly active rate, that's ~300 active queriers. If each issues an average of 5 queries per week, you're at ~1,500 queries/week, ~78,000/year, and at $0.50 average per query that's ~$39K/year in inference alone per firm. <em>The number is sensitive to assumptions — the variable that matters most is queries-per-active-user-per-week, not user count.</em> Not catastrophic, but it's the line item that scales with adoption.</p>
+          <p><strong>Embedding and storage costs are next.</strong> Firm corpora are large — iManage workspaces run 50K-500K documents. Embedding 100K documents at ~$0.02 per 1K tokens runs into tens of thousands upfront, plus vector database storage ongoing. Re-embedding on model upgrades multiplies this.</p>
+          <p><strong>Third, retrieval infrastructure.</strong> Hybrid search (vector + BM25) at low latency for hundreds of concurrent users requires real infrastructure — managed vector DB, search index, caching layer. This is a fixed cost that scales with corpus size and query volume.</p>
+          <p><strong>Fourth, ingestion pipeline.</strong> Parsing, chunking, classification, metadata extraction — all LLM-assisted. One-time per document at ingestion, but bulk onboarding a firm's 100K documents is a real expense.</p>
+          <p><strong>Fifth, the often-forgotten one: support and CSM.</strong> High-trust products require high-touch CSM, especially during Beta. A dedicated CSM per design partner firm is $150K+ loaded cost. Self-serve onboarding in Limited GA is how we get off that cost curve.</p>
+          <div class="closing-thought"><strong>The closing thought</strong>The dangerous cost isn't the sticker — it's the per-query line scaling linearly with adoption. Success pressure becomes margin pressure unless we get smarter about caching and model routing.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q20 -->
+    <div class="qa-card">
+      <div class="qa-question" onclick="toggleCard(this)">
+        <div class="qa-num">20</div>
+        <div class="qa-q-text">Considering cost, is per-seat/module pricing the right choice?</div>
+        <div class="qa-toggle">▼</div>
+      </div>
+      <div class="qa-answer">
+        <div class="qa-answer-inner">
+          <p>Per-seat is right for the SKU, wrong as the only lever. Here's why.</p>
+          <p>Per-seat aligns with how law firms already buy enterprise software and how Harvey prices today. Switching to per-query or per-document would force procurement through a new cycle and spook buyers who can't forecast spend. <strong>Per-seat is the path of least resistance and it's what the PRD's "KB is sold as part of Harvey platform" assumption implies.</strong></p>
+          <p>But per-seat alone creates a problem at $0.30-0.80 per query: heavy users are loss-making. A single litigator running 200 queries per week generates ~$4,000-10,000/year in inference on a $2,000/year seat. We absorb the margin hit. <em>If we hit the PRD's 30%+ weekly query rate target, we're not operating a healthy margin product.</em></p>
+          <p>So I'd layer two mechanisms on top. First, a fair-use cap per seat — say 500 queries/month — with overage pricing for power users. This protects margin without penalizing normal usage. Second, module-based pricing where KB is a paid add-on to Harvey core, so firms that want the trust architecture pay for the cost of delivering it. This also segments the market — firms investing in KM are the ones willing to pay a premium.</p>
+          <p>The strategic call is whether to optimize for adoption (simple flat per-seat, absorb margin, win share) or margin (metered, slower land). Given the 6-12 month competitive window the PRD identifies, <strong>I'd lean adoption for year one, margin for year two — but instrument everything now so we can shift without re-negotiating contracts.</strong></p>
+          <div class="closing-thought"><strong>The closing thought</strong>Per-seat wins the deal. Metered wins the P&L. In year one you need the deal. In year three you need both.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q21 -->
+    <div class="qa-card">
+      <div class="qa-question" onclick="toggleCard(this)">
+        <div class="qa-num">21</div>
+        <div class="qa-q-text">What's the north star metric?</div>
+        <div class="qa-toggle">▼</div>
+      </div>
+      <div class="qa-answer">
+        <div class="qa-answer-inner">
+          <p><strong>Weekly query rate among enabled users, gated on user override rate.</strong></p>
+          <p>The PRD lists both: >30% weekly query rate as adoption, <15% override rate as trust. I'd make them a compound north star because either one alone is misleading. <em>High query rate with high override means people are trying the product and not trusting it — we're building a demo, not a tool. Low query rate with low override means the few people who use it love it, but we're not reaching anyone — we're a niche product.</em> Only the compound metric captures what we actually want: widespread, trusted, regular use.</p>
+          <p><strong>Why not citation accuracy or hallucination rate?</strong> Those are release gates, not north stars. They need to be >99% and <2% respectively — non-negotiable — but hitting them doesn't mean we've built a product people use. A KB with perfect citations that no one queries is a failure. Quality metrics enable the north star; they aren't the north star.</p>
+          <p><strong>Why not time saved or draft acceleration?</strong> Those are the executive-facing ROI metrics and they'll go on the QBR slide. But they're lagging, hard to measure cleanly, and distort incentives — if I optimize for time saved I'll build a feature that makes five users feel 10x faster while 95% of the firm never touches the product.</p>
+          <p>Weekly query rate with override gate is honest. It can't be gamed. <em>It moves only when we build something people trust enough to use every week.</em></p>
+          <div class="closing-thought"><strong>The closing thought</strong>The north star isn't an accuracy number because accuracy is already non-negotiable. It's the only metric that captures whether a non-negotiable accurate product is actually getting used. Weekly query rate gated on override rate is the smallest possible expression of that question.</div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ════════════════════════════════════════════ -->
+  <!-- DAY OF TACTICS                               -->
+  <!-- ════════════════════════════════════════════ -->
+  <section id="day-of">
+    <h1 class="section-title">Day-Of Tactics</h1>
+    <p class="section-intro">The night before and morning of, focus on logistics and energy, not last-minute cramming. You already know the material.</p>
+
+    <div class="day-of-grid">
+      <div class="day-of-card">
+        <h4>Night Before</h4>
+        <ul>
+          <li>Re-read your own PRD once. Don't study other materials.</li>
+          <li>Pick the 4 stories you'll lean on (Mission Control, Blue Yonder, Cardinal, Team Drive ETAs)</li>
+          <li>Prepare 3 questions to ask each interviewer — rotate them so no one hears the same one</li>
+          <li><strong>Verify your stats:</strong> Sixth Circuit sanctions number ($30K, may actually be from a different district), Stanford HAI "20-30%" stat (find the exact source), Harvey $190M ARR (check the press release/leak)</li>
+          <li>Lay out clothes, charge laptop, set alarms</li>
+          <li>Sleep early. Nothing you cram tonight will help tomorrow.</li>
+        </ul>
+      </div>
+      <div class="day-of-card">
+        <h4>Morning Of</h4>
+        <ul>
+          <li>Eat real food. Coffee, but not too much.</li>
+          <li>Walk for 10 minutes before you arrive — clears the head</li>
+          <li>Bring printed copy of your PRD just in case</li>
+          <li>Bring water and a notebook. Take notes during interviews — it shows engagement.</li>
+          <li>Arrive 15 min early. 201 3rd Street, next to SF MoMA.</li>
+        </ul>
+      </div>
+      <div class="day-of-card">
+        <h4>Between Rounds</h4>
+        <ul>
+          <li>Reset between sessions. Take 2 minutes to clear your head.</li>
+          <li>Don't replay the previous round in your head — it's done.</li>
+          <li>Hydrate. Brain on dehydration is the #1 reason for blanks.</li>
+          <li>Ask the recruiter for the next interviewer's name and role before walking in</li>
+          <li>Smile. Energy is contagious.</li>
+        </ul>
+      </div>
+      <div class="day-of-card">
+        <h4>Universal Opening Move</h4>
+        <ul>
+          <li>"Before we dive in, can I ask what you're hoping to learn from this conversation?"</li>
+          <li>This re-frames the round around their actual goals, not your assumptions</li>
+          <li>It gives you 30 seconds to settle into the conversation</li>
+          <li>It signals that you treat interviewers as partners, not gatekeepers</li>
+          <li>Use it for every round.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════ -->
+  <!-- IF YOU BLANK                                 -->
+  <!-- ════════════════════════════════════════════ -->
+  <section id="if-blank">
+    <h1 class="section-title">If You Blank</h1>
+    <p class="section-intro">Everyone blanks at some point. The difference between good and great PMs in interviews isn't never blanking — it's how you recover.</p>
+
+    <div class="round-card">
+      <div class="round-content">
+        <h3>Recovery Phrases (Memorize These)</h3>
+        <ul>
+          <li><strong>"Let me think about that for a second."</strong> Then actually pause. 5 seconds of silence is fine. It signals thoughtfulness, not panic.</li>
+          <li><strong>"I want to make sure I'm answering the right question. Can you say more about what you're looking for?"</strong> This buys time and surfaces context you may have missed.</li>
+          <li><strong>"There are two ways to think about this — let me start with the one I'm most confident in."</strong> Then start with the part you know.</li>
+          <li><strong>"I don't have a great example of that, but I have a closely related one — would that work?"</strong> Pivot to a story you know.</li>
+          <li><strong>"Honestly, I haven't thought about that exact situation. Here's how I'd approach it..."</strong> It's okay to think out loud.</li>
+        </ul>
+
+        <h3>If You Forget a Story Mid-Telling</h3>
+        <p>Don't try to recover the original detail. Skip ahead. <em>"To shortcut this — the outcome was..."</em> The interviewer doesn't need every detail. They need the arc and the lesson.</p>
+
+        <h3>If You Disagree with the Interviewer</h3>
+        <p>Don't capitulate. <em>"I see your point on X. Where I'd push back is Y, because..."</em> Senior PMs are expected to hold positions under pressure. Folding immediately reads as weak.</p>
+
+        <h3>If a Question Catches You Off Guard</h3>
+        <p>Reframe to a question you can answer. <em>"That's interesting. The way I'd approach it is to first ask..."</em> Then ask a clarifying question, which gives you 30 seconds to think.</p>
+
+        <h3>If the Live Case Goes Sideways</h3>
+        <p>Stop. Reset. <em>"Let me back up. I think I started solving before I diagnosed. The first thing I'd actually want to know is..."</em> Resetting publicly is a strength, not a weakness — it shows you can correct course.</p>
+
+        <div class="talking-points">
+          <div class="tp-label">The Meta-Principle</div>
+          <ul>
+            <li>Interviewers are looking for how you handle pressure, not how you avoid it</li>
+            <li>A composed recovery is more impressive than a perfect first answer</li>
+            <li>Senior PMs are paid to make calls under uncertainty — show that ability when uncertainty hits</li>
+            <li>Your goal isn't to be perfect — it's to be the kind of person they'd want as a teammate</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  function toggleCard(el) { el.parentElement.classList.toggle('open'); }
+
+  function toggleAll() {
+    const cards = document.querySelectorAll('.qa-card');
+    const anyOpen = Array.from(cards).some(c => c.classList.contains('open'));
+    cards.forEach(c => {
+      if (anyOpen) c.classList.remove('open');
+      else c.classList.add('open');
+    });
+    document.querySelector('.expand-all').textContent = anyOpen ? 'Expand all 21' : 'Collapse all';
+  }
+
+  // Active nav highlighting on scroll
+  const sections = document.querySelectorAll('section[id]');
+  const navItems = document.querySelectorAll('.nav-item');
+
+  function setActiveNav() {
+    let current = '';
+    sections.forEach(s => {
+      const top = s.offsetTop - 100;
+      if (window.scrollY >= top) current = s.id;
+    });
+    navItems.forEach(item => {
+      item.classList.remove('active');
+      if (item.getAttribute('href') === '#' + current) item.classList.add('active');
+    });
+  }
+
+  window.addEventListener('scroll', setActiveNav);
+  setActiveNav();
+
+  // Smooth scroll
+  navItems.forEach(item => {
+    item.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(item.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+</script>
+
+</body>
+</html>

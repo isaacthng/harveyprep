@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harvey — Admin User Flow</title>
+<style>
+  :root {
+    --bg-base: #111111;
+    --bg-raised: #1A1A1A;
+    --bg-surface: #222222;
+    --bg-hover: #2A2A2A;
+    --border: rgba(255,255,255,0.08);
+    --border-strong: rgba(255,255,255,0.14);
+    --fg-primary: #F5F0EB;
+    --fg-secondary: #A8A199;
+    --fg-subtle: #6B6560;
+    --fg-muted: #4A4540;
+    --accent: #C4956A;
+    --accent-soft: rgba(196,149,106,0.08);
+    --accent-border: rgba(196,149,106,0.22);
+    --blue: #4F8BF6;
+    --blue-soft: rgba(79,139,246,0.08);
+    --blue-border: rgba(79,139,246,0.20);
+    --purple: #8B5CF6;
+    --purple-soft: rgba(139,92,246,0.08);
+    --purple-border: rgba(139,92,246,0.20);
+    --amber: #F59E0B;
+    --amber-soft: rgba(245,158,11,0.08);
+    --amber-border: rgba(245,158,11,0.20);
+    --green: #10B981;
+    --green-soft: rgba(16,185,129,0.08);
+    --green-border: rgba(16,185,129,0.20);
+    --red: #EF4444;
+    --red-soft: rgba(239,68,68,0.08);
+    --red-border: rgba(239,68,68,0.20);
+    --radius: 8px;
+    --radius-lg: 12px;
+    --transition: 180ms ease;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg-base);
+    color: var(--fg-primary);
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page-header {
+    text-align: center;
+    padding: 48px 32px 12px;
+  }
+
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .logo-mark {
+    width: 32px; height: 32px;
+    background: var(--accent);
+    border-radius: 7px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 16px; color: var(--bg-base);
+  }
+
+  .logo-text {
+    font-size: 18px; font-weight: 600;
+    letter-spacing: 0.5px; color: var(--fg-primary);
+  }
+
+  .page-header h1 {
+    font-size: 28px; font-weight: 700;
+    letter-spacing: -0.5px; color: var(--fg-primary);
+    margin-bottom: 6px;
+  }
+
+  .page-header .subtitle {
+    font-size: 14px; color: var(--fg-subtle);
+    max-width: 600px; margin: 0 auto; line-height: 1.6;
+  }
+
+  /* Legend */
+  .legend {
+    display: flex; justify-content: center; gap: 24px;
+    padding: 16px 32px 8px; flex-wrap: wrap;
+  }
+
+  .legend-item {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 12px; color: var(--fg-secondary);
+  }
+
+  .legend-shape {
+    width: 20px; height: 14px; border-radius: 3px;
+    border: 1.5px solid;
+  }
+
+  .legend-diamond {
+    width: 14px; height: 14px;
+    transform: rotate(45deg);
+    border: 1.5px solid;
+    border-radius: 2px;
+  }
+
+  .legend-line {
+    width: 24px; height: 0;
+    border-top: 2px solid;
+  }
+
+  .legend-line-dashed {
+    width: 24px; height: 0;
+    border-top: 2px dashed;
+  }
+
+  /* Flow canvas */
+  .flow-canvas {
+    padding: 20px 32px 48px;
+    overflow-x: auto;
+    display: flex;
+    justify-content: center;
+  }
+
+  .flow-svg {
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
+  }
+
+  /* Tooltip */
+  .tooltip {
+    position: fixed;
+    background: #2A2A2A;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 12px;
+    color: var(--fg-primary);
+    max-width: 280px;
+    line-height: 1.5;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 150ms ease;
+    z-index: 1000;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  }
+
+  .tooltip.visible { opacity: 1; }
+  .tooltip-title { font-weight: 600; margin-bottom: 4px; font-size: 13px; }
+  .tooltip-body { color: var(--fg-secondary); }
+
+  /* Section labels */
+  .section-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 10px; border-radius: 12px;
+    font-size: 10px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.6px;
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="logo">
+    <div class="logo-mark">H</div>
+    <div class="logo-text">HARVEY</div>
+  </div>
+  <h1>Admin User Flow — Knowledge Bases</h1>
+  <p class="subtitle">Complete admin journey: creating, ingesting, organizing, permissioning, managing, and monitoring Knowledge Bases</p>
+</div>
+
+<div class="legend">
+  <div class="legend-item">
+    <div class="legend-shape" style="background:var(--accent-soft);border-color:var(--accent);"></div>
+    Admin Action
+  </div>
+  <div class="legend-item">
+    <div class="legend-shape" style="background:var(--purple-soft);border-color:var(--purple);"></div>
+    AI / System Step
+  </div>
+  <div class="legend-item">
+    <div class="legend-diamond" style="background:var(--amber-soft);border-color:var(--amber);"></div>
+    Decision Point
+  </div>
+  <div class="legend-item">
+    <div class="legend-shape" style="background:var(--green-soft);border-color:var(--green);"></div>
+    Output / Success
+  </div>
+  <div class="legend-item">
+    <div class="legend-shape" style="background:var(--red-soft);border-color:var(--red);"></div>
+    Error / Fail-Closed
+  </div>
+  <div class="legend-item">
+    <div class="legend-shape" style="background:var(--blue-soft);border-color:var(--blue);"></div>
+    End User Touchpoint
+  </div>
+  <div class="legend-item">
+    <div class="legend-line" style="border-color:var(--fg-subtle);"></div>
+    Primary Flow
+  </div>
+  <div class="legend-item">
+    <div class="legend-line-dashed" style="border-color:var(--accent);"></div>
+    Cross-Flow Connection
+  </div>
+</div>
+
+<div class="flow-canvas">
+<svg class="flow-svg" width="1680" height="2480" viewBox="0 0 1680 2480" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,3.5 L0,7 Z" fill="#6B6560"/>
+    </marker>
+    <marker id="arrow-accent" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,3.5 L0,7 Z" fill="#C4956A"/>
+    </marker>
+    <marker id="arrow-blue" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,3.5 L0,7 Z" fill="#4F8BF6"/>
+    </marker>
+    <marker id="arrow-green" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,3.5 L0,7 Z" fill="#10B981"/>
+    </marker>
+    <marker id="arrow-purple" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,3.5 L0,7 Z" fill="#8B5CF6"/>
+    </marker>
+    <marker id="arrow-amber" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,3.5 L0,7 Z" fill="#F59E0B"/>
+    </marker>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- A1: CREATE & CONFIGURE KB                          -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <g id="section-a1">
+    <!-- Section label -->
+    <rect x="40" y="20" width="220" height="28" rx="14" fill="rgba(196,149,106,0.08)" stroke="rgba(196,149,106,0.22)" stroke-width="1"/>
+    <text x="56" y="39" font-size="11" font-weight="600" fill="#C4956A" letter-spacing="0.6" font-family="Inter, system-ui, sans-serif">A1 — CREATE &amp; CONFIGURE KB</text>
+
+    <!-- Start node -->
+    <g class="node" data-tooltip="Admin initiates KB creation from the Knowledge Bases dashboard" data-title="Start">
+      <circle cx="80" cy="90" r="22" fill="var(--bg-raised)" stroke="#C4956A" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="80" y="94" text-anchor="middle" font-size="10" font-weight="600" fill="#C4956A" font-family="Inter, system-ui, sans-serif">START</text>
+    </g>
+
+    <!-- Arrow: Start -> Name & Describe -->
+    <path d="M102,90 L140,90" stroke="#6B6560" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+    <!-- Name & Describe -->
+    <g class="node" data-tooltip="Enter KB name, description, and purpose. This metadata helps users discover and understand the KB." data-title="Name & Describe KB">
+      <rect x="148" y="68" width="140" height="44" rx="8" fill="var(--bg-raised)" stroke="rgba(196,149,106,0.4)" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="218" y="86" text-anchor="middle" font-size="11" font-weight="600" fill="var(--fg-primary)" font-family="Inter, system-ui, sans-serif">Name &amp; Describe</text>
+      <text x="218" y="101" text-anchor="middle" font-size="10" fill="var(--fg-subtle)" font-family="Inter, system-ui, sans-serif">KB metadata</text>
+    </g>
+
+    <!-- Arrow -->
+    <path d="M288,90 L320,90" stroke="#6B6560" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+    <!-- Select Practice Area -->
+    <g class="node" data-tooltip="Assign to a practice area (e.g., M&A, Litigation, Tax). Used for discovery and recommended KBs." data-title="Select Practice Area">
+      <rect x="328" y="68" width="140" height="44" rx="8" fill="var(--bg-raised)" stroke="rgba(196,149,106,0.4)" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="398" y="86" text-anchor="middle" font-size="11" font-weight="600" fill="var(--fg-primary)" font-family="Inter, system-ui, sans-serif">Practice Area</text>
+      <text x="398" y="101" text-anchor="middle" font-size="10" fill="var(--fg-subtle)" font-family="Inter, system-ui, sans-serif">M&amp;A, Litigation, Tax...</text>
+    </g>
+
+    <!-- Arrow -->
+    <path d="M468,90 L500,90" stroke="#6B6560" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+    <!-- Set Permissions -->
+    <g class="node" data-tooltip="Define which users and groups can access this KB. Integrates with firm directory and Intapp Walls." data-title="Set User Permissions">
+      <rect x="508" y="68" width="140" height="44" rx="8" fill="var(--bg-raised)" stroke="rgba(196,149,106,0.4)" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="578" y="86" text-anchor="middle" font-size="11" font-weight="600" fill="var(--fg-primary)" font-family="Inter, system-ui, sans-serif">User Permissions</text>
+      <text x="578" y="101" text-anchor="middle" font-size="10" fill="var(--fg-subtle)" font-family="Inter, system-ui, sans-serif">Access groups</text>
+    </g>
+
+    <!-- Arrow -->
+    <path d="M648,90 L680,90" stroke="#6B6560" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+    <!-- Admin Permissions -->
+    <g class="node" data-tooltip="Set admin-level permissions: who can edit, manage content, and configure this KB." data-title="Set Admin Permissions">
+      <rect x="688" y="68" width="140" height="44" rx="8" fill="var(--bg-raised)" stroke="rgba(196,149,106,0.4)" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="758" y="86" text-anchor="middle" font-size="11" font-weight="600" fill="var(--fg-primary)" font-family="Inter, system-ui, sans-serif">Admin Permissions</text>
+      <text x="758" y="101" text-anchor="middle" font-size="10" fill="var(--fg-subtle)" font-family="Inter, system-ui, sans-serif">Editors &amp; managers</text>
+    </g>
+
+    <!-- Arrow -->
+    <path d="M828,90 L860,90" stroke="#6B6560" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+    <!-- Quality Controls -->
+    <g class="node" data-tooltip="Configure quality gates: require approval before publishing? Auto-publish new uploads? Review thresholds." data-title="Quality Controls">
+      <rect x="868" y="68" width="160" height="44" rx="8" fill="var(--bg-raised)" stroke="rgba(196,149,106,0.4)" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="948" y="86" text-anchor="middle" font-size="11" font-weight="600" fill="var(--fg-primary)" font-family="Inter, system-ui, sans-serif">Quality Controls</text>
+      <text x="948" y="101" text-anchor="middle" font-size="10" fill="var(--fg-subtle)" font-family="Inter, system-ui, sans-serif">Approval? Auto-publish?</text>
+    </g>
+
+    <!-- Arrow -->
+    <path d="M1028,90 L1070,90" stroke="#6B6560" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+    <!-- KB Created (Draft) -->
+    <g class="node" data-tooltip="KB is created in Draft state. Not yet visible to end users. Ready for content upload." data-title="KB Created (Draft)">
+      <rect x="1078" y="68" width="150" height="44" rx="8" fill="var(--green-soft)" stroke="var(--green)" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="1153" y="86" text-anchor="middle" font-size="11" font-weight="600" fill="var(--green)" font-family="Inter, system-ui, sans-serif">KB Created</text>
+      <text x="1153" y="101" text-anchor="middle" font-size="10" fill="rgba(16,185,129,0.7)" font-family="Inter, system-ui, sans-serif">Draft State</text>
+    </g>
+
+    <!-- Connection to A2 -->
+    <path d="M1153,112 L1153,145 L250,145 L250,180" stroke="#C4956A" stroke-width="1.5" stroke-dasharray="6,4" fill="none" marker-end="url(#arrow-accent)"/>
+    <text x="700" y="141" text-anchor="middle" font-size="10" fill="#C4956A" font-family="Inter, system-ui, sans-serif">→ Proceed to Upload (A2)</text>
+
+    <!-- Connection to A4 -->
+    <path d="M578,112 L578,145 L1440,145 L1440,180" stroke="#C4956A" stroke-width="1.5" stroke-dasharray="6,4" fill="none" marker-end="url(#arrow-accent)"/>
+    <text x="1300" y="141" text-anchor="middle" font-size="10" fill="#C4956A" font-family="Inter, system-ui, sans-serif">→ Configure Permissions (A4)</text>
+  </g>
+
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- A2: UPLOAD & INGEST DOCUMENTS                      -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <g id="section-a2">
+    <rect x="40" y="190" width="260" height="28" rx="14" fill="rgba(196,149,106,0.08)" stroke="rgba(196,149,106,0.22)" stroke-width="1"/>
+    <text x="56" y="209" font-size="11" font-weight="600" fill="#C4956A" letter-spacing="0.6" font-family="Inter, system-ui, sans-serif">A2 — UPLOAD &amp; INGEST DOCUMENTS</text>
+
+    <!-- Entry paths -->
+    <g class="node" data-tooltip="Automatic sync from iManage DMS. Documents are pulled on schedule or via webhook trigger." data-title="DMS Sync (iManage)">
+      <rect x="56" y="240" width="140" height="44" rx="8" fill="var(--bg-raised)" stroke="rgba(196,149,106,0.4)" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="126" y="258" text-anchor="middle" font-size="11" font-weight="600" fill="var(--fg-primary)" font-family="Inter, system-ui, sans-serif">DMS Sync</text>
+      <text x="126" y="273" text-anchor="middle" font-size="10" fill="var(--fg-subtle)" font-family="Inter, system-ui, sans-serif">iManage integration</text>
+    </g>
+
+    <g class="node" data-tooltip="Upload multiple documents at once via drag-and-drop or file picker. Supports PDFs, DOCX, and more." data-title="Bulk Upload">
+      <rect x="216" y="240" width="130" height="44" rx="8" fill="var(--bg-raised)" stroke="rgba(196,149,106,0.4)" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="281" y="258" text-anchor="middle" font-size="11" font-weight="600" fill="var(--fg-primary)" font-family="Inter, system-ui, sans-serif">Bulk Upload</text>
+      <text x="281" y="273" text-anchor="middle" font-size="10" fill="var(--fg-subtle)" font-family="Inter, system-ui, sans-serif">Drag &amp; drop</text>
+    </g>
+
+    <g class="node" data-tooltip="Upload a single document with manual metadata entry." data-title="Individual Upload">
+      <rect x="366" y="240" width="130" height="44" rx="8" fill="var(--bg-raised)" stroke="rgba(196,149,106,0.4)" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="431" y="258" text-anchor="middle" font-size="11" font-weight="600" fill="var(--fg-primary)" font-family="Inter, system-ui, sans-serif">Single Upload</text>
+      <text x="431" y="273" text-anchor="middle" font-size="10" fill="var(--fg-subtle)" font-family="Inter, system-ui, sans-serif">Manual entry</text>
+    </g>
+
+    <g class="node" data-tooltip="Documents nominated by end users (U5). These arrive in the admin's approval queue with user-provided context." data-title="Knowledge Nomination">
+      <rect x="516" y="240" width="160" height="44" rx="8" fill="var(--blue-soft)" stroke="var(--blue)" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="596" y="258" text-anchor="middle" font-size="11" font-weight="600" fill="var(--blue)" font-family="Inter, system-ui, sans-serif">Knowledge Nomination</text>
+      <text x="596" y="273" text-anchor="middle" font-size="10" fill="rgba(79,139,246,0.7)" font-family="Inter, system-ui, sans-serif">From end users (U5)</text>
+    </g>
+
+    <!-- Converge arrows to AI Processing -->
+    <path d="M126,284 L126,310 L420,310 L420,330" stroke="#6B6560" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+    <path d="M281,284 L281,310 L420,310" stroke="#6B6560" stroke-width="1.5" fill="none"/>
+    <path d="M431,284 L431,310 L420,310" stroke="#6B6560" stroke-width="1.5" fill="none"/>
+    <path d="M596,284 L596,310 L420,310" stroke="#6B6560" stroke-width="1.5" fill="none"/>
+
+    <!-- AI Processing Pipeline -->
+    <rect x="100" y="338" width="650" height="70" rx="10" fill="rgba(139,92,246,0.04)" stroke="rgba(139,92,246,0.15)" stroke-width="1" stroke-dasharray="4,3"/>
+    <text x="120" y="355" font-size="10" font-weight="600" fill="var(--purple)" letter-spacing="0.5" font-family="Inter, system-ui, sans-serif">AI PROCESSING PIPELINE</text>
+
+    <g class="node" data-tooltip="Document parsing: extract text, tables, headers, footnotes from PDFs, DOCX, and other formats." data-title="Parse">
+      <rect x="120" y="364" width="90" height="34" rx="6" fill="var(--purple-soft)" stroke="var(--purple)" stroke-width="1.2"/>
+      <text x="165" y="385" text-anchor="middle" font-size="11" font-weight="600" fill="var(--purple)" font-family="Inter, system-ui, sans-serif">Parse</text>
+    </g>
+
+    <path d="M210,381 L230,381" stroke="#8B5CF6" stroke-width="1.2" fill="none" marker-end="url(#arrow-purple)"/>
+
+    <g class="node" data-tooltip="AI classifies document type (memo, agreement, brief, etc.) with a confidence score. Low-confidence items get flagged for admin review." data-title="Classify">
+      <rect x="238" y="364" width="100" height="34" rx="6" fill="var(--purple-soft)" stroke="var(--purple)" stroke-width="1.2"/>
+      <text x="288" y="385" text-anchor="middle" font-size="11" font-weight="600" fill="var(--purple)" font-family="Inter, system-ui, sans-serif">Classify</text>
+    </g>
+
+    <path d="M338,381 L358,381" stroke="#8B5CF6" stroke-width="1.2" fill="none" marker-end="url(#arrow-purple)"/>
+
+    <g class="node" data-tooltip="Extract metadata: parties, dates, jurisdiction, deal type, clause types. Feeds search and filtering." data-title="Extract Metadata">
+      <rect x="366" y="364" width="120" height="34" rx="6" fill="var(--purple-soft)" stroke="var(--purple)" stroke-width="1.2"/>
+      <text x="426" y="385" text-anchor="middle" font-size="11" font-weight="600" fill="var(--purple)" font-family="Inter, system-ui, sans-serif">Metadata</text>
+    </g>
+
+    <path d="M486,381 L506,381" stroke="#8B5CF6" stroke-width="1.2" fill="none" marker-end="url(#arrow-purple)"/>
+
+    <g class="node" data-tooltip="Chunk documents into semantic segments optimized for retrieval. Preserves context and document structure." data-title="Chunk">
+      <rect x="514" y="364" width="90" height="34" rx="6" fill="var(--purple-soft)" stroke="var(--purple)" stroke-width="1.2"/>
+      <text x="559" y="385" text-anchor="middle" font-size="11" font-weight="600" fill="var(--purple)" font-family="Inter, system-ui, sans-serif">Chunk</text>
+    </g>
+
+    <path d="M604,381 L624,381" stroke="#8B5CF6" stroke-width="1.2" fill="none" marker-end="url(#arrow-purple)"/>
+
+    <g class="node" data-tooltip="Generate vector embeddings for semantic search. Stored in vector database for retrieval." data-title="Embed">
+      <rect x="632" y="364" width="90" height="34" rx="6" fill="var(--purple-soft)" stroke="var(--purple)" stroke-width="1.2"/>
+      <text x="677" y="385" text-anchor="middle" font-size="11" font-weight="600" fill="var(--purple)" font-family="Inter, system-ui, sans-serif">Embed</text>
+    </g>
+
+    <!-- Arrow from pipeline to Admin Review -->
+    <path d="M420,408 L420,440" stroke="#6B6560" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+    <!-- Admin Review -->
+    <g class="node" data-tooltip="Admin reviews AI-generated classifications and metadata. Can approve, edit suggestions, or reject documents entirely." data-title="Admin Review">
+      <rect x="320" y="448" width="200" height="48" rx="8" fill="var(--bg-raised)" stroke="rgba(196,149,106,0.4)" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="420" y="468" text-anchor="middle" font-size="12" font-weight="600" fill="var(--fg-primary)" font-family="Inter, system-ui, sans-serif">Admin Review</text>
+      <text x="420" y="484" text-anchor="middle" font-size="10" fill="var(--fg-subtle)" font-family="Inter, system-ui, sans-serif">Approve / Edit / Reject AI suggestions</text>
+    </g>
+
+    <!-- Arrow to decision -->
+    <path d="M420,496 L420,530" stroke="#6B6560" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+    <!-- Decision: Quality controls? -->
+    <g class="node" data-tooltip="If quality controls are enabled (set in A1), documents enter an approval queue before going live. Otherwise, they're published immediately." data-title="Quality Controls Enabled?">
+      <rect x="384" y="538" width="72" height="72" rx="4" fill="var(--amber-soft)" stroke="var(--amber)" stroke-width="1.5" transform="rotate(45,420,574)" filter="url(#shadow)"/>
+      <text x="420" y="570" text-anchor="middle" font-size="10" font-weight="700" fill="var(--amber)" font-family="Inter, system-ui, sans-serif">Quality</text>
+      <text x="420" y="582" text-anchor="middle" font-size="10" font-weight="700" fill="var(--amber)" font-family="Inter, system-ui, sans-serif">Gate?</text>
+    </g>
+
+    <!-- Yes path: Approval Queue -->
+    <path d="M456,574 L560,574" stroke="#F59E0B" stroke-width="1.5" fill="none" marker-end="url(#arrow-amber)"/>
+    <text x="500" y="566" text-anchor="middle" font-size="10" font-weight="600" fill="var(--amber)" font-family="Inter, system-ui, sans-serif">Yes</text>
+
+    <g class="node" data-tooltip="Documents wait in approval queue. Designated approvers must review and approve before content goes live." data-title="Approval Queue">
+      <rect x="568" y="552" width="140" height="44" rx="8" fill="var(--bg-raised)" stroke="rgba(245,158,11,0.4)" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="638" y="570" text-anchor="middle" font-size="11" font-weight="600" fill="var(--fg-primary)" font-family="Inter, system-ui, sans-serif">Approval Queue</text>
+      <text x="638" y="585" text-anchor="middle" font-size="10" fill="var(--fg-subtle)" font-family="Inter, system-ui, sans-serif">Pending review</text>
+    </g>
+
+    <path d="M708,574 L780,574 L780,650" stroke="#6B6560" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+    <!-- No path: Straight to live -->
+    <path d="M420,610 L420,650" stroke="#F59E0B" stroke-width="1.5" fill="none" marker-end="url(#arrow-amber)"/>
+    <text x="435" y="635" font-size="10" font-weight="600" fill="var(--amber)" font-family="Inter, system-ui, sans-serif">No</text>
+
+    <!-- Documents Live -->
+    <g class="node" data-tooltip="Documents are now queryable by end users with appropriate permissions. Content is live in the KB." data-title="Documents Queryable">
+      <rect x="360" y="658" width="200" height="48" rx="8" fill="var(--green-soft)" stroke="var(--green)" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="460" y="678" text-anchor="middle" font-size="12" font-weight="600" fill="var(--green)" font-family="Inter, system-ui, sans-serif">Documents Queryable</text>
+      <text x="460" y="694" text-anchor="middle" font-size="10" fill="rgba(16,185,129,0.7)" font-family="Inter, system-ui, sans-serif">Live in KB — searchable by users</text>
+    </g>
+
+    <!-- Merge approval path -->
+    <path d="M560,658 L560,682 L780,682 L780,658" stroke="rgba(16,185,129,0.3)" stroke-width="1" fill="none" stroke-dasharray="4,3"/>
+
+    <!-- Connection to A3 -->
+    <path d="M460,706 L460,730 L870,730" stroke="#C4956A" stroke-width="1.5" stroke-dasharray="6,4" fill="none" marker-end="url(#arrow-accent)"/>
+    <text x="660" y="724" text-anchor="middle" font-size="10" fill="#C4956A" font-family="Inter, system-ui, sans-serif">→ Organize Content (A3)</text>
+  </g>
+
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- A3: ORGANIZE CONTENT                               -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <g id="section-a3">
+    <rect x="830" y="190" width="200" height="28" rx="14" fill="rgba(196,149,106,0.08)" stroke="rgba(196,149,106,0.22)" stroke-width="1"/>
+    <text x="846" y="209" font-size="11" font-weight="600" fill="#C4956A" letter-spacing="0.6" font-family="Inter, system-ui, sans-serif">A3 — ORGANIZE CONTENT</text>
+
+    <g class="node" data-tooltip="Apply tags to multiple documents at once. Speeds up organization of large document sets." data-title="Bulk Tagging">
+      <rect x="880" y="240" width="130" height="44" rx="8" fill="var(--bg-raised)" stroke="rgba(196,149,106,0.4)" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="945" y="258" text-anchor="middle" font-size="11" font-weight="600" fill="var(--fg-primary)" font-family="Inter, system-ui, sans-serif">Bulk Tagging</text>
+      <text x="945" y="273" text-anchor="middle" font-size="10" fill="var(--fg-subtle)" font-family="Inter, system-ui, sans-serif">Multi-select &amp; tag</text>
+    </g>
+
+    <path d="M945,284 L945,310" stroke="#6B6560" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+    <g class="node" data-tooltip="Define custom taxonomy specific to this KB. Organize content by deal type, jurisdiction, practice area, etc." data-title="Custom Taxonomy">
+      <rect x="880" y="318" width="130" height="44" rx="8" fill="var(--bg-raised)" stroke="rgba(196,149,106,0.4)" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="945" y="336" text-anchor="middle" font-size="11" font-weight="600" fill="var(--fg-primary)" font-family="Inter, system-ui, sans-serif">Custom Taxonomy</text>
+      <text x="945" y="351" text-anchor="middle" font-size="10" fill="var(--fg-subtle)" font-family="Inter, system-ui, sans-serif">Hierarchy &amp; categories</text>
+    </g>
+
+    <path d="M945,362 L945,388" stroke="#6B6560" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+    <g class="node" data-tooltip="AI suggests tags based on document content. Admin can accept or reject each suggestion." data-title="AI-Suggested Tags">
+      <rect x="880" y="396" width="130" height="44" rx="8" fill="var(--purple-soft)" stroke="var(--purple)" stroke-width="1.2" filter="url(#shadow)"/>
+      <text x="945" y="414" text-anchor="middle" font-size="11" font-weight="600" fill="var(--purple)" font-family="Inter, system-ui, sans-serif">AI Tag Suggestions</text>
+      <text x="945" y="429" text-anchor="middle" font-size="10" fill="rgba(139,92,246,0.7)" font-family="Inter, system-ui, sans-serif">Accept / Reject</text>
+    </g>
+
+    <path d="M945,440 L945,466" stroke="#6B6560" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+    <g class="node" data-tooltip="Pin important documents to the top of the KB for easy discovery. Featured content appears prominently." data-title="Pin Featured Content">
+      <rect x="880" y="474" width="130" height="44" rx="8" fill="var(--bg-raised)" stroke="rgba(196,149,106,0.4)" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="945" y="492" text-anchor="middle" font-size="11" font-weight="600" fill="var(--fg-primary)" font-family="Inter, system-ui, sans-serif">Pin Featured</text>
+      <text x="945" y="507" text-anchor="middle" font-size="10" fill="var(--fg-subtle)" font-family="Inter, system-ui, sans-serif">Highlight key docs</text>
+    </g>
+
+    <path d="M945,518 L945,544" stroke="#6B6560" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+    <g class="node" data-tooltip="Archive outdated or superseded content. Archived docs are removed from search but retained for audit trail." data-title="Archive Stale Content">
+      <rect x="880" y="552" width="130" height="44" rx="8" fill="var(--bg-raised)" stroke="rgba(196,149,106,0.4)" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="945" y="570" text-anchor="middle" font-size="11" font-weight="600" fill="var(--fg-primary)" font-family="Inter, system-ui, sans-serif">Archive Stale</text>
+      <text x="945" y="585" text-anchor="middle" font-size="10" fill="var(--fg-subtle)" font-family="Inter, system-ui, sans-serif">Remove from search</text>
+    </g>
+
+    <!-- Feedback from A6 -->
+    <path d="M1080,596 L1080,660 L1010,660 L1010,596" stroke="#C4956A" stroke-width="1.5" stroke-dasharray="6,4" fill="none" marker-end="url(#arrow-accent)"/>
+    <text x="1046" y="656" font-size="9" fill="#C4956A" font-family="Inter, system-ui, sans-serif">A6 stale alerts</text>
+
+    <!-- Re-tag connection to A2 -->
+    <path d="M880,576 L830,576 L830,480 L520,480" stroke="#C4956A" stroke-width="1.5" stroke-dasharray="6,4" fill="none" marker-end="url(#arrow-accent)"/>
+    <text x="700" y="470" font-size="9" fill="#C4956A" font-family="Inter, system-ui, sans-serif">Re-tag → A2</text>
+  </g>
+
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- A4: PERMISSIONS & ETHICAL WALLS                    -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <g id="section-a4">
+    <rect x="1120" y="190" width="280" height="28" rx="14" fill="rgba(196,149,106,0.08)" stroke="rgba(196,149,106,0.22)" stroke-width="1"/>
+    <text x="1136" y="209" font-size="11" font-weight="600" fill="#C4956A" letter-spacing="0.6" font-family="Inter, system-ui, sans-serif">A4 — PERMISSIONS &amp; ETHICAL WALLS</text>
+
+    <g class="node" data-tooltip="Set the base access level for the KB: firm-wide, practice group, or specific teams." data-title="Base Access Level">
+      <rect x="1160" y="240" width="160" height="44" rx="8" fill="var(--bg-raised)" stroke="rgba(196,149,106,0.4)" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="1240" y="258" text-anchor="middle" font-size="11" font-weight="600" fill="var(--fg-primary)" font-family="Inter, system-ui, sans-serif">Base Access Level</text>
+      <text x="1240" y="273" text-anchor="middle" font-size="10" fill="var(--fg-subtle)" font-family="Inter, system-ui, sans-serif">Firm / Group / Team</text>
+    </g>
+
+    <path d="M1240,284 L1240,310" stroke="#6B6560" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+    <g class="node" data-tooltip="Sync with Intapp Walls to enforce ethical wall restrictions. Ensures conflict-free access." data-title="Intapp Walls Sync">
+      <rect x="1160" y="318" width="160" height="44" rx="8" fill="var(--purple-soft)" stroke="var(--purple)" stroke-width="1.2" filter="url(#shadow)"/>
+      <text x="1240" y="336" text-anchor="middle" font-size="11" font-weight="600" fill="var(--purple)" font-family="Inter, system-ui, sans-serif">Intapp Walls Sync</text>
+      <text x="1240" y="351" text-anchor="middle" font-size="10" fill="rgba(139,92,246,0.7)" font-family="Inter, system-ui, sans-serif">Ethical wall enforcement</text>
+    </g>
+
+    <path d="M1240,362 L1240,388" stroke="#6B6560" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+    <g class="node" data-tooltip="Override permissions at the individual document level. Useful for sensitive documents within a broader KB." data-title="Document-Level Overrides">
+      <rect x="1160" y="396" width="160" height="44" rx="8" fill="var(--bg-raised)" stroke="rgba(196,149,106,0.4)" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="1240" y="414" text-anchor="middle" font-size="11" font-weight="600" fill="var(--fg-primary)" font-family="Inter, system-ui, sans-serif">Doc-Level Overrides</text>
+      <text x="1240" y="429" text-anchor="middle" font-size="10" fill="var(--fg-subtle)" font-family="Inter, system-ui, sans-serif">Per-document access</text>
+    </g>
+
+    <path d="M1240,440 L1240,466" stroke="#6B6560" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+    <!-- Decision: Permission Conflict? -->
+    <g class="node" data-tooltip="System checks for conflicts between KB permissions, document overrides, and ethical walls. Conflicts are resolved fail-closed—most restrictive wins." data-title="Permission Conflict?">
+      <rect x="1204" y="498" width="72" height="72" rx="4" fill="var(--amber-soft)" stroke="var(--amber)" stroke-width="1.5" transform="rotate(45,1240,534)" filter="url(#shadow)"/>
+      <text x="1240" y="530" text-anchor="middle" font-size="10" font-weight="700" fill="var(--amber)" font-family="Inter, system-ui, sans-serif">Conflict</text>
+      <text x="1240" y="542" text-anchor="middle" font-size="10" font-weight="700" fill="var(--amber)" font-family="Inter, system-ui, sans-serif">Found?</text>
+    </g>
+
+    <!-- Yes: Fail-closed -->
+    <path d="M1276,534 L1400,534" stroke="#EF4444" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+    <text x="1330" y="526" text-anchor="middle" font-size="10" font-weight="600" fill="var(--red)" font-family="Inter, system-ui, sans-serif">Yes</text>
+
+    <g class="node" data-tooltip="When permission conflict exists, system applies the most restrictive rule. Access is denied—fail-closed. Admin must explicitly resolve." data-title="Fail-Closed">
+      <rect x="1408" y="512" width="140" height="44" rx="8" fill="var(--red-soft)" stroke="var(--red)" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="1478" y="530" text-anchor="middle" font-size="11" font-weight="600" fill="var(--red)" font-family="Inter, system-ui, sans-serif">Fail-Closed</text>
+      <text x="1478" y="545" text-anchor="middle" font-size="10" fill="rgba(239,68,68,0.7)" font-family="Inter, system-ui, sans-serif">Most restrictive wins</text>
+    </g>
+
+    <!-- No: Test as User -->
+    <path d="M1240,570 L1240,604" stroke="#F59E0B" stroke-width="1.5" fill="none" marker-end="url(#arrow-amber)"/>
+    <text x="1258" y="594" font-size="10" font-weight="600" fill="var(--amber)" font-family="Inter, system-ui, sans-serif">No</text>
+
+    <g class="node" data-tooltip="Preview the KB exactly as a specific user would see it. Validates permission configuration before publishing." data-title="Test As User">
+      <rect x="1160" y="612" width="160" height="44" rx="8" fill="var(--bg-raised)" stroke="rgba(196,149,106,0.4)" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="1240" y="630" text-anchor="middle" font-size="11" font-weight="600" fill="var(--fg-primary)" font-family="Inter, system-ui, sans-serif">"Test as User"</text>
+      <text x="1240" y="645" text-anchor="middle" font-size="10" fill="var(--fg-subtle)" font-family="Inter, system-ui, sans-serif">Preview permissions</text>
+    </g>
+
+    <!-- Three-layer enforcement diagram -->
+    <rect x="1130" y="680" width="220" height="90" rx="8" fill="rgba(196,149,106,0.04)" stroke="rgba(196,149,106,0.15)" stroke-width="1"/>
+    <text x="1240" y="700" text-anchor="middle" font-size="10" font-weight="600" fill="#C4956A" font-family="Inter, system-ui, sans-serif">THREE-LAYER ENFORCEMENT</text>
+    <rect x="1150" y="712" width="180" height="20" rx="4" fill="rgba(196,149,106,0.1)" stroke="rgba(196,149,106,0.3)" stroke-width="1"/>
+    <text x="1240" y="726" text-anchor="middle" font-size="9" font-weight="500" fill="var(--fg-secondary)" font-family="Inter, system-ui, sans-serif">Layer 1: KB-Level Access</text>
+    <rect x="1150" y="734" width="180" height="20" rx="4" fill="rgba(196,149,106,0.1)" stroke="rgba(196,149,106,0.3)" stroke-width="1"/>
+    <text x="1240" y="748" text-anchor="middle" font-size="9" font-weight="500" fill="var(--fg-secondary)" font-family="Inter, system-ui, sans-serif">Layer 2: Document-Level</text>
+    <rect x="1150" y="756" width="180" height="12" rx="4" fill="rgba(239,68,68,0.08)" stroke="rgba(239,68,68,0.3)" stroke-width="1"/>
+    <text x="1240" y="766" text-anchor="middle" font-size="9" font-weight="600" fill="var(--red)" font-family="Inter, system-ui, sans-serif">Layer 3: Ethical Wall (Intapp)</text>
+  </g>
+
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- A5: KB LIFECYCLE MANAGEMENT                        -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <g id="section-a5">
+    <rect x="40" y="810" width="260" height="28" rx="14" fill="rgba(196,149,106,0.08)" stroke="rgba(196,149,106,0.22)" stroke-width="1"/>
+    <text x="56" y="829" font-size="11" font-weight="600" fill="#C4956A" letter-spacing="0.6" font-family="Inter, system-ui, sans-serif">A5 — KB LIFECYCLE MANAGEMENT</text>
+
+    <!-- Ownership Transfer -->
+    <g class="node" data-tooltip="Transfer KB ownership to another admin. Includes notification and confirmation workflow." data-title="Ownership Transfer">
+      <rect x="56" y="858" width="140" height="44" rx="8" fill="var(--bg-raised)" stroke="rgba(196,149,106,0.4)" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="126" y="876" text-anchor="middle" font-size="11" font-weight="600" fill="var(--fg-primary)" font-family="Inter, system-ui, sans-serif">Transfer Owner</text>
+      <text x="126" y="891" text-anchor="middle" font-size="10" fill="var(--fg-subtle)" font-family="Inter, system-ui, sans-serif">Reassign admin</text>
+    </g>
+
+    <g class="node" data-tooltip="Track changes to KB configuration and content over time. Full audit trail with rollback capability." data-title="Version Control">
+      <rect x="216" y="858" width="140" height="44" rx="8" fill="var(--bg-raised)" stroke="rgba(196,149,106,0.4)" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="286" y="876" text-anchor="middle" font-size="11" font-weight="600" fill="var(--fg-primary)" font-family="Inter, system-ui, sans-serif">Version Control</text>
+      <text x="286" y="891" text-anchor="middle" font-size="10" fill="var(--fg-subtle)" font-family="Inter, system-ui, sans-serif">Audit trail &amp; rollback</text>
+    </g>
+
+    <g class="node" data-tooltip="Archive a KB that is no longer actively maintained but should be preserved for reference." data-title="Archival">
+      <rect x="376" y="858" width="120" height="44" rx="8" fill="var(--bg-raised)" stroke="rgba(196,149,106,0.4)" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="436" y="876" text-anchor="middle" font-size="11" font-weight="600" fill="var(--fg-primary)" font-family="Inter, system-ui, sans-serif">Archive</text>
+      <text x="436" y="891" text-anchor="middle" font-size="10" fill="var(--fg-subtle)" font-family="Inter, system-ui, sans-serif">Preserve, no queries</text>
+    </g>
+
+    <!-- Deprecation flow -->
+    <g class="node" data-tooltip="Mark a KB for deprecation. Includes redirect to replacement KB and user notification." data-title="Deprecation">
+      <rect x="516" y="858" width="130" height="44" rx="8" fill="var(--bg-raised)" stroke="rgba(196,149,106,0.4)" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="581" y="876" text-anchor="middle" font-size="11" font-weight="600" fill="var(--fg-primary)" font-family="Inter, system-ui, sans-serif">Deprecate</text>
+      <text x="581" y="891" text-anchor="middle" font-size="10" fill="var(--fg-subtle)" font-family="Inter, system-ui, sans-serif">With redirect</text>
+    </g>
+
+    <path d="M581,902 L581,930" stroke="#6B6560" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+    <!-- Decision: Active users? -->
+    <g class="node" data-tooltip="Check if users are actively querying this KB. If yes, show usage metrics and require explicit confirmation before deprecation." data-title="Active Users?">
+      <rect x="545" y="962" width="72" height="72" rx="4" fill="var(--amber-soft)" stroke="var(--amber)" stroke-width="1.5" transform="rotate(45,581,998)" filter="url(#shadow)"/>
+      <text x="581" y="994" text-anchor="middle" font-size="10" font-weight="700" fill="var(--amber)" font-family="Inter, system-ui, sans-serif">Active</text>
+      <text x="581" y="1006" text-anchor="middle" font-size="10" font-weight="700" fill="var(--amber)" font-family="Inter, system-ui, sans-serif">Users?</text>
+    </g>
+
+    <!-- Yes path -->
+    <path d="M617,998 L720,998" stroke="#F59E0B" stroke-width="1.5" fill="none" marker-end="url(#arrow-amber)"/>
+    <text x="660" y="990" text-anchor="middle" font-size="10" font-weight="600" fill="var(--amber)" font-family="Inter, system-ui, sans-serif">Yes</text>
+
+    <g class="node" data-tooltip="Show usage statistics and affected user list. Require explicit admin confirmation with redirect KB selected." data-title="Usage Confirmation">
+      <rect x="728" y="976" width="160" height="44" rx="8" fill="var(--bg-raised)" stroke="rgba(245,158,11,0.4)" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="808" y="994" text-anchor="middle" font-size="11" font-weight="600" fill="var(--fg-primary)" font-family="Inter, system-ui, sans-serif">Show Usage Metrics</text>
+      <text x="808" y="1009" text-anchor="middle" font-size="10" fill="var(--fg-subtle)" font-family="Inter, system-ui, sans-serif">Require confirmation</text>
+    </g>
+
+    <path d="M888,998 L940,998" stroke="#6B6560" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+    <!-- No path -->
+    <path d="M581,1034 L581,1068 L988,1068 L988,1020" stroke="#F59E0B" stroke-width="1.5" fill="none" marker-end="url(#arrow-amber)"/>
+    <text x="596" y="1060" font-size="10" font-weight="600" fill="var(--amber)" font-family="Inter, system-ui, sans-serif">No</text>
+
+    <!-- Archive result -->
+    <g class="node" data-tooltip="KB is archived. Users are redirected to the replacement KB. Notifications sent to all affected users." data-title="KB Archived">
+      <rect x="948" y="976" width="130" height="44" rx="8" fill="var(--green-soft)" stroke="var(--green)" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="1013" y="994" text-anchor="middle" font-size="11" font-weight="600" fill="var(--green)" font-family="Inter, system-ui, sans-serif">KB Archived</text>
+      <text x="1013" y="1009" text-anchor="middle" font-size="10" fill="rgba(16,185,129,0.7)" font-family="Inter, system-ui, sans-serif">Users redirected</text>
+    </g>
+
+    <!-- Bulk Migration -->
+    <g class="node" data-tooltip="Move documents between KBs in bulk. Maintains metadata and permissions mapping." data-title="Bulk Migration">
+      <rect x="666" y="858" width="140" height="44" rx="8" fill="var(--bg-raised)" stroke="rgba(196,149,106,0.4)" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="736" y="876" text-anchor="middle" font-size="11" font-weight="600" fill="var(--fg-primary)" font-family="Inter, system-ui, sans-serif">Bulk Migration</text>
+      <text x="736" y="891" text-anchor="middle" font-size="10" fill="var(--fg-subtle)" font-family="Inter, system-ui, sans-serif">Move docs between KBs</text>
+    </g>
+
+    <!-- Notification to end users -->
+    <path d="M1013,1020 L1013,1060 L1400,1060" stroke="var(--blue)" stroke-width="1.5" stroke-dasharray="6,4" fill="none" marker-end="url(#arrow-blue)"/>
+    <text x="1200" y="1054" text-anchor="middle" font-size="10" fill="var(--blue)" font-family="Inter, system-ui, sans-serif">Notify end users of deprecation → redirect</text>
+  </g>
+
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- A6: MONITOR USAGE & QUALITY                        -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <g id="section-a6">
+    <rect x="40" y="1120" width="260" height="28" rx="14" fill="rgba(196,149,106,0.08)" stroke="rgba(196,149,106,0.22)" stroke-width="1"/>
+    <text x="56" y="1139" font-size="11" font-weight="600" fill="#C4956A" letter-spacing="0.6" font-family="Inter, system-ui, sans-serif">A6 — MONITOR USAGE &amp; QUALITY</text>
+
+    <!-- Dashboard metrics -->
+    <rect x="56" y="1168" width="700" height="180" rx="10" fill="rgba(196,149,106,0.03)" stroke="rgba(196,149,106,0.12)" stroke-width="1"/>
+    <text x="76" y="1190" font-size="11" font-weight="600" fill="#C4956A" font-family="Inter, system-ui, sans-serif">ANALYTICS DASHBOARD</text>
+
+    <!-- Metric cards row 1 -->
+    <g class="node" data-tooltip="Track total queries, queries per day, and query trends over time." data-title="Query Volume">
+      <rect x="76" y="1204" width="120" height="52" rx="6" fill="var(--bg-raised)" stroke="var(--border-strong)" stroke-width="1" filter="url(#shadow)"/>
+      <text x="136" y="1224" text-anchor="middle" font-size="10" font-weight="600" fill="var(--fg-primary)" font-family="Inter, system-ui, sans-serif">Query Volume</text>
+      <text x="136" y="1244" text-anchor="middle" font-size="20" font-weight="700" fill="var(--accent)" font-family="Inter, system-ui, sans-serif">2.4K</text>
+    </g>
+
+    <g class="node" data-tooltip="See the most frequently asked questions and topics. Identifies what users need most." data-title="Top Queries">
+      <rect x="208" y="1204" width="120" height="52" rx="6" fill="var(--bg-raised)" stroke="var(--border-strong)" stroke-width="1" filter="url(#shadow)"/>
+      <text x="268" y="1224" text-anchor="middle" font-size="10" font-weight="600" fill="var(--fg-primary)" font-family="Inter, system-ui, sans-serif">Top Queries</text>
+      <text x="268" y="1244" text-anchor="middle" font-size="11" fill="var(--fg-subtle)" font-family="Inter, system-ui, sans-serif">Most asked topics</text>
+    </g>
+
+    <g class="node" data-tooltip="Percentage of queries that return at least one relevant result. Low rates indicate content gaps." data-title="Retrieval Success">
+      <rect x="340" y="1204" width="120" height="52" rx="6" fill="var(--bg-raised)" stroke="var(--border-strong)" stroke-width="1" filter="url(#shadow)"/>
+      <text x="400" y="1224" text-anchor="middle" font-size="10" font-weight="600" fill="var(--fg-primary)" font-family="Inter, system-ui, sans-serif">Retrieval Rate</text>
+      <text x="400" y="1244" text-anchor="middle" font-size="20" font-weight="700" fill="var(--green)" font-family="Inter, system-ui, sans-serif">94%</text>
+    </g>
+
+    <g class="node" data-tooltip="Rate at which responses include verifiable citations. Higher is better—shows the system is grounding answers in real documents." data-title="Citation Rate">
+      <rect x="472" y="1204" width="120" height="52" rx="6" fill="var(--bg-raised)" stroke="var(--border-strong)" stroke-width="1" filter="url(#shadow)"/>
+      <text x="532" y="1224" text-anchor="middle" font-size="10" font-weight="600" fill="var(--fg-primary)" font-family="Inter, system-ui, sans-serif">Citation Rate</text>
+      <text x="532" y="1244" text-anchor="middle" font-size="20" font-weight="700" fill="var(--green)" font-family="Inter, system-ui, sans-serif">89%</text>
+    </g>
+
+    <g class="node" data-tooltip="Aggregated thumbs up/down and detailed feedback from end users (U4). Shows overall satisfaction." data-title="User Feedback">
+      <rect x="604" y="1204" width="120" height="52" rx="6" fill="var(--blue-soft)" stroke="var(--blue)" stroke-width="1.2" filter="url(#shadow)"/>
+      <text x="664" y="1224" text-anchor="middle" font-size="10" font-weight="600" fill="var(--blue)" font-family="Inter, system-ui, sans-serif">User Feedback</text>
+      <text x="664" y="1244" text-anchor="middle" font-size="10" fill="rgba(79,139,246,0.7)" font-family="Inter, system-ui, sans-serif">From U4 flow</text>
+    </g>
+
+    <!-- Metric cards row 2 -->
+    <g class="node" data-tooltip="Queries that returned no results or low-confidence results. Indicates topics where content should be added." data-title="Content Gaps">
+      <rect x="76" y="1268" width="150" height="52" rx="6" fill="var(--bg-raised)" stroke="rgba(239,68,68,0.3)" stroke-width="1" filter="url(#shadow)"/>
+      <text x="151" y="1288" text-anchor="middle" font-size="10" font-weight="600" fill="var(--red)" font-family="Inter, system-ui, sans-serif">Content Gaps</text>
+      <text x="151" y="1308" text-anchor="middle" font-size="10" fill="rgba(239,68,68,0.6)" font-family="Inter, system-ui, sans-serif">Unanswered queries → add content</text>
+    </g>
+
+    <g class="node" data-tooltip="Documents that haven't been accessed or cited in a configurable time period. Candidates for review or archival." data-title="Stale Content Alerts">
+      <rect x="238" y="1268" width="150" height="52" rx="6" fill="var(--bg-raised)" stroke="rgba(245,158,11,0.3)" stroke-width="1" filter="url(#shadow)"/>
+      <text x="313" y="1288" text-anchor="middle" font-size="10" font-weight="600" fill="var(--amber)" font-family="Inter, system-ui, sans-serif">Stale Alerts</text>
+      <text x="313" y="1308" text-anchor="middle" font-size="10" fill="rgba(245,158,11,0.6)" font-family="Inter, system-ui, sans-serif">Unused docs → archive</text>
+    </g>
+
+    <g class="node" data-tooltip="Queue of documents nominated by end users (U5) pending admin review." data-title="Nomination Queue">
+      <rect x="400" y="1268" width="150" height="52" rx="6" fill="var(--blue-soft)" stroke="var(--blue)" stroke-width="1.2" filter="url(#shadow)"/>
+      <text x="475" y="1288" text-anchor="middle" font-size="10" font-weight="600" fill="var(--blue)" font-family="Inter, system-ui, sans-serif">Nomination Queue</text>
+      <text x="475" y="1308" text-anchor="middle" font-size="10" fill="rgba(79,139,246,0.7)" font-family="Inter, system-ui, sans-serif">From U5 → review</text>
+    </g>
+
+    <!-- Feedback loops -->
+    <text x="76" y="1370" font-size="11" font-weight="600" fill="var(--fg-subtle)" font-family="Inter, system-ui, sans-serif">FEEDBACK LOOPS</text>
+
+    <!-- Content gaps → A2 -->
+    <g>
+      <path d="M151,1320 L151,1395 Q151,1405 141,1405 L60,1405 Q40,1405 40,1385 L40,690 Q40,680 50,680 L360,680" stroke="#C4956A" stroke-width="1.5" stroke-dasharray="6,4" fill="none" marker-end="url(#arrow-accent)"/>
+      <rect x="60" y="1380" width="180" height="22" rx="4" fill="var(--bg-base)"/>
+      <text x="150" y="1395" text-anchor="middle" font-size="10" font-weight="500" fill="#C4956A" font-family="Inter, system-ui, sans-serif">Content gaps → Upload (A2)</text>
+    </g>
+
+    <!-- Stale alerts → A3 -->
+    <g>
+      <path d="M313,1320 L313,1420 Q313,1430 323,1430 L840,1430 Q860,1430 860,1410 L860,596" stroke="#C4956A" stroke-width="1.5" stroke-dasharray="6,4" fill="none" marker-end="url(#arrow-accent)"/>
+      <rect x="480" y="1415" width="200" height="22" rx="4" fill="var(--bg-base)"/>
+      <text x="580" y="1430" text-anchor="middle" font-size="10" font-weight="500" fill="#C4956A" font-family="Inter, system-ui, sans-serif">Stale alerts → Archive (A3)</text>
+    </g>
+
+    <!-- Nominations → A2 -->
+    <g>
+      <path d="M475,1320 L475,1452 Q475,1462 465,1462 L30,1462 Q20,1462 20,1442 L20,270 Q20,260 30,260 L56,260" stroke="var(--blue)" stroke-width="1.5" stroke-dasharray="6,4" fill="none" marker-end="url(#arrow-blue)"/>
+      <rect x="100" y="1447" width="220" height="22" rx="4" fill="var(--bg-base)"/>
+      <text x="210" y="1462" text-anchor="middle" font-size="10" font-weight="500" fill="var(--blue)" font-family="Inter, system-ui, sans-serif">Nominations → Upload Queue (A2)</text>
+    </g>
+  </g>
+
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- CROSS-FLOW RELATIONSHIPS SUMMARY                   -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <g id="cross-flow-summary">
+    <rect x="56" y="1520" width="1560" height="130" rx="10" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+    <text x="76" y="1545" font-size="13" font-weight="700" fill="var(--fg-primary)" font-family="Inter, system-ui, sans-serif">Cross-Flow Relationships</text>
+
+    <!-- Relationship items -->
+    <g>
+      <circle cx="90" cy="1575" r="4" fill="var(--accent)"/>
+      <text x="104" y="1579" font-size="11" fill="var(--fg-secondary)" font-family="Inter, system-ui, sans-serif">A1 → A2: KB creation flows into document upload</text>
+    </g>
+    <g>
+      <circle cx="90" cy="1600" r="4" fill="var(--accent)"/>
+      <text x="104" y="1604" font-size="11" fill="var(--fg-secondary)" font-family="Inter, system-ui, sans-serif">A1 → A4: Permissions set at creation, refined in A4</text>
+    </g>
+    <g>
+      <circle cx="90" cy="1625" r="4" fill="var(--accent)"/>
+      <text x="104" y="1629" font-size="11" fill="var(--fg-secondary)" font-family="Inter, system-ui, sans-serif">A2 ↔ A3: Uploaded docs organized; re-tagging triggers re-processing</text>
+    </g>
+    <g>
+      <circle cx="560" cy="1575" r="4" fill="var(--blue)"/>
+      <text x="574" y="1579" font-size="11" fill="var(--fg-secondary)" font-family="Inter, system-ui, sans-serif">A6 → A2: Content gap analysis drives new uploads</text>
+    </g>
+    <g>
+      <circle cx="560" cy="1600" r="4" fill="var(--blue)"/>
+      <text x="574" y="1604" font-size="11" fill="var(--fg-secondary)" font-family="Inter, system-ui, sans-serif">A6 → A3: Stale content alerts trigger archival</text>
+    </g>
+    <g>
+      <circle cx="560" cy="1625" r="4" fill="var(--blue)"/>
+      <text x="574" y="1629" font-size="11" fill="var(--fg-secondary)" font-family="Inter, system-ui, sans-serif">End User U4 feedback → A6 dashboard metrics</text>
+    </g>
+    <g>
+      <circle cx="1060" cy="1575" r="4" fill="var(--blue)"/>
+      <text x="1074" y="1579" font-size="11" fill="var(--fg-secondary)" font-family="Inter, system-ui, sans-serif">End User U5 nominations → A2 approval queue</text>
+    </g>
+    <g>
+      <circle cx="1060" cy="1600" r="4" fill="var(--blue)"/>
+      <text x="1074" y="1604" font-size="11" fill="var(--fg-secondary)" font-family="Inter, system-ui, sans-serif">A4 permissions → enforced in U1 query pipeline</text>
+    </g>
+    <g>
+      <circle cx="1060" cy="1625" r="4" fill="var(--blue)"/>
+      <text x="1074" y="1629" font-size="11" fill="var(--fg-secondary)" font-family="Inter, system-ui, sans-serif">A5 lifecycle events → end user notifications</text>
+    </g>
+  </g>
+
+</svg>
+</div>
+
+<div id="tooltip" class="tooltip">
+  <div class="tooltip-title"></div>
+  <div class="tooltip-body"></div>
+</div>
+
+<script>
+  const tooltip = document.getElementById('tooltip');
+  const tooltipTitle = tooltip.querySelector('.tooltip-title');
+  const tooltipBody = tooltip.querySelector('.tooltip-body');
+
+  document.querySelectorAll('.node').forEach(node => {
+    node.style.cursor = 'pointer';
+
+    node.addEventListener('mouseenter', (e) => {
+      const title = node.dataset.title;
+      const text = node.dataset.tooltip;
+      if (!title && !text) return;
+
+      tooltipTitle.textContent = title || '';
+      tooltipBody.textContent = text || '';
+      tooltip.classList.add('visible');
+
+      // Highlight effect
+      const rect = node.querySelector('rect') || node.querySelector('circle');
+      if (rect) {
+        rect.style.filter = 'brightness(1.2) drop-shadow(0 0 8px rgba(196,149,106,0.3))';
+      }
+    });
+
+    node.addEventListener('mousemove', (e) => {
+      const x = e.clientX + 16;
+      const y = e.clientY - 8;
+      const tipRect = tooltip.getBoundingClientRect();
+
+      tooltip.style.left = (x + tipRect.width > window.innerWidth)
+        ? (e.clientX - tipRect.width - 16) + 'px'
+        : x + 'px';
+      tooltip.style.top = (y + tipRect.height > window.innerHeight)
+        ? (e.clientY - tipRect.height - 8) + 'px'
+        : y + 'px';
+    });
+
+    node.addEventListener('mouseleave', () => {
+      tooltip.classList.remove('visible');
+      const rect = node.querySelector('rect') || node.querySelector('circle');
+      if (rect) {
+        rect.style.filter = '';
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

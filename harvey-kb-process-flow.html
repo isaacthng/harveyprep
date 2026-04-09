@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harvey — Knowledge Base Architecture</title>
+<style>
+  :root {
+    --bg-base: #111111;
+    --bg-raised: #1A1A1A;
+    --bg-surface: #222222;
+    --bg-hover: #2A2A2A;
+    --border: rgba(255,255,255,0.08);
+    --border-strong: rgba(255,255,255,0.14);
+    --fg-primary: #F5F0EB;
+    --fg-secondary: #A8A199;
+    --fg-subtle: #6B6560;
+    --fg-muted: #4A4540;
+    --accent: #C4956A;
+    --accent-soft: rgba(196, 149, 106, 0.08);
+    --accent-border: rgba(196, 149, 106, 0.22);
+    --green: #5CB88F;
+    --green-soft: rgba(92, 184, 143, 0.08);
+    --green-border: rgba(92, 184, 143, 0.20);
+    --purple: #9B8ACA;
+    --purple-soft: rgba(155, 138, 202, 0.08);
+    --purple-border: rgba(155, 138, 202, 0.20);
+    --radius: 8px;
+    --radius-lg: 12px;
+    --transition: 180ms ease;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg-base);
+    color: var(--fg-primary);
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Header ── */
+  .page-header { text-align: center; padding: 48px 32px 20px; }
+
+  .logo { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 24px; }
+
+  .logo-mark {
+    width: 32px; height: 32px; background: var(--accent); border-radius: 7px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 16px; color: var(--bg-base);
+  }
+
+  .logo-text { font-size: 18px; font-weight: 600; letter-spacing: 0.5px; color: var(--fg-primary); }
+
+  .page-header h1 { font-size: 30px; font-weight: 700; letter-spacing: -0.5px; color: var(--fg-primary); margin-bottom: 8px; }
+  .page-header .subtitle { font-size: 15px; color: var(--fg-subtle); max-width: 560px; margin: 0 auto; line-height: 1.6; }
+
+  /* ── Flow Container ── */
+  .flow-container { flex: 1; padding: 20px 48px 48px; max-width: 1400px; margin: 0 auto; width: 100%; }
+
+  /* ── Lane ── */
+  .swim-lane { margin-bottom: 0; }
+
+  .lane-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+
+  .lane-label {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 12px; border-radius: 16px; font-size: 11px;
+    font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px;
+  }
+
+  .ll-admin { background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent-border); }
+  .ll-pipeline { background: var(--purple-soft); color: var(--purple); border: 1px solid var(--purple-border); }
+  .ll-user { background: var(--green-soft); color: var(--green); border: 1px solid var(--green-border); }
+
+  .lane-desc { font-size: 13px; color: var(--fg-muted); }
+
+  /* ── Step Row ── */
+  .step-row { display: flex; align-items: stretch; gap: 0; }
+
+  .step-card {
+    flex: 1; position: relative;
+    background: var(--bg-raised); border: 1.5px solid var(--border-strong);
+    border-radius: var(--radius-lg); padding: 18px 16px; text-align: center;
+    transition: all var(--transition); cursor: default;
+    display: flex; flex-direction: column; align-items: center;
+  }
+
+  .step-card:hover { border-color: rgba(255,255,255,0.2); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.4); }
+
+  .step-icon {
+    width: 42px; height: 42px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 19px; margin-bottom: 10px; flex-shrink: 0;
+  }
+
+  .step-number { font-size: 10px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 5px; }
+  .step-title { font-size: 13px; font-weight: 650; color: var(--fg-primary); margin-bottom: 5px; line-height: 1.3; }
+  .step-desc { font-size: 11.5px; color: var(--fg-subtle); line-height: 1.5; }
+
+  .step-card.admin .step-icon { background: var(--accent-soft); border: 1px solid var(--accent-border); }
+  .step-card.admin .step-number { color: var(--accent); }
+  .step-card.admin:hover { border-color: var(--accent-border); }
+
+  .step-card.pipeline .step-icon { background: var(--purple-soft); border: 1px solid var(--purple-border); }
+  .step-card.pipeline .step-number { color: var(--purple); }
+  .step-card.pipeline:hover { border-color: var(--purple-border); }
+
+  .step-card.user .step-icon { background: var(--green-soft); border: 1px solid var(--green-border); }
+  .step-card.user .step-number { color: var(--green); }
+  .step-card.user:hover { border-color: var(--green-border); }
+
+  /* ── Arrows ── */
+  .arrow-h { display: flex; align-items: center; justify-content: center; width: 44px; flex-shrink: 0; }
+  .arrow-h svg { width: 26px; height: 10px; }
+
+  .vertical-conn { display: flex; justify-content: center; padding: 12px 0; }
+
+  .vc-inner { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .vc-inner svg { width: 14px; height: 28px; }
+
+  .conn-label {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase;
+    padding: 3px 10px; border-radius: 10px;
+  }
+
+  .cl-purple { background: var(--purple-soft); color: var(--purple); border: 1px solid var(--purple-border); }
+  .cl-green { background: var(--green-soft); color: var(--green); border: 1px solid var(--green-border); }
+  .cl-accent { background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent-border); }
+
+  /* ── Pipeline Detail ── */
+  .pipeline-detail {
+    background: var(--bg-raised);
+    border: 1.5px solid var(--purple-border);
+    border-radius: var(--radius-lg);
+    padding: 22px 24px;
+  }
+
+  .pipeline-inner { display: flex; align-items: center; gap: 0; }
+
+  .pipeline-stage { flex: 1; text-align: center; }
+
+  .ps-icon {
+    width: 38px; height: 38px; background: var(--bg-surface);
+    border: 1.5px solid var(--purple-border); border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 7px; font-size: 17px;
+  }
+
+  .ps-name { font-size: 11.5px; font-weight: 600; color: var(--fg-primary); margin-bottom: 2px; }
+  .ps-detail { font-size: 10.5px; color: var(--fg-subtle); line-height: 1.4; }
+
+  .pa { width: 36px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+  .pa svg { width: 22px; height: 8px; }
+
+  /* ── Legend ── */
+  .legend {
+    display: flex; justify-content: center; gap: 32px;
+    margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--border);
+  }
+
+  .legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--fg-subtle); }
+  .legend-dot { width: 10px; height: 10px; border-radius: 3px; }
+  .ld-admin { background: var(--accent); }
+  .ld-pipeline { background: var(--purple); }
+  .ld-user { background: var(--green); }
+
+  /* ── Footer ── */
+  .page-footer { text-align: center; padding: 20px; font-size: 12px; color: var(--fg-muted); border-top: 1px solid var(--border); }
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <div class="logo">
+    <div class="logo-mark">H</div>
+    <span class="logo-text">Harvey</span>
+  </div>
+  <h1>Knowledge Base Architecture</h1>
+  <p class="subtitle">End-to-end flow from document ingestion to AI-powered retrieval — how knowledge moves from admin curation to associate answers.</p>
+</header>
+
+<div class="flow-container">
+
+  <!-- ──── Admin Flow ──── -->
+  <div class="swim-lane">
+    <div class="lane-header">
+      <span class="lane-label ll-admin">Admin Workflow</span>
+      <span class="lane-desc">KM Directors and Practice Group Leaders manage knowledge base content and access</span>
+    </div>
+
+    <div class="step-row">
+      <div class="step-card admin">
+        <div class="step-icon">📁</div>
+        <div class="step-number">Step 1</div>
+        <div class="step-title">Create KB</div>
+        <div class="step-desc">Define scope, practice area, and naming. Set initial structure and taxonomy.</div>
+      </div>
+
+      <div class="arrow-h"><svg viewBox="0 0 26 10" fill="none"><path d="M0 5h22M18 1l4 4-4 4" stroke="#C4956A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+      <div class="step-card admin">
+        <div class="step-icon">📤</div>
+        <div class="step-number">Step 2</div>
+        <div class="step-title">Upload Docs</div>
+        <div class="step-desc">Drag-and-drop, bulk upload, or import from iManage / NetDocuments.</div>
+      </div>
+
+      <div class="arrow-h"><svg viewBox="0 0 26 10" fill="none"><path d="M0 5h22M18 1l4 4-4 4" stroke="#C4956A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+      <div class="step-card admin">
+        <div class="step-icon">🏷</div>
+        <div class="step-number">Step 3</div>
+        <div class="step-title">Organize & Tag</div>
+        <div class="step-desc">Apply practice area tags, document types, and matter classifications.</div>
+      </div>
+
+      <div class="arrow-h"><svg viewBox="0 0 26 10" fill="none"><path d="M0 5h22M18 1l4 4-4 4" stroke="#C4956A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+      <div class="step-card admin">
+        <div class="step-icon">🔒</div>
+        <div class="step-number">Step 4</div>
+        <div class="step-title">Set Permissions</div>
+        <div class="step-desc">Configure practice group access, ethical walls, and matter-level restrictions.</div>
+      </div>
+
+      <div class="arrow-h"><svg viewBox="0 0 26 10" fill="none"><path d="M0 5h22M18 1l4 4-4 4" stroke="#C4956A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+      <div class="step-card admin">
+        <div class="step-icon">📊</div>
+        <div class="step-number">Step 5</div>
+        <div class="step-title">Monitor</div>
+        <div class="step-desc">Track query volume, content gaps, stale docs, and user feedback.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ──── Admin → Pipeline ──── -->
+  <div class="vertical-conn">
+    <div class="vc-inner">
+      <svg viewBox="0 0 14 28" fill="none"><path d="M7 0v24M3 20l4 4 4-4" stroke="#9B8ACA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="conn-label cl-purple">Documents enter AI pipeline</span>
+      <svg viewBox="0 0 14 28" fill="none"><path d="M7 0v24M3 20l4 4 4-4" stroke="#9B8ACA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+  </div>
+
+  <!-- ──── AI Pipeline ──── -->
+  <div class="swim-lane">
+    <div class="lane-header">
+      <span class="lane-label ll-pipeline">AI Processing Pipeline</span>
+      <span class="lane-desc">Automated ingestion, embedding, and indexing — no manual steps required</span>
+    </div>
+
+    <div class="pipeline-detail">
+      <div class="pipeline-inner">
+        <div class="pipeline-stage">
+          <div class="ps-icon">📄</div>
+          <div class="ps-name">Document Parsing</div>
+          <div class="ps-detail">Extract text, tables, headers from PDF, DOCX, XLSX</div>
+        </div>
+
+        <div class="pa"><svg viewBox="0 0 22 8" fill="none"><path d="M0 4h18M14 1l4 3-4 3" stroke="#9B8ACA" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+        <div class="pipeline-stage">
+          <div class="ps-icon">✂️</div>
+          <div class="ps-name">Chunking</div>
+          <div class="ps-detail">Semantic splitting with overlap and context preservation</div>
+        </div>
+
+        <div class="pa"><svg viewBox="0 0 22 8" fill="none"><path d="M0 4h18M14 1l4 3-4 3" stroke="#9B8ACA" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+        <div class="pipeline-stage">
+          <div class="ps-icon">🧮</div>
+          <div class="ps-name">Embedding</div>
+          <div class="ps-detail">Vector embeddings via legal-tuned model</div>
+        </div>
+
+        <div class="pa"><svg viewBox="0 0 22 8" fill="none"><path d="M0 4h18M14 1l4 3-4 3" stroke="#9B8ACA" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+        <div class="pipeline-stage">
+          <div class="ps-icon">🗃</div>
+          <div class="ps-name">Vector Store</div>
+          <div class="ps-detail">Index with metadata for fast similarity search</div>
+        </div>
+
+        <div class="pa"><svg viewBox="0 0 22 8" fill="none"><path d="M0 4h18M14 1l4 3-4 3" stroke="#9B8ACA" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+        <div class="pipeline-stage">
+          <div class="ps-icon">🔍</div>
+          <div class="ps-name">RAG Retrieval</div>
+          <div class="ps-detail">Retrieve relevant chunks with re-ranking</div>
+        </div>
+
+        <div class="pa"><svg viewBox="0 0 22 8" fill="none"><path d="M0 4h18M14 1l4 3-4 3" stroke="#9B8ACA" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+        <div class="pipeline-stage">
+          <div class="ps-icon">🤖</div>
+          <div class="ps-name">Answer Generation</div>
+          <div class="ps-detail">Synthesize response with inline citations</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ──── Pipeline → User ──── -->
+  <div class="vertical-conn">
+    <div class="vc-inner">
+      <svg viewBox="0 0 14 28" fill="none"><path d="M7 0v24M3 20l4 4 4-4" stroke="#5CB88F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="conn-label cl-green">AI-generated answers delivered to users</span>
+      <svg viewBox="0 0 14 28" fill="none"><path d="M7 0v24M3 20l4 4 4-4" stroke="#5CB88F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+  </div>
+
+  <!-- ──── End User Flow ──── -->
+  <div class="swim-lane">
+    <div class="lane-header">
+      <span class="lane-label ll-user">End User Workflow</span>
+      <span class="lane-desc">Associates and Partners query knowledge bases through Harvey's AI Assistant</span>
+    </div>
+
+    <div class="step-row">
+      <div class="step-card user">
+        <div class="step-icon">💬</div>
+        <div class="step-number">Step 1</div>
+        <div class="step-title">Open Assistant</div>
+        <div class="step-desc">Launch Harvey AI from the firm's integrated workspace or web app.</div>
+      </div>
+
+      <div class="arrow-h"><svg viewBox="0 0 26 10" fill="none"><path d="M0 5h22M18 1l4 4-4 4" stroke="#5CB88F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+      <div class="step-card user">
+        <div class="step-icon">📚</div>
+        <div class="step-number">Step 2</div>
+        <div class="step-title">Select KB</div>
+        <div class="step-desc">Choose which knowledge bases to query — one or multiple at once.</div>
+      </div>
+
+      <div class="arrow-h"><svg viewBox="0 0 26 10" fill="none"><path d="M0 5h22M18 1l4 4-4 4" stroke="#5CB88F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+      <div class="step-card user">
+        <div class="step-icon">❓</div>
+        <div class="step-number">Step 3</div>
+        <div class="step-title">Ask Question</div>
+        <div class="step-desc">Type a natural language query about the firm's knowledge and precedents.</div>
+      </div>
+
+      <div class="arrow-h"><svg viewBox="0 0 26 10" fill="none"><path d="M0 5h22M18 1l4 4-4 4" stroke="#5CB88F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+      <div class="step-card user">
+        <div class="step-icon">📋</div>
+        <div class="step-number">Step 4</div>
+        <div class="step-title">Review Answer</div>
+        <div class="step-desc">Read synthesized answer with inline citations. Verify sources in the side panel.</div>
+      </div>
+
+      <div class="arrow-h"><svg viewBox="0 0 26 10" fill="none"><path d="M0 5h22M18 1l4 4-4 4" stroke="#5CB88F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+      <div class="step-card user">
+        <div class="step-icon">✍️</div>
+        <div class="step-number">Step 5</div>
+        <div class="step-title">Use in Drafting</div>
+        <div class="step-desc">Copy clauses, reference precedents, or export directly into document drafts.</div>
+      </div>
+
+      <div class="arrow-h"><svg viewBox="0 0 26 10" fill="none"><path d="M0 5h22M18 1l4 4-4 4" stroke="#5CB88F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+      <div class="step-card user">
+        <div class="step-icon">👍</div>
+        <div class="step-number">Step 6</div>
+        <div class="step-title">Provide Feedback</div>
+        <div class="step-desc">Rate accuracy, flag issues. Feeds back into admin analytics dashboard.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ──── Feedback Loop ──── -->
+  <div style="display:flex;justify-content:center;padding:14px 0 6px;">
+    <div style="display:flex;align-items:center;gap:8px;">
+      <svg width="14" height="28" viewBox="0 0 14 28" fill="none"><path d="M7 24V4M3 8l4-4 4 4" stroke="#C4956A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="conn-label cl-accent">Feedback loop to admin monitoring</span>
+      <svg width="14" height="28" viewBox="0 0 14 28" fill="none"><path d="M7 24V4M3 8l4-4 4 4" stroke="#C4956A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+  </div>
+
+  <!-- ──── Legend ──── -->
+  <div class="legend">
+    <div class="legend-item"><span class="legend-dot ld-admin"></span> Admin Workflow (KM Directors, Practice Group Leaders)</div>
+    <div class="legend-item"><span class="legend-dot ld-pipeline"></span> AI Processing Pipeline (Automated)</div>
+    <div class="legend-item"><span class="legend-dot ld-user"></span> End User Workflow (Associates, Partners)</div>
+  </div>
+</div>
+
+<footer class="page-footer">Harvey AI — Knowledge Base Architecture · Confidential</footer>
+
+</body>
+</html>
